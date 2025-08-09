@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "GXgPsjnUWn8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\rcber\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\YharimEX\\YharimEX.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rcber\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
+  ],
+  "logs": []
+}
