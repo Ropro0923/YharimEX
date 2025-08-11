@@ -1,4 +1,9 @@
 using System;
+using FargowiltasSouls.Content.Items.BossBags;
+using FargowiltasSouls;
+using FargowiltasSouls.Content.Projectiles;
+using FargowiltasSouls.Core.Globals;
+using FargowiltasSouls.Core.ModPlayers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -7,6 +12,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using YharimEX.Core;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -41,7 +47,7 @@ namespace YharimEX.Content.Projectiles
 			if (Projectile.type == ModContent.ProjectileType<MutantSphereRing>())
 			{
 				DieOutsideArena = true;
-				Projectile.GetGlobalProjectile<FargoSoulsGlobalProjectile>(true).TimeFreezeImmune = FargoSoulsWorld.MasochistModeReal && FargoSoulsUtil.BossIsAlive(ref EModeGlobalNPC.mutantBoss, ModContent.NPCType<global::FargowiltasSouls.NPCs.MutantBoss.MutantBoss>()) && Main.npc[EModeGlobalNPC.mutantBoss].ai[0] == -5f;
+				Projectile.GetGlobalProjectile<FargoSoulsGlobalProjectile>().TimeFreezeImmune = YharimEXUtil.BossIsAlive(ref EModeGlobalNPC.mutantBoss, ModContent.NPCType<global::FargowiltasSouls.NPCs.MutantBoss.MutantBoss>()) && Main.npc[EModeGlobalNPC.mutantBoss].ai[0] == -5f;
 			}
 		}
 
@@ -59,7 +65,7 @@ namespace YharimEX.Content.Projectiles
 			if (!spawned)
 			{
 				spawned = true;
-				originalSpeed = ((Vector2)(ref ((Entity)((ModProjectile)this).Projectile).velocity)).Length();
+				originalSpeed = ((Vector2)Projectile.velocity).Length();
 			}
 			((Entity)((ModProjectile)this).Projectile).velocity = originalSpeed * Utils.RotatedBy(Vector2.Normalize(((Entity)((ModProjectile)this).Projectile).velocity), (double)((ModProjectile)this).Projectile.ai[1] / (Math.PI * 2.0 * (double)((ModProjectile)this).Projectile.ai[0] * (double)(((ModProjectile)this).Projectile.localAI[0] += 1f)), default(Vector2));
 			if (((ModProjectile)this).Projectile.alpha > 0)
@@ -96,56 +102,56 @@ namespace YharimEX.Content.Projectiles
 						}
 					}
 				}
-				Projectile ritual = FargoSoulsUtil.ProjectileExists(ritualID, ModContent.ProjectileType<MutantRitual>());
+				Projectile ritual = YharimEXUtil.ProjectileExists(ritualID, ModContent.ProjectileType<MutantRitual>());
 				if (ritual != null && ((Entity)((ModProjectile)this).Projectile).Distance(((Entity)ritual).Center) > 1200f)
 				{
 					((ModProjectile)this).Projectile.timeLeft = 0;
 				}
 			}
-			if (((Entity)Main.LocalPlayer).active && !Main.LocalPlayer.dead && !Main.LocalPlayer.ghost && FargoSoulsUtil.BossIsAlive(ref EModeGlobalNPC.mutantBoss, ModContent.NPCType<global::FargowiltasSouls.NPCs.MutantBoss.MutantBoss>()) && FargoSoulsWorld.MasochistModeReal && Main.npc[EModeGlobalNPC.mutantBoss].ai[0] == -5f && ((ModProjectile)this).Projectile.Colliding(((Entity)((ModProjectile)this).Projectile).Hitbox, Main.LocalPlayer.GetModPlayer<FargoSoulsPlayer>().GetPrecisionHurtbox()))
+			if (((Entity)Main.LocalPlayer).active && !Main.LocalPlayer.dead && !Main.LocalPlayer.ghost && YharimEXUtil.BossIsAlive(ref EModeGlobalNPC.mutantBoss, ModContent.NPCType<global::FargowiltasSouls.NPCs.MutantBoss.MutantBoss>()) && FargoSoulsWorld.MasochistModeReal && Main.npc[EModeGlobalNPC.mutantBoss].ai[0] == -5f && ((ModProjectile)this).Projectile.Colliding(((Entity)((ModProjectile)this).Projectile).Hitbox, Main.LocalPlayer.GetModPlayer<FargoSoulsPlayer>().GetPrecisionHurtbox()))
 			{
 				if (!Main.LocalPlayer.HasBuff(ModContent.BuffType<TimeFrozen>()))
 				{
 					SoundStyle val = new SoundStyle("FargowiltasSouls/Sounds/ZaWarudo", (SoundType)0);
-					SoundEngine.PlaySound(ref val, (Vector2?)((Entity)Main.LocalPlayer).Center);
+					SoundEngine.PlaySound(val, (Vector2?)((Entity)Main.LocalPlayer).Center);
 				}
 				Main.LocalPlayer.AddBuff(ModContent.BuffType<TimeFrozen>(), 300, true, false);
 			}
 		}
 
-		public override void OnHitPlayer(Player target, int damage, bool crit)
-		{
-			if (FargoSoulsUtil.BossIsAlive(ref EModeGlobalNPC.mutantBoss, ModContent.NPCType<global::FargowiltasSouls.NPCs.MutantBoss.MutantBoss>()) && FargoSoulsWorld.EternityMode)
-			{
-				target.GetModPlayer<FargoSoulsPlayer>().MaxLifeReduction += 100;
-				target.AddBuff(ModContent.BuffType<OceanicMaul>(), 5400, true, false);
-				target.AddBuff(ModContent.BuffType<MutantFang>(), 180, true, false);
-			}
-			target.AddBuff(ModContent.BuffType<CurseoftheMoon>(), 360, true, false);
-		}
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (YharimEXUtil.BossIsAlive(ref EModeGlobalNPC.mutantBoss, ModContent.NPCType<global::FargowiltasSouls.NPCs.MutantBoss.MutantBoss>()) && FargoSoulsWorld.EternityMode)
+            {
+                target.GetModPlayer<FargoSoulsPlayer>().MaxLifeReduction += 100;
+                //target.AddBuff(ModContent.BuffType<OceanicMaul>(), 5400, true, false);
+                //target.AddBuff(ModContent.BuffType<MutantFang>(), 180, true, false);
+            }
+            //target.AddBuff(ModContent.BuffType<CurseoftheMoon>(), 360, true, false);
+        }
 
 		public override void Kill(int timeleft)
 		{
 			if (Utils.NextBool(Main.rand, Main.player[((ModProjectile)this).Projectile.owner].ownedProjectileCounts[((ModProjectile)this).Projectile.type] / 10 + 1))
 			{
-				SoundEngine.PlaySound(ref SoundID.NPCDeath6, (Vector2?)((Entity)((ModProjectile)this).Projectile).Center);
+				SoundEngine.PlaySound(SoundID.NPCDeath6, (Vector2?)((Entity)((ModProjectile)this).Projectile).Center);
 			}
 			((Entity)((ModProjectile)this).Projectile).position = ((Entity)((ModProjectile)this).Projectile).Center;
 			((Entity)((ModProjectile)this).Projectile).width = (((Entity)((ModProjectile)this).Projectile).height = 208);
 			((Entity)((ModProjectile)this).Projectile).Center = ((Entity)((ModProjectile)this).Projectile).position;
 			for (int index1 = 0; index1 < 2; index1++)
 			{
-				int index2 = Dust.NewDust(((Entity)((ModProjectile)this).Projectile).position, ((Entity)((ModProjectile)this).Projectile).width, ((Entity)((ModProjectile)this).Projectile).height, 31, 0f, 0f, 100, default(Color), 1.5f);
+				int index2 = Dust.NewDust(((Entity)((ModProjectile)this).Projectile).position, ((Entity)((ModProjectile)this).Projectile).width, ((Entity)((ModProjectile)this).Projectile).height, DustID.Smoke, 0f, 0f, 100, default(Color), 1.5f);
 				Main.dust[index2].position = Utils.RotatedBy(new Vector2((float)(((Entity)((ModProjectile)this).Projectile).width / 2), 0f), 6.28318548202515 * Main.rand.NextDouble(), default(Vector2)) * (float)Main.rand.NextDouble() + ((Entity)((ModProjectile)this).Projectile).Center;
 			}
 			for (int i = 0; i < 4; i++)
 			{
-				int index3 = Dust.NewDust(((Entity)((ModProjectile)this).Projectile).position, ((Entity)((ModProjectile)this).Projectile).width, ((Entity)((ModProjectile)this).Projectile).height, 60, 0f, 0f, 0, default(Color), 2.5f);
+				int index3 = Dust.NewDust(((Entity)((ModProjectile)this).Projectile).position, ((Entity)((ModProjectile)this).Projectile).width, ((Entity)((ModProjectile)this).Projectile).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 2.5f);
 				Main.dust[index3].position = Utils.RotatedBy(new Vector2((float)(((Entity)((ModProjectile)this).Projectile).width / 2), 0f), 6.28318548202515 * Main.rand.NextDouble(), default(Vector2)) * (float)Main.rand.NextDouble() + ((Entity)((ModProjectile)this).Projectile).Center;
 				Main.dust[index3].noGravity = true;
 				Dust obj = Main.dust[index3];
 				obj.velocity *= 1f;
-				int index4 = Dust.NewDust(((Entity)((ModProjectile)this).Projectile).position, ((Entity)((ModProjectile)this).Projectile).width, ((Entity)((ModProjectile)this).Projectile).height, 60, 0f, 0f, 100, default(Color), 1.5f);
+				int index4 = Dust.NewDust(((Entity)((ModProjectile)this).Projectile).position, ((Entity)((ModProjectile)this).Projectile).width, ((Entity)((ModProjectile)this).Projectile).height, DustID.RedTorch, 0f, 0f, 100, default(Color), 1.5f);
 				Main.dust[index4].position = Utils.RotatedBy(new Vector2((float)(((Entity)((ModProjectile)this).Projectile).width / 2), 0f), 6.28318548202515 * Main.rand.NextDouble(), default(Vector2)) * (float)Main.rand.NextDouble() + ((Entity)((ModProjectile)this).Projectile).Center;
 				Dust obj2 = Main.dust[index4];
 				obj2.velocity *= 1f;
@@ -163,9 +169,8 @@ namespace YharimEX.Content.Projectiles
 			Texture2D glow = ((Mod)FargowiltasSouls.Instance).Assets.Request<Texture2D>("Projectiles/MutantBoss/MutantSphereGlow", (AssetRequestMode)1).Value;
 			int rect1 = glow.Height;
 			int rect2 = 0;
-			Rectangle glowrectangle = default(Rectangle);
-			((Rectangle)(ref glowrectangle))._002Ector(0, rect2, glow.Width, rect1);
-			Vector2 gloworigin2 = Utils.Size(glowrectangle) / 2f;
+            Rectangle glowrectangle = new Rectangle(0, rect2, glow.Width, rect1);
+            Vector2 gloworigin2 = Utils.Size(glowrectangle) / 2f;
 			Color glowcolor = Color.Lerp(new Color(255, 37, 45, 0), Color.Transparent, 0.9f);
 			for (int i = 0; i < Sets.TrailCacheLength[((ModProjectile)this).Projectile.type]; i++)
 			{
@@ -185,9 +190,8 @@ namespace YharimEX.Content.Projectiles
 			Texture2D texture2D13 = TextureAssets.Projectile[((ModProjectile)this).Projectile.type].Value;
 			int num156 = TextureAssets.Projectile[((ModProjectile)this).Projectile.type].Value.Height / Main.projFrames[((ModProjectile)this).Projectile.type];
 			int y3 = num156 * ((ModProjectile)this).Projectile.frame;
-			Rectangle rectangle = default(Rectangle);
-			((Rectangle)(ref rectangle))._002Ector(0, y3, texture2D13.Width, num156);
-			Vector2 origin2 = Utils.Size(rectangle) / 2f;
+            Rectangle rectangle = new Rectangle(0, y3, texture2D13.Width, num156);
+            Vector2 origin2 = Utils.Size(rectangle) / 2f;
 			Main.EntitySpriteDraw(texture2D13, ((Entity)((ModProjectile)this).Projectile).Center - Main.screenPosition + new Vector2(0f, ((ModProjectile)this).Projectile.gfxOffY), (Rectangle?)rectangle, ((ModProjectile)this).Projectile.GetAlpha(lightColor), ((ModProjectile)this).Projectile.rotation, origin2, ((ModProjectile)this).Projectile.scale, (SpriteEffects)0, 0);
 		}
 	}

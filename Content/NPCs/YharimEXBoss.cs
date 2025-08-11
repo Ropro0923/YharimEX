@@ -30,6 +30,9 @@ using FargowiltasSouls.Content.Buffs.Masomode;
 using FargowiltasSouls.Content.Buffs.Souls;
 using static Terraria.GameContent.Creative.CreativePowers;
 using YharimEX.Core.Systems;
+using YharimEX.Content.Projectiles;
+using FargowiltasSouls.Core.Globals;
+using FargowiltasSouls.Content.Projectiles;
 
 namespace YharimEX.Content.NPCs
 {
@@ -119,16 +122,16 @@ namespace YharimEX.Content.NPCs
                 NPC.damage *= 17;
                 NPC.defense *= 10;
             }
-            /*    if (ModLoader.TryGetMod("FargowiltasMusic", ref musicMod))
-                {
-                    Music = MusicLoader.GetMusicSlot(musicMod, FargoSoulsWorld.MasochistModeReal ? "Assets/Music/rePrologue" : "Assets/Music/SteelRed");
-                }
-                else
-                {
-                    Music = MusicLoader.GetMusicSlot(((ModType)this).Mod, "Sounds/Music/P1");
-                }
-                SceneEffectPriority = (SceneEffectPriority)8;
-            */
+            if (ModLoader.TryGetMod("FargowiltasMusic", out Mod musicMod))
+            {
+                Music = MusicLoader.GetMusicSlot(musicMod, "Assets/Music/rePrologue");
+            }
+            else
+            {
+                //Music = MusicLoader.GetMusicSlot(((ModType)this).Mod, "Sounds/Music/P1");
+                Music = MusicID.OtherworldlyTowers;
+            }
+            SceneEffectPriority = SceneEffectPriority.BossHigh;
         }
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
@@ -143,16 +146,10 @@ namespace YharimEX.Content.NPCs
                 return false;
             }
             CooldownSlot = 1;
-            /*
-                if (!FargoSoulsWorld.MasochistModeReal)
-                {
-                    return false;
-                }
-                if (NPC.Distance(FargoSoulsUtil.ClosestPointInHitbox((Entity)(object)target, NPC.Center)) < 42f)
-                {
-                    return NPC.ai[0] > -1f;
-                }
-            */
+            if (NPC.Distance(YharimEXUtil.ClosestPointInHitbox((Entity)(object)target, NPC.Center)) < 42f)
+            {
+                return NPC.ai[0] > -1f;
+            }
             return false;
         }
 
@@ -231,7 +228,7 @@ namespace YharimEX.Content.NPCs
                 return;
             }
             TeleportDust();
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (teleportTarget != default)
                 {
@@ -259,12 +256,15 @@ namespace YharimEX.Content.NPCs
 
         public override void AI()
         {
-            EModeGlobalNPC.mutantBoss = NPC.whoAmI;
+            if (YharimEXCrossmod.FargowiltasSouls.Loaded) 
+            {
+                EModeGlobalNPC.mutantBoss = NPC.whoAmI;
+            }
             NPC.dontTakeDamage = NPC.ai[0] < 0f;
             ShouldDrawAura = false;
             ManageAurasAndPreSpawn();
             ManageNeededProjectiles();
-            NPC.direction = (NPC.spriteDirection = ((((Entity)NPC).Center.X < ((Entity)Player).Center.X) ? 1 : (-1)));
+            NPC.direction = (NPC.spriteDirection = (NPC.Center.X < Player.Center.X) ? 1 : (-1));
             bool drainLifeInP3 = true;
             Vector2 val;
             switch ((int)NPC.ai[0])
@@ -281,8 +281,8 @@ namespace YharimEX.Content.NPCs
                                     p3.Kill();
                                 }
                             }
-                            Vector2 center2 = ((Entity)player).Center;
-                            Vector2 val2 = Utils.SafeNormalize(((Entity)NPC).Center - ((Entity)player).Center, Vector2.Zero);
+                            Vector2 center2 = Player.Center;
+                            Vector2 val2 = Utils.SafeNormalize(((Entity)NPC).Center - Player.Center, Vector2.Zero);
                             double num5 = (Utils.NextBool(Main.rand, 2) ? 0.7854f : (-0.7854f));
                             val = default(Vector2);
                             StrongAttackTeleport(center2 + Utils.RotatedBy(val2, num5, val) * 600f);
@@ -294,20 +294,20 @@ namespace YharimEX.Content.NPCs
                             ((Entity)NPC).velocity = Vector2.Zero;
                             if (NewAI[2] == 0f)
                             {
-                                double angle = ((((Entity)NPC).position.X < ((Entity)player).position.X) ? (-Math.PI / 4.0) : (Math.PI / 4.0));
+                                double angle = (NPC.position.X < (Player.position.X) ? (-Math.PI / 4.0) : (Math.PI / 4.0));
                                 NewAI[2] = (float)angle * -4f / 30f;
-                                if (Main.netMode != 1)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     IEntitySource source_FromThis = ((Entity)NPC).GetSource_FromThis((string)null);
                                     Vector2 center3 = ((Entity)NPC).Center;
                                     Vector2 unitY = Vector2.UnitY;
                                     val = default(Vector2);
-                                    Projectile.NewProjectile(source_FromThis, center3 + -Utils.RotatedBy(unitY, angle, val) * 90f, Vector2.Zero, ModContent.ProjectileType<DeviSparklingLove>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 2f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 90f);
+                                    Projectile.NewProjectile(source_FromThis, center3 + -Utils.RotatedBy(unitY, angle, val) * 90f, Vector2.Zero, ModContent.ProjectileType<SparklingLove>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 2f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 90f);
                                 }
                                 Vector2 unitY2 = Vector2.UnitY;
                                 val = default(Vector2);
                                 Vector2 offset2 = -Utils.RotatedBy(unitY2, angle, val) * 80f;
-                                if (Main.netMode != 1)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     for (int n = 0; n < 8; n++)
                                     {
@@ -325,7 +325,7 @@ namespace YharimEX.Content.NPCs
                                         SpawnAxeHitbox(val4 + Utils.RotatedBy(offset2, num8, val) * (float)num6);
                                     }
                                 }
-                                if (FargoSoulsWorld.MasochistModeReal && Main.netMode != 1)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     for (int num9 = 0; num9 < 4; num9++)
                                     {
@@ -334,25 +334,27 @@ namespace YharimEX.Content.NPCs
                                         val = default(Vector2);
                                         Vector2 target = Utils.RotatedBy(val5, num10, val);
                                         Vector2 speed2 = 2f * target / 90f;
-                                        float acceleration = (0f - ((Vector2)(ref speed2)).Length()) / 90f;
-                                        int damage = ((NPC.localAI[3] > 1f) ? FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f) : FargoSoulsUtil.ScaledProjectileDamage(NPC.damage));
-                                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, speed2, ModContent.ProjectileType<DeviEnergyHeart>(), damage, 0f, Main.myPlayer, 0f, acceleration);
+                                        float acceleration = (0f - ((Vector2)(speed2)).Length()) / 90f;
+                                        int damage = (NPC.localAI[3] > 1f) ? YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f) : YharimEXUtil.ScaledProjectileDamage(NPC.damage);
+                                        Projectile.NewProjectile(NPC.GetSource_FromThis(null), NPC.Center, speed2, ModContent.ProjectileType<DeviEnergyHeart>(), damage, 0f, Main.myPlayer, 0f, acceleration);
                                     }
                                 }
                             }
-                            ((Entity)NPC).direction = (NPC.spriteDirection = Math.Sign(NewAI[2]));
+                            NPC.direction = NPC.spriteDirection = Math.Sign(NewAI[2]);
                         }
                         else if (NewAI[1] == 150f)
                         {
-                            targetPos = ((Entity)player).Center;
+                            targetPos = Player.Center;
                             targetPos.X -= 360 * Math.Sign(NewAI[2]);
-                            ((Entity)NPC).velocity = (targetPos - ((Entity)NPC).Center) / 30f;
+                            NPC.velocity = (targetPos - NPC.Center) / 30f;
                             NPC.netUpdate = true;
-                            ((Entity)NPC).direction = (NPC.spriteDirection = Math.Sign(NewAI[2]));
+                            NPC.direction = (NPC.spriteDirection = Math.Sign(NewAI[2]));
+                            /*
                             if (!FargoSoulsWorld.MasochistModeReal && Math.Sign(targetPos.X - ((Entity)NPC).Center.X) != Math.Sign(NewAI[2]))
                             {
                                 ((Entity)NPC).velocity.X *= 0.5f;
                             }
+                            */
                         }
                         else if (NewAI[1] < 180f)
                         {
@@ -361,8 +363,8 @@ namespace YharimEX.Content.NPCs
                         }
                         else
                         {
-                            targetPos = ((Entity)player).Center + ((Entity)player).DirectionTo(((Entity)NPC).Center) * 400f;
-                            if (((Entity)NPC).Distance(targetPos) > 50f)
+                            targetPos = Player.Center + Player.DirectionTo(NPC.Center) * 400f;
+                            if (NPC.Distance(targetPos) > 50f)
                             {
                                 Movement(targetPos, 0.2f);
                             }
@@ -375,11 +377,11 @@ namespace YharimEX.Content.NPCs
                         break;
                     }
                 case 132:
-                    if (!(NewAI[1] < 90f) || AliveCheck(player))
+                    if (!(NewAI[1] < 90f) || AliveCheck(Player))
                     {
                         if (NewAI[2] == 0f && NewAI[3] == 0f)
                         {
-                            NewAI[2] = ((Entity)NPC).Center.X + (float)((((Entity)player).Center.X < ((Entity)NPC).Center.X) ? (-1000) : 1000);
+                            NewAI[2] = NPC.Center.X + ((Player.Center.X < NPC.Center.X) ? (-1000) : 1000);
                         }
                         if (NPC.localAI[2] == 0f)
                         {
@@ -392,15 +394,14 @@ namespace YharimEX.Content.NPCs
                         else
                         {
                             bool k2 = Utils.NextBool(Main.rand, 2);
-                            NewAI[3] = ((Entity)player).Center.Y + (float)(k2 ? 1000 : (-1000));
+                            NewAI[3] = Player.Center.Y + (k2 ? 1000 : (-1000));
                             NewAI[0] = ((!k2) ? 1 : (-1));
                         }
-                        Vector2 targetPos4 = default(Vector2);
-                        ((Vector2)(ref targetPos4))._002Ector(NewAI[2], NewAI[3]);
+                        Vector2 targetPos4 = new Vector2(NewAI[2], NewAI[3]);
                         Movement(targetPos4, 1.4f);
                         if ((NewAI[1] += 1f) > 150f)
                         {
-                            SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.Roar, (Vector2?)NPC.Center);
                             NPC.netUpdate = true;
                             NPC.ai[0] += 1f;
                             NewAI[1] = 0f;
@@ -417,16 +418,16 @@ namespace YharimEX.Content.NPCs
                         Vector2 val7 = Utils.SafeNormalize(((Entity)NPC).velocity, Vector2.Zero);
                         val = default(Vector2);
                         Vector2 v = Utils.RotatedBy(val7, 1.5707000494003296, val);
-                        Vector2 d = ((Entity)player).Center - ((Entity)NPC).Center;
+                        Vector2 d = ((Entity)Player).Center - ((Entity)NPC).Center;
                         float num17 = v.X * d.X + v.Y * d.Y;
-                        float Dis = ((Entity)NPC).Distance(((Entity)player).Center);
+                        float Dis = ((Entity)NPC).Distance(((Entity)Player).Center);
                         if (num17 > 300f)
                         {
-                            Vector2 val8 = ((Entity)player).Center - ((Entity)NPC).Center;
+                            Vector2 val8 = ((Entity)Player).Center - ((Entity)NPC).Center;
                             Vector2 val9 = Utils.SafeNormalize(((Entity)NPC).velocity, Vector2.Zero);
                             val = default(Vector2);
                             val = val8 - Utils.RotatedBy(val9, 1.5707000494003296, val) * 50f;
-                            if (((Vector2)(ref val)).Length() < Dis)
+                            if (((Vector2)(val)).Length() < Dis)
                             {
                                 NPC nPC4 = NPC;
                                 Vector2 velocity2 = ((Entity)nPC4).velocity;
@@ -445,11 +446,11 @@ namespace YharimEX.Content.NPCs
                         }
                         if (num17 <= 300f)
                         {
-                            Vector2 val12 = ((Entity)player).Center - ((Entity)NPC).Center;
+                            Vector2 val12 = ((Entity)Player).Center - ((Entity)NPC).Center;
                             Vector2 val13 = Utils.SafeNormalize(((Entity)NPC).velocity, Vector2.Zero);
                             val = default(Vector2);
                             val = val12 - Utils.RotatedBy(val13, 1.5707000494003296, val) * 50f;
-                            if (((Vector2)(ref val)).Length() < Dis)
+                            if (((Vector2)(val)).Length() < Dis)
                             {
                                 NPC nPC6 = NPC;
                                 Vector2 velocity4 = ((Entity)nPC6).velocity;
@@ -470,7 +471,7 @@ namespace YharimEX.Content.NPCs
                         if ((NewAI[3] += 1f) > 5f)
                         {
                             NewAI[3] = 0f;
-                            SoundEngine.PlaySound(ref SoundID.Item12, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.Item12, (Vector2?)((Entity)NPC).Center);
                             float timeLeft = 2400f / Math.Abs(((Entity)NPC).velocity.X) * 2f - NewAI[1] + 120f;
                             if (NewAI[1] <= 15f)
                             {
@@ -487,7 +488,7 @@ namespace YharimEX.Content.NPCs
                                     NPC.localAI[2] = 0f;
                                 }
                             }
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 float R = Utils.ToRotation(new Vector2(NewAI[2], NewAI[0]));
                                 IEntitySource source_FromThis2 = ((Entity)NPC).GetSource_FromThis((string)null);
@@ -495,13 +496,13 @@ namespace YharimEX.Content.NPCs
                                 Vector2 unitY3 = Vector2.UnitY;
                                 double num18 = (double)MathHelper.ToRadians(20f) * (Main.rand.NextDouble() - 0.5) + (double)R;
                                 val = default(Vector2);
-                                Projectile.NewProjectile(source_FromThis2, center6, Utils.RotatedBy(unitY3, num18, val), ModContent.ProjectileType<AbomDeathrayMark>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft, 0f);
+                                Projectile.NewProjectile(source_FromThis2, center6, Utils.RotatedBy(unitY3, num18, val), ModContent.ProjectileType<AbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft, 0f);
                                 IEntitySource source_FromThis3 = ((Entity)NPC).GetSource_FromThis((string)null);
                                 Vector2 center7 = ((Entity)NPC).Center;
                                 Vector2 unitY4 = Vector2.UnitY;
                                 double num19 = (double)MathHelper.ToRadians(20f) * (Main.rand.NextDouble() - 0.5) + (double)R;
                                 val = default(Vector2);
-                                Projectile.NewProjectile(source_FromThis3, center7, -Utils.RotatedBy(unitY4, num19, val), ModContent.ProjectileType<AbomDeathrayMark>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft, 0f);
+                                Projectile.NewProjectile(source_FromThis3, center7, -Utils.RotatedBy(unitY4, num19, val), ModContent.ProjectileType<AbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft, 0f);
                             }
                         }
                         if ((NewAI[1] += 1f) > 218.18182f)
@@ -515,19 +516,19 @@ namespace YharimEX.Content.NPCs
                         break;
                     }
                 case 134:
-                    if (!(NewAI[1] < 150f) || AliveCheck(player))
+                    if (!(NewAI[1] < 150f) || AliveCheck(Player))
                     {
                         ((Entity)NPC).velocity.Y = 0f;
                         NPC nPC13 = NPC;
                         ((Entity)nPC13).velocity = ((Entity)nPC13).velocity * 0.947f;
-                        NewAI[3] += ((Vector2)(ref ((Entity)NPC).velocity)).Length();
+                        NewAI[3] += ((Vector2)NPC.velocity).Length();
                         if (NewAI[1] > 150f)
                         {
                             FancyFireballs2((int)NewAI[1] - 150);
                         }
                         if ((NewAI[1] += 1f) > 210f)
                         {
-                            SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
                             NPC.netUpdate = true;
                             NPC.ai[0] += 1f;
                             NewAI[1] = 0f;
@@ -544,16 +545,16 @@ namespace YharimEX.Content.NPCs
                         Vector2 val16 = Utils.SafeNormalize(((Entity)NPC).velocity, Vector2.Zero);
                         val = default(Vector2);
                         Vector2 v = Utils.RotatedBy(val16, 1.5707000494003296, val);
-                        Vector2 d = ((Entity)player).Center - ((Entity)NPC).Center;
+                        Vector2 d = Player.Center - NPC.Center;
                         float num22 = v.X * d.X + v.Y * d.Y;
-                        float Dis = ((Entity)NPC).Distance(((Entity)player).Center);
+                        float Dis = NPC.Distance(Player.Center);
                         if (num22 > 300f)
                         {
-                            Vector2 val17 = ((Entity)player).Center - ((Entity)NPC).Center;
-                            Vector2 val18 = Utils.SafeNormalize(((Entity)NPC).velocity, Vector2.Zero);
+                            Vector2 val17 = Player.Center - NPC.Center;
+                            Vector2 val18 = Utils.SafeNormalize(NPC.velocity, Vector2.Zero);
                             val = default(Vector2);
                             val = val17 - Utils.RotatedBy(val18, 1.5707000494003296, val) * 2f;
-                            if (((Vector2)(ref val)).Length() < Dis)
+                            if (((Vector2)(val)).Length() < Dis)
                             {
                                 NPC nPC9 = NPC;
                                 Vector2 velocity6 = ((Entity)nPC9).velocity;
@@ -572,11 +573,11 @@ namespace YharimEX.Content.NPCs
                         }
                         else
                         {
-                            Vector2 val21 = ((Entity)player).Center - ((Entity)NPC).Center;
+                            Vector2 val21 = Player.Center - NPC.Center;
                             Vector2 val22 = Utils.SafeNormalize(((Entity)NPC).velocity, Vector2.Zero);
                             val = default(Vector2);
                             val = val21 - Utils.RotatedBy(val22, 1.5707000494003296, val) * 2f;
-                            if (((Vector2)(ref val)).Length() < Dis)
+                            if (((Vector2)(val)).Length() < Dis)
                             {
                                 NPC nPC11 = NPC;
                                 Vector2 velocity8 = ((Entity)nPC11).velocity;
@@ -597,7 +598,7 @@ namespace YharimEX.Content.NPCs
                         if ((NewAI[3] += 1f) > 5f)
                         {
                             NewAI[3] = 0f;
-                            SoundEngine.PlaySound(ref SoundID.Item12, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.Item12, (Vector2?)((Entity)NPC).Center);
                             float timeLeft2 = 2400f / Math.Abs(((Entity)NPC).velocity.X) * 2f - NewAI[1] + 120f;
                             if (NewAI[1] <= 15f)
                             {
@@ -614,7 +615,7 @@ namespace YharimEX.Content.NPCs
                                     NPC.localAI[2] = 0f;
                                 }
                             }
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 float R2 = Utils.ToRotation(new Vector2(NewAI[2], NewAI[0]));
                                 IEntitySource source_FromThis4 = ((Entity)NPC).GetSource_FromThis((string)null);
@@ -622,13 +623,13 @@ namespace YharimEX.Content.NPCs
                                 Vector2 unitY5 = Vector2.UnitY;
                                 double num23 = (double)MathHelper.ToRadians(20f) * (Main.rand.NextDouble() - 0.5) + (double)R2;
                                 val = default(Vector2);
-                                Projectile.NewProjectile(source_FromThis4, center8, Utils.RotatedBy(unitY5, num23, val), ModContent.ProjectileType<AbomDeathrayMark>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft2, 0f);
+                                Projectile.NewProjectile(source_FromThis4, center8, Utils.RotatedBy(unitY5, num23, val), ModContent.ProjectileType<AbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft2, 0f);
                                 IEntitySource source_FromThis5 = ((Entity)NPC).GetSource_FromThis((string)null);
                                 Vector2 center9 = ((Entity)NPC).Center;
                                 Vector2 unitY6 = Vector2.UnitY;
                                 double num24 = (double)MathHelper.ToRadians(20f) * (Main.rand.NextDouble() - 0.5) + (double)R2;
                                 val = default(Vector2);
-                                Projectile.NewProjectile(source_FromThis5, center9, -Utils.RotatedBy(unitY6, num24, val), ModContent.ProjectileType<AbomDeathrayMark>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft2, 0f);
+                                Projectile.NewProjectile(source_FromThis5, center9, -Utils.RotatedBy(unitY6, num24, val), ModContent.ProjectileType<AbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft2, 0f);
                             }
                         }
                         if (!((NewAI[1] += 1f) > 218.18182f))
@@ -664,14 +665,14 @@ namespace YharimEX.Content.NPCs
                 case 1919:
                     if (NewAI[1] == 1f)
                     {
-                        SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                        SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
                     }
                     if (NewAI[2] <= 114f)
                     {
-                        Vector2 targetPos = ((Entity)player).Center;
+                        Vector2 targetPos = Player.Center;
                         targetPos.X += 600 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
                         NPC nPC18 = NPC;
-                        ((Entity)nPC18).position = ((Entity)nPC18).position + ((Entity)player).velocity / 3f;
+                        ((Entity)nPC18).position = ((Entity)nPC18).position + Player.velocity / 3f;
                         Movement(targetPos, 1.2f);
                     }
                     if (NewAI[2] == 114f)
@@ -684,52 +685,52 @@ namespace YharimEX.Content.NPCs
                                 p5.Kill();
                             }
                         }
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowRing>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, -20f);
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowRingEX>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, -20f);
                         }
                     }
                     if ((NewAI[2] += 1f) <= 315f)
                     {
-                        Vector2 targetPos = ((Entity)player).Center;
+                        Vector2 targetPos = Player.Center;
                         targetPos.X += 600 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
                         NPC nPC19 = NPC;
-                        ((Entity)nPC19).position = ((Entity)nPC19).position + ((Entity)player).velocity / 3f;
+                        nPC19.position = nPC19.position + Player.velocity / 3f;
                         Movement(targetPos, 1.2f);
                         if ((NPC.localAI[0] -= 1f) < 0f && NewAI[2] > 114f)
                         {
                             NPC.localAI[0] = 90f;
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 for (int j2 = -1; j2 <= 1; j2 += 2)
                                 {
                                     for (int i2 = -11; i2 <= 11; i2++)
                                     {
-                                        Vector2 target4 = ((Entity)player).Center;
+                                        Vector2 target4 = Player.Center;
                                         target4.X += 180f * (float)i2;
                                         target4.Y += (400f + 27.272728f * (float)Math.Abs(i2)) * (float)j2;
                                         Vector2 speed5 = (target4 - ((Entity)NPC).Center) / 20f;
                                         int individualTiming = 60 + Math.Abs(i2 * 2);
-                                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, speed5 / 2f, ModContent.ProjectileType<CosmosSphere>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 20f, (float)individualTiming);
+                                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, speed5 / 2f, ModContent.ProjectileType<CosmosSphere>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 20f, (float)individualTiming);
                                     }
                                 }
                             }
                         }
-                        NPC.rotation = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)player).Center));
+                        NPC.rotation = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)Player).Center));
                         if (((Entity)NPC).direction < 0)
                         {
                             NPC nPC20 = NPC;
                             nPC20.rotation += (float)Math.PI;
                         }
-                        NewAI[3] = ((((Entity)NPC).Center.X < ((Entity)player).Center.X) ? 1 : (-1));
+                        NewAI[3] = ((((Entity)NPC).Center.X < ((Entity)Player).Center.X) ? 1 : (-1));
                         if (NewAI[2] == 315f)
                         {
-                            ((Entity)NPC).velocity = 42f * ((Entity)NPC).DirectionTo(((Entity)player).Center);
+                            ((Entity)NPC).velocity = 42f * ((Entity)NPC).DirectionTo(((Entity)Player).Center);
                             NPC.netUpdate = true;
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                int modifier4 = Math.Sign(((Entity)NPC).Center.Y - ((Entity)player).Center.Y);
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + 3000f * ((Entity)NPC).DirectionFrom(((Entity)player).Center) * (float)modifier4, ((Entity)NPC).DirectionTo(((Entity)player).Center) * (float)modifier4, ModContent.ProjectileType<CosmosDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                                int modifier4 = Math.Sign(((Entity)NPC).Center.Y - ((Entity)Player).Center.Y);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + 3000f * ((Entity)NPC).DirectionFrom(((Entity)Player).Center) * (float)modifier4, ((Entity)NPC).DirectionTo(((Entity)Player).Center) * (float)modifier4, ModContent.ProjectileType<CosmosDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                             }
                         }
                     }
@@ -737,7 +738,7 @@ namespace YharimEX.Content.NPCs
                     {
                         ((Entity)NPC).direction = (NPC.spriteDirection = Math.Sign(NewAI[3]));
                     }
-                    if ((NewAI[1] += 1f) > 400f || (NewAI[2] > 315f && ((NewAI[3] > 0f) ? (((Entity)NPC).Center.X > ((Entity)player).Center.X + 800f) : (((Entity)NPC).Center.X < ((Entity)player).Center.X - 800f))))
+                    if ((NewAI[1] += 1f) > 400f || (NewAI[2] > 315f && ((NewAI[3] > 0f) ? (((Entity)NPC).Center.X > ((Entity)Player).Center.X + 800f) : (((Entity)NPC).Center.X < ((Entity)Player).Center.X - 800f))))
                     {
                         ((Entity)NPC).velocity.X = 0f;
                         NPC.TargetClosest(true);
@@ -752,7 +753,7 @@ namespace YharimEX.Content.NPCs
                 case 1920:
                     if ((NewAI[1] += 1f) < 110f)
                     {
-                        Vector2 targetPos = ((Entity)player).Center;
+                        Vector2 targetPos = ((Entity)Player).Center;
                         targetPos.X += 300 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
                         if (((Entity)NPC).Distance(targetPos) > 50f)
                         {
@@ -760,17 +761,17 @@ namespace YharimEX.Content.NPCs
                         }
                         if (NewAI[1] == 1f)
                         {
-                            SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
                         }
                         if ((NewAI[2] += 1f) <= 6f)
                         {
-                            NPC.rotation = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)player).Center));
+                            NPC.rotation = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)Player).Center));
                             if (((Entity)NPC).direction < 0)
                             {
                                 NPC nPC14 = NPC;
                                 nPC14.rotation += (float)Math.PI;
                             }
-                            NewAI[3] = ((((Entity)NPC).Center.X < ((Entity)player).Center.X) ? 1 : (-1));
+                            NewAI[3] = ((((Entity)NPC).Center.X < ((Entity)Player).Center.X) ? 1 : (-1));
                             if (NewAI[2] != 6f)
                             {
                                 break;
@@ -778,7 +779,7 @@ namespace YharimEX.Content.NPCs
                             NPC.netUpdate = true;
                             if (NewAI[1] > 50f)
                             {
-                                if (Main.netMode != 1)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     Vector2 offset5 = Vector2.UnitX;
                                     if (((Entity)NPC).direction < 0)
@@ -786,11 +787,11 @@ namespace YharimEX.Content.NPCs
                                         offset5.X *= -1f;
                                     }
                                     Vector2 val25 = offset5;
-                                    double num25 = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)player).Center));
+                                    double num25 = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)Player).Center));
                                     val = default(Vector2);
                                     offset5 = Utils.RotatedBy(val25, num25, val);
-                                    int modifier = Math.Sign(((Entity)NPC).Center.Y - ((Entity)player).Center.Y);
-                                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + offset5 + 3000f * ((Entity)NPC).DirectionFrom(((Entity)player).Center) * (float)modifier, ((Entity)NPC).DirectionTo(((Entity)player).Center) * (float)modifier, ModContent.ProjectileType<CosmosDeathray>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                                    int modifier = Math.Sign(((Entity)NPC).Center.Y - ((Entity)Player).Center.Y);
+                                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + offset5 + 3000f * ((Entity)NPC).DirectionFrom(((Entity)Player).Center) * (float)modifier, ((Entity)NPC).DirectionTo(((Entity)Player).Center) * (float)modifier, ModContent.ProjectileType<CosmosDeathray>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                                 }
                             }
                             else
@@ -812,13 +813,13 @@ namespace YharimEX.Content.NPCs
                     }
                     if (NewAI[1] <= 155f)
                     {
-                        Vector2 targetPos = ((Entity)player).Center;
+                        Vector2 targetPos = ((Entity)Player).Center;
                         targetPos.X += 350 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
                         targetPos.Y += 700f;
                         NPC nPC15 = NPC;
-                        ((Entity)nPC15).position = ((Entity)nPC15).position + ((Entity)player).velocity / 3f;
+                        ((Entity)nPC15).position = ((Entity)nPC15).position + ((Entity)Player).velocity / 3f;
                         Movement(targetPos, 2.4f);
-                        NPC.rotation = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)player).Center));
+                        NPC.rotation = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)Player).Center));
                         if (((Entity)NPC).direction < 0)
                         {
                             NPC nPC16 = NPC;
@@ -826,17 +827,17 @@ namespace YharimEX.Content.NPCs
                         }
                         if (NewAI[1] == 155f)
                         {
-                            ((Entity)NPC).velocity = 42f * ((Entity)NPC).DirectionTo(((Entity)player).Center);
+                            ((Entity)NPC).velocity = 42f * ((Entity)NPC).DirectionTo(((Entity)Player).Center);
                             NPC.netUpdate = true;
-                            NewAI[3] = Math.Abs(((Entity)player).Center.Y - ((Entity)NPC).Center.Y) / 42f;
+                            NewAI[3] = Math.Abs(((Entity)Player).Center.Y - ((Entity)NPC).Center.Y) / 42f;
                             NewAI[3] *= 2f;
-                            NPC.localAI[0] = ((Entity)player).Center.X;
-                            NPC.localAI[1] = ((Entity)player).Center.Y;
-                            NPC.localAI[0] += ((((Entity)NPC).Center.X < ((Entity)player).Center.X) ? (-50) : 50);
-                            if (Main.netMode != 1)
+                            NPC.localAI[0] = ((Entity)Player).Center.X;
+                            NPC.localAI[1] = ((Entity)Player).Center.Y;
+                            NPC.localAI[0] += ((((Entity)NPC).Center.X < ((Entity)Player).Center.X) ? (-50) : 50);
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                int modifier2 = Math.Sign(((Entity)NPC).Center.Y - ((Entity)player).Center.Y);
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + 3000f * ((Entity)NPC).DirectionFrom(((Entity)player).Center) * (float)modifier2, ((Entity)NPC).DirectionTo(((Entity)player).Center) * (float)modifier2, ModContent.ProjectileType<CosmosDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                                int modifier2 = Math.Sign(((Entity)NPC).Center.Y - ((Entity)Player).Center.Y);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + 3000f * ((Entity)NPC).DirectionFrom(((Entity)Player).Center) * (float)modifier2, ((Entity)NPC).DirectionTo(((Entity)Player).Center) * (float)modifier2, ModContent.ProjectileType<CosmosDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                             }
                         }
                         break;
@@ -851,26 +852,24 @@ namespace YharimEX.Content.NPCs
                     if (Math.Abs(((Entity)NPC).Center.Y - NPC.localAI[1]) < 300f)
                     {
                         Vector2 val26 = ((Entity)NPC).Center - ((Entity)NPC).velocity / 2f;
-                        Vector2 target2 = default(Vector2);
-                        ((Vector2)(ref target2))._002Ector(NPC.localAI[0], NPC.localAI[1]);
+                        Vector2 target2 = new Vector2(NPC.localAI[0], NPC.localAI[1]);
                         Vector2 vel4 = Vector2.Normalize(val26 - target2);
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            int modifier3 = ((Math.Sign(((Entity)player).Center.X - target2.X) == ((Entity)NPC).direction) ? 1 : (-1));
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, (float)modifier3 * 0.5f * vel4, ModContent.ProjectileType<CosmosBolt>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, (float)modifier3 * 0.5f * ((Entity)NPC).DirectionFrom(target2), ModContent.ProjectileType<CosmosBolt>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                            int modifier3 = ((Math.Sign(((Entity)Player).Center.X - target2.X) == ((Entity)NPC).direction) ? 1 : (-1));
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, (float)modifier3 * 0.5f * vel4, ModContent.ProjectileType<CosmosBolt>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, (float)modifier3 * 0.5f * ((Entity)NPC).DirectionFrom(target2), ModContent.ProjectileType<CosmosBolt>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                         }
                     }
                     else if ((NewAI[2] += 1f) > 1f)
                     {
                         NewAI[2] = 0f;
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Vector2 target3 = default(Vector2);
-                            ((Vector2)(ref target3))._002Ector(NPC.localAI[0], NPC.localAI[1]);
-                            Math.Sign(((Entity)player).Center.X - target3.X);
+                            Vector2 target3 = new Vector2(NPC.localAI[0], NPC.localAI[1]);
+                            Math.Sign(((Entity)Player).Center.X - target3.X);
                             _ = ((Entity)NPC).direction;
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, 0.5f * ((Entity)NPC).DirectionFrom(target3), ModContent.ProjectileType<CosmosBolt>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, 0.5f * ((Entity)NPC).DirectionFrom(target3), ModContent.ProjectileType<CosmosBolt>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                         }
                     }
                     if (NewAI[1] > 155f + NewAI[3])
@@ -878,7 +877,7 @@ namespace YharimEX.Content.NPCs
                         ((Entity)NPC).velocity.Y = 0f;
                         NPC.TargetClosest(true);
                         NPC.ai[0] = 1922f;
-                        NewAI[1] = ((!FargoSoulsWorld.EternityMode || NPC.localAI[2] == 0f) ? (-120) : 0);
+                        NewAI[1] = (NPC.localAI[2] == 0f) ? (-120) : 0;
                         NewAI[2] = 0f;
                         NewAI[3] = 0f;
                         NPC.localAI[0] = 0f;
@@ -891,8 +890,8 @@ namespace YharimEX.Content.NPCs
                     break;
                 case 1922:
                     {
-                        Vector2 targetPos = ((Entity)player).Center + ((Entity)NPC).DirectionFrom(((Entity)player).Center) * 500f;
-                        if (NewAI[1] < 130f || (((Entity)NPC).Distance(((Entity)player).Center) > 200f && ((Entity)NPC).Distance(((Entity)player).Center) < 600f))
+                        Vector2 targetPos = ((Entity)Player).Center + ((Entity)NPC).DirectionFrom(((Entity)Player).Center) * 500f;
+                        if (NewAI[1] < 130f || (((Entity)NPC).Distance(((Entity)Player).Center) > 200f && ((Entity)NPC).Distance(((Entity)Player).Center) < 600f))
                         {
                             NPC nPC2 = NPC;
                             ((Entity)nPC2).velocity = ((Entity)nPC2).velocity * 0.97f;
@@ -901,11 +900,11 @@ namespace YharimEX.Content.NPCs
                         {
                             Movement(targetPos, 0.8f);
                             NPC nPC3 = NPC;
-                            ((Entity)nPC3).position = ((Entity)nPC3).position + ((Entity)player).velocity / 4f;
+                            ((Entity)nPC3).position = ((Entity)nPC3).position + ((Entity)Player).velocity / 4f;
                         }
-                        if (NewAI[1] >= 10f && Main.netMode != 2 && ((EffectManager<Filter>)(object)Filters.Scene)["FargowiltasSouls:Invert"].IsActive())
+                        if (NewAI[1] >= 10f && Main.netMode != NetmodeID.MultiplayerClient && ((EffectManager<Filter>)(object)Terraria.Graphics.Effects.Filters.Scene)["FargowiltasSouls:Invert"].IsActive())
                         {
-                            ((EffectManager<Filter>)(object)Filters.Scene)["FargowiltasSouls:Invert"].GetShader().UseTargetPosition(((Entity)NPC).Center);
+                            ((EffectManager<Filter>)(object)Terraria.Graphics.Effects.Filters.Scene)["FargowiltasSouls:Invert"].GetShader().UseTargetPosition(((Entity)NPC).Center);
                         }
                         if (NewAI[1] == 10f)
                         {
@@ -913,7 +912,7 @@ namespace YharimEX.Content.NPCs
                             if (!Main.dedServ)
                             {
                                 SoundStyle val6 = new SoundStyle("FargowiltasSouls/Sounds/ZaWarudo", (SoundType)0);
-                                SoundEngine.PlaySound(ref val6, (Vector2?)((Entity)player).Center);
+                                SoundEngine.PlaySound(val6, (Vector2?)((Entity)Player).Center);
                             }
                         }
                         else if (NewAI[1] < 210f)
@@ -932,19 +931,19 @@ namespace YharimEX.Content.NPCs
                             }
                             for (int num12 = 0; num12 < 1000; num12++)
                             {
-                                if (((Entity)Main.projectile[num12]).active && !Main.projectile[num12].GetGlobalProjectile<FargoSoulsGlobalProjectile>(true).TimeFreezeImmune)
+                                if (((Entity)Main.projectile[num12]).active && !Main.projectile[num12].GetGlobalProjectile<FargoSoulsGlobalProjectile>().TimeFreezeImmune)
                                 {
-                                    Main.projectile[num12].GetGlobalProjectile<FargoSoulsGlobalProjectile>(true).TimeFrozen = duration;
+                                    Main.projectile[num12].GetGlobalProjectile<FargoSoulsGlobalProjectile>().TimeFrozen = duration;
                                 }
                             }
                             if (NewAI[1] < 130f && (NewAI[2] += 1f) > 12f)
                             {
                                 NewAI[2] = 0f;
-                                bool altAttack = FargoSoulsWorld.EternityMode && NPC.localAI[2] != 0f;
+                                bool altAttack = NPC.localAI[2] != 0f;
                                 int baseDistance = 300;
                                 float offset3 = (altAttack ? 250f : 150f);
                                 float speed3 = (altAttack ? 4f : 2.5f);
-                                int damage2 = FargoSoulsUtil.ScaledProjectileDamage(NPC.damage);
+                                int damage2 = YharimEXUtil.ScaledProjectileDamage(NPC.damage);
                                 if (NewAI[1] < 85f || !altAttack)
                                 {
                                     if (altAttack && NewAI[3] % 2f == 0f)
@@ -958,14 +957,14 @@ namespace YharimEX.Content.NPCs
                                             if (!((double)angle2 > Math.PI * 2.0 - (double)MathHelper.WrapAngle(MathHelper.ToRadians(60f))))
                                             {
                                                 float spawnOffset = radius;
-                                                Vector2 center4 = ((Entity)player).Center;
+                                                Vector2 center4 = ((Entity)Player).Center;
                                                 Vector2 unitX2 = Vector2.UnitX;
                                                 double num14 = angle2 + NPC.localAI[0];
                                                 val = default(Vector2);
                                                 Vector2 spawnPos2 = center4 + spawnOffset * Utils.RotatedBy(unitX2, num14, val);
-                                                Vector2 vel2 = speed3 * ((Entity)player).DirectionFrom(spawnPos2);
-                                                float ai3 = ((Entity)player).Distance(spawnPos2) / speed3 + 30f;
-                                                if (Main.netMode != 1)
+                                                Vector2 vel2 = speed3 * ((Entity)Player).DirectionFrom(spawnPos2);
+                                                float ai3 = ((Entity)Player).Distance(spawnPos2) / speed3 + 30f;
+                                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                                 {
                                                     ((CosmosInvaderTime)(object)Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromThis((string)null), spawnPos2, vel2, ModContent.ProjectileType<CosmosInvaderTime>(), damage2, 0f, Main.myPlayer, ai3, Utils.ToRotation(vel2)).ModProjectile).SpeedUP = true;
                                                 }
@@ -980,14 +979,14 @@ namespace YharimEX.Content.NPCs
                                         {
                                             float ai4 = baseDistance;
                                             float distance = ai4 + NewAI[3] * offset3;
-                                            Vector2 center5 = ((Entity)player).Center;
+                                            Vector2 center5 = ((Entity)Player).Center;
                                             Vector2 unitX3 = Vector2.UnitX;
                                             double num16 = Math.PI * 2.0 / (double)max2 * (double)num15 + (double)rotationOffset;
                                             val = default(Vector2);
                                             Vector2 spawnPos3 = center5 + distance * Utils.RotatedBy(unitX3, num16, val);
-                                            Vector2 vel3 = speed3 * ((Entity)player).DirectionFrom(spawnPos3);
+                                            Vector2 vel3 = speed3 * ((Entity)Player).DirectionFrom(spawnPos3);
                                             ai4 = distance / speed3 + 30f;
-                                            if (Main.netMode != 1)
+                                            if (Main.netMode != NetmodeID.MultiplayerClient)
                                             {
                                                 ((CosmosInvaderTime)(object)Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromThis((string)null), spawnPos3, vel3, ModContent.ProjectileType<CosmosInvaderTime>(), damage2, 0f, Main.myPlayer, ai4, Utils.ToRotation(vel3)).ModProjectile).SpeedUP = true;
                                             }
@@ -1037,13 +1036,13 @@ namespace YharimEX.Content.NPCs
                                 ((Entity)p2).active = false;
                             }
                         }
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int l = 0; l < 10; l++)
                             {
                                 for (int m = 0; m < 3; m++)
                                 {
-                                    Vector2 center = ((Entity)player).Center;
+                                    Vector2 center = ((Entity)Player).Center;
                                     float num2 = Utils.NextFloat(Main.rand, 500f, 700f);
                                     Vector2 unitX = Vector2.UnitX;
                                     double num3 = Main.rand.NextDouble() * 2.0 * Math.PI;
@@ -1053,7 +1052,7 @@ namespace YharimEX.Content.NPCs
                                     double num4 = Main.rand.NextDouble() * Math.PI * 2.0;
                                     val = default(Vector2);
                                     Vector2 vel = Utils.RotatedBy(velocity, num4, val);
-                                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos, vel, ModContent.ProjectileType<ShadowClone>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, (float)(60 + 30 * l));
+                                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos, vel, ModContent.ProjectileType<ShadowClone>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, (float)(60 + 30 * l));
                                 }
                             }
                         }
@@ -1063,7 +1062,7 @@ namespace YharimEX.Content.NPCs
                         ClearNewAI();
                         P1NextAttackOrMasoOptions(HistoryAttack1);
                     }
-                    Movement(((Entity)player).Center + Utils.SafeNormalize(((Entity)NPC).Center - ((Entity)player).Center, Vector2.Zero) * 666f, 1f);
+                    Movement(((Entity)Player).Center + Utils.SafeNormalize(((Entity)NPC).Center - ((Entity)Player).Center, Vector2.Zero) * 666f, 1f);
                     break;
                 case 1919811:
                     {
@@ -1086,7 +1085,7 @@ namespace YharimEX.Content.NPCs
                                 }
                             }
                         }
-                        Vector2 vel6 = ((Entity)player).Center - ((Entity)NPC).Center;
+                        Vector2 vel6 = ((Entity)Player).Center - ((Entity)NPC).Center;
                         NPC.rotation = Utils.ToRotation(vel6);
                         if (vel6.X > 0f)
                         {
@@ -1099,7 +1098,7 @@ namespace YharimEX.Content.NPCs
                             ((Entity)NPC).direction = (NPC.spriteDirection = -1);
                         }
                         vel6.Y -= 250f;
-                        ((Vector2)(ref vel6)).Normalize();
+                        ((Vector2)(vel6)).Normalize();
                         vel6 *= 16f;
                         if (((Entity)NPC).velocity.X < vel6.X)
                         {
@@ -1136,11 +1135,10 @@ namespace YharimEX.Content.NPCs
                         if ((NPC.localAI[0] += 1f) > 100f)
                         {
                             NPC.localAI[0] = 47f;
-                            if (Main.netMode != 1 && NewAI[1] < 90f)
+                            if (Main.netMode != NetmodeID.MultiplayerClient && NewAI[1] < 90f)
                             {
-                                SoundEngine.PlaySound(ref SoundID.Item34, (Vector2?)((Entity)NPC).Center);
-                                Vector2 spawn = default(Vector2);
-                                ((Vector2)(ref spawn))._002Ector(40f, 50f);
+                                SoundEngine.PlaySound(SoundID.Item34, (Vector2?)((Entity)NPC).Center);
+                                Vector2 spawn = new Vector2(40f, 50f);
                                 if (((Entity)NPC).direction < 0)
                                 {
                                     spawn.X *= -1f;
@@ -1153,11 +1151,11 @@ namespace YharimEX.Content.NPCs
                                 val = default(Vector2);
                                 spawn = Utils.RotatedBy(val29, num29, val);
                                 spawn += ((Entity)NPC).Center;
-                                Vector2 val30 = ((Entity)NPC).DirectionTo(((Entity)player).Center);
+                                Vector2 val30 = ((Entity)NPC).DirectionTo(((Entity)Player).Center);
                                 double num30 = (Main.rand.NextDouble() - 0.5) * Math.PI / 10.0;
                                 val = default(Vector2);
                                 Vector2 projVel = Utils.RotatedBy(val30, num30, val);
-                                ((Vector2)(ref projVel)).Normalize();
+                                ((Vector2)(projVel)).Normalize();
                                 projVel *= Utils.NextFloat(Main.rand, 8f, 12f);
                                 int type = 467;
                                 if (Utils.NextBool(Main.rand))
@@ -1171,14 +1169,14 @@ namespace YharimEX.Content.NPCs
                         if ((NPC.localAI[1] -= 1f) < -75f)
                         {
                             NPC.localAI[1] = -50f;
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), new Vector2(((Entity)player).Center.X, Math.Max(600f, ((Entity)player).Center.Y - 2000f)), Vector2.UnitY, ModContent.ProjectileType<WillDeathraySmall>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, ((Entity)player).Center.X, (float)((Entity)NPC).whoAmI);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), new Vector2(((Entity)Player).Center.X, Math.Max(600f, ((Entity)Player).Center.Y - 2000f)), Vector2.UnitY, ModContent.ProjectileType<WillDeathraySmall>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, ((Entity)Player).Center.X, (float)((Entity)NPC).whoAmI);
                             }
                         }
                         if ((NewAI[1] += 1f) == 1f)
                         {
-                            SoundEngine.PlaySound(ref SoundID.ForceRoarPitched, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.ForceRoarPitched, (Vector2?)((Entity)NPC).Center);
                         }
                         else if (NewAI[1] > 200f)
                         {
@@ -1205,12 +1203,12 @@ namespace YharimEX.Content.NPCs
                                 ((Entity)p4).active = false;
                             }
                         }
-                        SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                        NPC.localAI[0] = ((Entity)player).Center.X;
-                        NPC.localAI[1] = ((Entity)player).Center.Y;
-                        if (Main.netMode != 1)
+                        SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                        NPC.localAI[0] = ((Entity)Player).Center.X;
+                        NPC.localAI[1] = ((Entity)Player).Center.Y;
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, (((Entity)player).Center - ((Entity)NPC).Center) / 120f, ModContent.ProjectileType<TimberSquirrel>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, NewAI[3] + 10f, (float)((Entity)NPC).whoAmI);
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, (((Entity)Player).Center - ((Entity)NPC).Center) / 120f, ModContent.ProjectileType<TimberSquirrel>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, NewAI[3] + 10f, (float)((Entity)NPC).whoAmI);
                         }
                     }
                     if (NewAI[1] < 100f)
@@ -1219,8 +1217,8 @@ namespace YharimEX.Content.NPCs
                     }
                     if (NewAI[1] < 100f)
                     {
-                        Vector2 targetPos = ((Entity)player).Center;
-                        targetPos.X += ((((Entity)NPC).Center.X < ((Entity)player).Center.X) ? (-200) : 200);
+                        Vector2 targetPos = ((Entity)Player).Center;
+                        targetPos.X += ((((Entity)NPC).Center.X < ((Entity)Player).Center.X) ? (-200) : 200);
                         targetPos.Y -= 200f;
                         if (((Entity)NPC).Distance(targetPos) > 50f)
                         {
@@ -1241,7 +1239,7 @@ namespace YharimEX.Content.NPCs
                         if (NewAI[1] == 90f)
                         {
                             ((Entity)NPC).velocity = Vector2.Zero;
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.UnitY, ModContent.ProjectileType<GlowLine>(), 0, 0f, Main.myPlayer, 19f, 0f);
                             }
@@ -1256,8 +1254,8 @@ namespace YharimEX.Content.NPCs
                         Vector2 spawnPos4 = default(Vector2);
                         for (int num20 = -1; num20 <= 1; num20 += 2)
                         {
-                            ((Vector2)(ref spawnPos4))._002Ector(((Entity)NPC).Center.X + offset4 * (float)num20, ((Entity)player).Center.Y + 1500f);
-                            if (Main.netMode != 1)
+                            spawnPos4 = new Vector2(NPC.Center.X + offset4 * num20, Player.Center.Y + 1500f);
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos4, -Vector2.UnitY, ModContent.ProjectileType<GlowLine>(), 0, 0f, Main.myPlayer, 19f, 0f);
                             }
@@ -1271,18 +1269,18 @@ namespace YharimEX.Content.NPCs
                         }
                         if (NewAI[1] % 3f == 0f)
                         {
-                            SoundEngine.PlaySound(ref SoundID.Item157, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.Item157, (Vector2?)((Entity)NPC).Center);
                         }
                         Vector2 spawnPos5 = default(Vector2);
                         for (int num21 = 0; num21 < 3; num21++)
                         {
-                            ((Vector2)(ref spawnPos5))._002Ector(NPC.localAI[0], NPC.localAI[1]);
+                            spawnPos5 = new Vector2(NPC.localAI[0], NPC.localAI[1]);
                             spawnPos5.X += (Utils.NextBool(Main.rand, 2) ? Main.rand.Next(-1600, -600) : Main.rand.Next(600, 1600));
                             spawnPos5.Y -= Utils.NextFloat(Main.rand, 600f, 800f);
                             Vector2 speed4 = Utils.NextFloat(Main.rand, 7.5f, 12.5f) * Vector2.UnitY;
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos5, speed4, ModContent.ProjectileType<TimberLaser>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos5, speed4, ModContent.ProjectileType<TimberLaser>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
                             }
                         }
                     }
@@ -1327,8 +1325,8 @@ namespace YharimEX.Content.NPCs
                     if ((NewAI[2] += 1f) > 100f)
                     {
                         NewAI[2] = 60f;
-                        SoundEngine.PlaySound(ref SoundID.Item92, (Vector2?)((Entity)NPC).Center);
-                        if (Main.netMode != 1)
+                        SoundEngine.PlaySound(SoundID.Item92, (Vector2?)((Entity)NPC).Center);
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             for (int i3 = 0; i3 < 15; i3++)
                             {
@@ -1338,16 +1336,16 @@ namespace YharimEX.Content.NPCs
                                 val = default(Vector2);
                                 Vector2 velocity10 = num26 * Utils.RotatedBy(unitX4, num27, val);
                                 float ai6 = num26 / Utils.NextFloat(Main.rand, 60f, 120f);
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, velocity10, ModContent.ProjectileType<SpiritSword>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, ai6);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, velocity10, ModContent.ProjectileType<SpiritSword>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, ai6);
                             }
                             for (int i4 = 0; i4 < 12; i4++)
                             {
-                                Vector2 val27 = ((Entity)NPC).DirectionTo(((Entity)player).Center);
+                                Vector2 val27 = ((Entity)NPC).DirectionTo(((Entity)Player).Center);
                                 double num28 = Math.PI / 6.0 * (double)i4;
                                 val = default(Vector2);
                                 Vector2 vel5 = Utils.RotatedBy(val27, num28, val);
                                 float ai7 = 1.04f;
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel5, ModContent.ProjectileType<SpiritHand>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, ai7, 0f);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel5, ModContent.ProjectileType<SpiritHand>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, ai7, 0f);
                             }
                         }
                     }
@@ -1390,16 +1388,13 @@ namespace YharimEX.Content.NPCs
                     break;
                 case 114518:
                     ((Entity)NPC).direction = (NPC.spriteDirection = Math.Sign(NewAI[2] - ((Entity)NPC).Center.X));
-                    if (NewAI[1] == 0f && Main.netMode != 1)
+                    if (NewAI[1] == 0f && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         float horizontalModifier = Math.Sign(NPC.ai[2] - ((Entity)NPC).Center.X);
                         float verticalModifier2 = Math.Sign(NPC.ai[3] - ((Entity)NPC).Center.Y);
                         float ai5 = horizontalModifier * (float)Math.PI / 60f * verticalModifier2;
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.UnitX * (0f - horizontalModifier), ModContent.ProjectileType<AbomSword>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, ai5, (float)((Entity)NPC).whoAmI);
-                        if (FargoSoulsWorld.MasochistModeReal)
-                        {
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.UnitX * (0f - horizontalModifier), ModContent.ProjectileType<AbomSword>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, ai5, (float)((Entity)NPC).whoAmI);
-                        }
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.UnitX * (0f - horizontalModifier), ModContent.ProjectileType<AbomSword>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, ai5, (float)((Entity)NPC).whoAmI);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.UnitX * (0f - horizontalModifier), ModContent.ProjectileType<AbomSword>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, ai5, (float)((Entity)NPC).whoAmI);
                     }
                     if ((NewAI[1] += 1f) > 60f)
                     {
@@ -1417,26 +1412,26 @@ namespace YharimEX.Content.NPCs
                         {
                             FancyFireballs2((int)NewAI[1]);
                         }
-                        if (NewAI[1] == 0f && NewAI[2] != 2f && Main.netMode != 1)
+                        if (NewAI[1] == 0f && NewAI[2] != 2f && Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             float ai8 = ((NewAI[2] != 1f) ? 1 : (-1));
                             ai8 *= MathHelper.ToRadians(270f) / 120f * -1f * 60f;
-                            int p8 = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowLine>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 3f, ai8);
+                            int p8 = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowLine>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 3f, ai8);
                             if (p8 != 1000)
                             {
                                 Main.projectile[p8].localAI[1] = ((Entity)NPC).whoAmI;
-                                if (Main.netMode == 2)
+                                if (Main.netMode == NetmodeID.Server)
                                 {
-                                    NetMessage.SendData(27, -1, -1, (NetworkText)null, p8, 0f, 0f, 0f, 0, 0, 0);
+                                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, (NetworkText)null, p8, 0f, 0f, 0f, 0, 0, 0);
                                 }
                             }
-                            int p9 = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowLine>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 3f, ai8 + 3.1416f);
+                            int p9 = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowLine>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 3f, ai8 + 3.1416f);
                             if (p9 != 1000)
                             {
                                 Main.projectile[p9].localAI[1] = ((Entity)NPC).whoAmI;
-                                if (Main.netMode == 2)
+                                if (Main.netMode == NetmodeID.Server)
                                 {
-                                    NetMessage.SendData(27, -1, -1, (NetworkText)null, p9, 0f, 0f, 0f, 0, 0, 0);
+                                    NetMessage.SendData(MessageID.SyncProjectile, -1, -1, (NetworkText)null, p9, 0f, 0f, 0f, 0, 0, 0);
                                 }
                             }
                         }
@@ -1446,24 +1441,21 @@ namespace YharimEX.Content.NPCs
                             NPC.netUpdate = true;
                             NPC.ai[0] += 1f;
                             NewAI[1] = 0f;
-                            ((Entity)NPC).velocity = ((Entity)NPC).DirectionTo(((Entity)player).Center) * 3f;
+                            ((Entity)NPC).velocity = ((Entity)NPC).DirectionTo(((Entity)Player).Center) * 3f;
                         }
-                        else if (NewAI[1] == 60f && Main.netMode != 1)
+                        else if (NewAI[1] == 60f && Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             NPC.netUpdate = true;
                             ((Entity)NPC).velocity = Vector2.Zero;
-                            SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
                             float ai9 = ((NewAI[2] != 1f) ? 1 : (-1));
                             ai9 *= MathHelper.ToRadians(270f) / 120f;
-                            Vector2 val31 = ((Entity)NPC).DirectionTo(((Entity)player).Center);
+                            Vector2 val31 = ((Entity)NPC).DirectionTo(((Entity)Player).Center);
                             double num31 = (0f - ai9) * 60f;
                             val = default(Vector2);
                             Vector2 vel7 = Utils.RotatedBy(val31, num31, val);
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel7, ModContent.ProjectileType<AbomSword>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, ai9, (float)((Entity)NPC).whoAmI);
-                            if (FargoSoulsWorld.MasochistModeReal)
-                            {
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -vel7, ModContent.ProjectileType<AbomSword>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, ai9, (float)((Entity)NPC).whoAmI);
-                            }
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel7, ModContent.ProjectileType<AbomSword>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, ai9, (float)((Entity)NPC).whoAmI);
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -vel7, ModContent.ProjectileType<AbomSword>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, ai9, (float)((Entity)NPC).whoAmI);
                         }
                         break;
                     }
@@ -1477,9 +1469,9 @@ namespace YharimEX.Content.NPCs
                     }
                     break;
                 case 114516:
-                    if (AliveCheck(player))
+                    if (AliveCheck(Player))
                     {
-                        Vector2 targetPos5 = ((Entity)player).Center + ((Entity)player).DirectionTo(((Entity)NPC).Center) * 500f;
+                        Vector2 targetPos5 = ((Entity)Player).Center + ((Entity)Player).DirectionTo(((Entity)NPC).Center) * 500f;
                         if (((Entity)NPC).Distance(targetPos5) > 50f)
                         {
                             Movement(targetPos5, 0.7f);
@@ -1498,30 +1490,30 @@ namespace YharimEX.Content.NPCs
                     break;
                 case 114517:
                     {
-                        if (NewAI[1] < 90f && !AliveCheck(player))
+                        if (NewAI[1] < 90f && !AliveCheck(Player))
                         {
                             break;
                         }
                         if (NewAI[2] == 0f && NewAI[3] == 0f)
                         {
                             NPC.netUpdate = true;
-                            NewAI[2] = ((Entity)player).Center.X;
-                            NewAI[3] = ((Entity)player).Center.Y;
-                            if (FargoSoulsUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<AbomRitual>()) != null)
+                            NewAI[2] = ((Entity)Player).Center.X;
+                            NewAI[3] = ((Entity)Player).Center.Y;
+                            if (YharimEXUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<AbomRitual>()) != null)
                             {
                                 NewAI[2] = ((Entity)Main.projectile[ritualProj]).Center.X;
                                 NewAI[3] = ((Entity)Main.projectile[ritualProj]).Center.Y;
                             }
                             Vector2 offset = default(Vector2);
-                            offset.X = Math.Sign(((Entity)player).Center.X - NewAI[2]);
-                            offset.Y = Math.Sign(((Entity)player).Center.Y - NewAI[3]);
+                            offset.X = Math.Sign(((Entity)Player).Center.X - NewAI[2]);
+                            offset.Y = Math.Sign(((Entity)Player).Center.Y - NewAI[3]);
                             NPC.localAI[2] = Utils.ToRotation(offset);
                         }
                         Vector2 actualTargetPositionOffset = (float)Math.Sqrt(2880000.0) * Utils.ToRotationVector2(NPC.localAI[2]);
                         actualTargetPositionOffset.Y -= 450 * Math.Sign(actualTargetPositionOffset.Y);
                         Vector2 targetPos = new Vector2(NewAI[2], NewAI[3]) + actualTargetPositionOffset;
                         Movement(targetPos, 1f);
-                        if (NewAI[1] == 0f && Main.netMode != 1)
+                        if (NewAI[1] == 0f && Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             float num = Math.Sign(NPC.ai[2] - targetPos.X);
                             float verticalModifier = Math.Sign(NPC.ai[3] - targetPos.Y);
@@ -1683,23 +1675,23 @@ namespace YharimEX.Content.NPCs
                         float length = MathHelper.Lerp(2500f, 1000f, NPC.localAI[3] / 100f);
                         for (int j = 0; j < 50; j++)
                         {
-                            Dust.NewDustDirect(((Entity)NPC).Center + Utils.NextVector2CircularEdge(Main.rand, length, length), 0, 0, 242, 0f, 0f, 0, default(Color), 1.5f).noGravity = true;
+                            Dust.NewDustDirect(((Entity)NPC).Center + Utils.NextVector2CircularEdge(Main.rand, length, length), 0, 0, DustID.PinkTorch, 0f, 0f, 0, default(Color), 1.5f).noGravity = true;
                         }
-                        if (((Entity)NPC).Distance(((Entity)player).Center) > length)
+                        if (((Entity)NPC).Distance(((Entity)Player).Center) > length)
                         {
-                            Player obj = player;
+                            Player obj = Player;
                             ((Entity)obj).velocity = ((Entity)obj).velocity * 0f;
-                            Player obj2 = player;
-                            ((Entity)obj2).Center = ((Entity)obj2).Center + Utils.SafeNormalize(((Entity)NPC).Center - ((Entity)player).Center, Vector2.Zero) * 5f;
+                            Player obj2 = Player;
+                            ((Entity)obj2).Center = ((Entity)obj2).Center + Utils.SafeNormalize(((Entity)NPC).Center - ((Entity)Player).Center, Vector2.Zero) * 5f;
                         }
                         if (NewAI[3] == 0f)
                         {
-                            NewAI[3] = ((!(((Entity)NPC).Center.X < ((Entity)player).Center.X)) ? 1 : (-1));
+                            NewAI[3] = ((!(((Entity)NPC).Center.X < ((Entity)Player).Center.X)) ? 1 : (-1));
                         }
                         if ((NewAI[2] += 1f) > (float)((NPC.localAI[2] == 1f) ? 40 : 60))
                         {
                             NewAI[2] = 0f;
-                            SoundEngine.PlaySound(ref SoundID.Item92, (Vector2?)((Entity)NPC).Center);
+                            SoundEngine.PlaySound(SoundID.Item92, (Vector2?)((Entity)NPC).Center);
                             if (NPC.localAI[0] > 0f)
                             {
                                 NPC.localAI[0] = -1f;
@@ -1708,7 +1700,7 @@ namespace YharimEX.Content.NPCs
                             {
                                 NPC.localAI[0] = 1f;
                             }
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 Vector2 projTarget = ((Entity)NPC).Center;
                                 projTarget.X += 1200f * NewAI[3];
@@ -1722,7 +1714,7 @@ namespace YharimEX.Content.NPCs
                                     Vector2 speed = (projTarget - ((Entity)NPC).Center) / 40f;
                                     float ai0 = (float)((NPC.localAI[2] == 1f) ? 8 : 6) * (0f - NewAI[3]);
                                     float ai1 = 6f * (0f - NPC.localAI[0]);
-                                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, speed, ModContent.ProjectileType<ChampionBeetle>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, ai0, ai1);
+                                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, speed, ModContent.ProjectileType<ChampionBeetle>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, ai0, ai1);
                                 }
                             }
                         }
@@ -1764,7 +1756,7 @@ namespace YharimEX.Content.NPCs
                     NPC.ai[0] = 11f;
                     goto case 11;
             }
-            if (FargoSoulsWorld.EternityMode && (NPC.ai[0] < 0f || NPC.ai[0] > 10f || (NPC.ai[0] == 10f && NPC.ai[1] > 150f)))
+            if ((NPC.ai[0] < 0f || NPC.ai[0] > 10f || (NPC.ai[0] == 10f && NPC.ai[1] > 150f)))
             {
                 Main.dayTime = false;
                 Main.time = 16200.0;
@@ -1775,7 +1767,7 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[0] < 0f && NPC.life > 1 && drainLifeInP3)
             {
-                int time = (FargoSoulsWorld.MasochistModeReal ? 4350 : 2580);
+                int time = 4350;
                 NPC nPC23 = NPC;
                 nPC23.life -= NPC.lifeMax / time;
                 if (NPC.life < 1)
@@ -1783,15 +1775,15 @@ namespace YharimEX.Content.NPCs
                     NPC.life = 1;
                 }
             }
-            if (player.immune || player.hurtCooldowns[0] != 0 || player.hurtCooldowns[1] != 0)
+            if (Player.immune || Player.hurtCooldowns[0] != 0 || Player.hurtCooldowns[1] != 0)
             {
                 playerInvulTriggered = true;
             }
-            if (FargoSoulsWorld.EternityMode && FargoSoulsWorld.downedAbom && !FargoSoulsWorld.downedMutant && Main.netMode != 1 && NPC.HasPlayerTarget && !droppedSummon)
-            {
-                Item.NewItem(((Entity)NPC).GetSource_Loot((string)null), ((Entity)player).Hitbox, ModContent.ItemType<MutantsCurse>(), 1, false, 0, false, false);
-                droppedSummon = true;
-            }
+            //if (FargoSoulsWorld.EternityMode && FargoSoulsWorld.downedAbom && !FargoSoulsWorld.downedMutant && Main.netMode != 1 && NPC.HasPlayerTarget && !droppedSummon)
+            //{
+            //    Item.NewItem(((Entity)NPC).GetSource_Loot((string)null), ((Entity)Player).Hitbox, ModContent.ItemType<MutantsCurse>(), 1, false, 0, false, false);
+            //    droppedSummon = true;
+            //}
             void FancyFireballs(int repeats)
             {
                 float modifier5 = 0f;
@@ -1803,7 +1795,7 @@ namespace YharimEX.Content.NPCs
                 float rotation = (float)Math.PI * 2f * modifier5;
                 for (int num33 = 0; num33 < 4; num33++)
                 {
-                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 2f * (float)num33), default(Vector2)), 0, 0, 242, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
+                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 2f * (float)num33), default(Vector2)), 0, 0, DustID.PinkTorch, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
                     Main.dust[d2].noGravity = true;
                     Main.dust[d2].scale = 6f - 4f * modifier5;
                 }
@@ -1819,7 +1811,7 @@ namespace YharimEX.Content.NPCs
                 float rotation = (float)Math.PI * 2f * modifier5;
                 for (int num33 = 0; num33 < 4; num33++)
                 {
-                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 2f * (float)num33), default(Vector2)), 0, 0, 70, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
+                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 2f * (float)num33), default(Vector2)), 0, 0, DustID.PurpleCrystalShard, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
                     Main.dust[d2].noGravity = true;
                     Main.dust[d2].scale = 6f - 4f * modifier5;
                 }
@@ -1835,7 +1827,7 @@ namespace YharimEX.Content.NPCs
                 float rotation = (float)Math.PI * 2f * modifier5;
                 for (int num33 = 0; num33 < 9; num33++)
                 {
-                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI * 2f / 9f * (float)num33), default(Vector2)), 0, 0, 173, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
+                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI * 2f / 9f * (float)num33), default(Vector2)), 0, 0, DustID.ShadowbeamStaff, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
                     Main.dust[d2].noGravity = true;
                     Main.dust[d2].scale = 7f - 4f * modifier5;
                 }
@@ -1851,14 +1843,14 @@ namespace YharimEX.Content.NPCs
                 float rotation = (float)Math.PI * 2f * modifier5;
                 for (int num33 = 0; num33 < 6; num33++)
                 {
-                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 3f * (float)num33), default(Vector2)), 0, 0, 227, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
+                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 3f * (float)num33), default(Vector2)), 0, 0, DustID.MartianHit, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
                     Main.dust[d2].noGravity = true;
                     Main.dust[d2].scale = 6f - 4f * modifier5;
                 }
             }
             void FancyFireballs6(int repeats)
             {
-                Movement(((Entity)player).Center - Utils.SafeNormalize(((Entity)NPC).DirectionTo(((Entity)player).Center), Vector2.Zero) * 560f, 1f);
+                Movement(((Entity)Player).Center - Utils.SafeNormalize(((Entity)NPC).DirectionTo(((Entity)Player).Center), Vector2.Zero) * 560f, 1f);
                 float modifier5 = 0f;
                 for (int num32 = 0; num32 < repeats; num32++)
                 {
@@ -1868,7 +1860,7 @@ namespace YharimEX.Content.NPCs
                 float rotation = (float)Math.PI * 2f * modifier5;
                 for (int num33 = 0; num33 < 10; num33++)
                 {
-                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 5f * (float)num33), default(Vector2)), 0, 0, 63, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
+                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 5f * (float)num33), default(Vector2)), 0, 0, DustID.WhiteTorch, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
                     Main.dust[d2].noGravity = true;
                     Main.dust[d2].scale = 7f - 4f * modifier5;
                 }
@@ -1884,14 +1876,14 @@ namespace YharimEX.Content.NPCs
                 float rotation = (float)Math.PI * 2f * modifier5;
                 for (int num33 = 0; num33 < 7; num33++)
                 {
-                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + 0.8975979f * (float)num33), default(Vector2)), 0, 0, 292, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
+                    int d2 = Dust.NewDust(((Entity)NPC).Center + distance2 * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + 0.8975979f * (float)num33), default(Vector2)), 0, 0, DustID.YellowStarDust, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
                     Main.dust[d2].noGravity = true;
                     Main.dust[d2].scale = 6f - 4f * modifier5;
                 }
             }
             void SpawnAxeHitbox(Vector2 val32)
             {
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), val32, Vector2.Zero, ModContent.ProjectileType<DeviAxe>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 2f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, ((Entity)NPC).Distance(val32));
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), val32, Vector2.Zero, ModContent.ProjectileType<DeviAxe>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 2f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, ((Entity)NPC).Distance(val32));
             }
         }
 
@@ -1912,10 +1904,10 @@ namespace YharimEX.Content.NPCs
                 }
                 NPC.life = NPC.lifeMax;
             }
-            if (FargoSoulsWorld.MasochistModeReal && ((Entity)Main.LocalPlayer).active && !Main.LocalPlayer.dead && !Main.LocalPlayer.ghost)
-            {
-                Main.LocalPlayer.AddBuff(ModContent.BuffType<MutantPresence>(), 2, true, false);
-            }
+            //if (FargoSoulsWorld.MasochistModeReal && ((Entity)Main.LocalPlayer).active && !Main.LocalPlayer.dead && !Main.LocalPlayer.ghost)
+            //{
+            //    Main.LocalPlayer.AddBuff(ModContent.BuffType<MutantPresence>(), 2, true, false);
+            //}
             if (NPC.localAI[3] == 0f)
             {
                 NPC.TargetClosest(true);
@@ -1926,8 +1918,8 @@ namespace YharimEX.Content.NPCs
                 if (((Entity)NPC).Distance(((Entity)Main.player[NPC.target]).Center) < 1500f)
                 {
                     NPC.localAI[3] = 1f;
-                    SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                    if (Main.netMode != 1 && FargoSoulsWorld.AngryMutant && FargoSoulsWorld.MasochistModeReal)
+                    SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                    if (Main.netMode != NetmodeID.MultiplayerClient && FargoSoulsWorld.AngryMutant && FargoSoulsWorld.MasochistModeReal)
                     {
                         Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<BossRush>(), 0, 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
                     }
@@ -1946,7 +1938,7 @@ namespace YharimEX.Content.NPCs
                 }
                 if (Main.expertMode)
                 {
-                    Main.LocalPlayer.AddBuff(ModContent.BuffType<MutantPresence>(), 2, true, false);
+                    //Main.LocalPlayer.AddBuff(ModContent.BuffType<MutantPresence>(), 2, true, false);
                 }
                 if (FargoSoulsWorld.EternityMode && NPC.ai[0] < 0f && NPC.ai[0] > -6f)
                 {
@@ -1960,23 +1952,23 @@ namespace YharimEX.Content.NPCs
         }
         private void ManageNeededProjectiles()
         {
-            if (Main.netMode == 1)
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 return;
             }
-            if (FargoSoulsWorld.EternityMode && NPC.ai[0] != -7f && (NPC.ai[0] < 0f || (NPC.ai[0] > 10f && NPC.ai[0] < 100f)) && FargoSoulsUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null)
+            if (FargoSoulsWorld.EternityMode && NPC.ai[0] != -7f && (NPC.ai[0] < 0f || (NPC.ai[0] > 10f && NPC.ai[0] < 100f)) && YharimEXUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null)
             {
-                ritualProj = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
+                ritualProj = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
             }
-            if (FargoSoulsUtil.ProjectileExists(ringProj, ModContent.ProjectileType<MutantRitual5>()) == null)
+            if (YharimEXUtil.ProjectileExists(ringProj, ModContent.ProjectileType<MutantRitual5>()) == null)
             {
                 ringProj = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual5>(), 0, 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
             }
-            if (FargoSoulsUtil.ProjectileExists(spriteProj, ModContent.ProjectileType<global::FargowiltasSouls.Projectiles.MutantBoss.MutantBoss>()) != null)
+            if (YharimEXUtil.ProjectileExists(spriteProj, ModContent.ProjectileType<global::FargowiltasSouls.Projectiles.MutantBoss.MutantBoss>()) != null)
             {
                 return;
             }
-            if (Main.netMode == 0)
+            if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 int number = 0;
                 for (int index = 999; index >= 0; index--)
@@ -2074,7 +2066,7 @@ namespace YharimEX.Content.NPCs
             if (FargoSoulsWorld.EternityMode)
             {
                 bool useRandomizer = true;
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Queue<float> recentAttacks = new Queue<float>(attackHistory);
                     if (useRandomizer)
@@ -2101,7 +2093,7 @@ namespace YharimEX.Content.NPCs
                     }
                 }
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int maxMemory = (FargoSoulsWorld.MasochistModeReal ? 10 : 16);
                 if ((double)attackCount++ > (double)maxMemory * 1.25)
@@ -2221,7 +2213,7 @@ namespace YharimEX.Content.NPCs
 
         private void SpawnSphereRing(int max, float speed, int damage, float rotationModifier, float offset = 0f)
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 float rotation = (float)Math.PI * 2f / (float)max;
                 int type = ModContent.ProjectileType<MutantSphereRing>();
@@ -2230,7 +2222,7 @@ namespace YharimEX.Content.NPCs
                     Vector2 vel = speed * Utils.RotatedBy(Vector2.UnitY, (double)(rotation * (float)i + offset), default(Vector2));
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, type, damage, 0f, Main.myPlayer, rotationModifier * (float)NPC.spriteDirection, speed);
                 }
-                SoundEngine.PlaySound(ref SoundID.Item84, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Item84, (Vector2?)((Entity)NPC).Center);
             }
         }
 
@@ -2254,16 +2246,16 @@ namespace YharimEX.Content.NPCs
                             ((Entity)NPC).position.Y = 0f;
                         }
                         ModNPC modNPC = default(ModNPC);
-                        if (Main.netMode != 1 && ModContent.TryFind<ModNPC>("Fargowiltas", "Mutant", ref modNPC) && !NPC.AnyNPCs(modNPC.Type))
+                        if (Main.netMode != NetmodeID.MultiplayerClient && ModContent.TryFind<ModNPC>("YharimEX", "Yharim", out modNPC) && !NPC.AnyNPCs(modNPC.Type)) //this looks for the NPC, which will be added in soon.
                         {
-                            FargoSoulsUtil.ClearHostileProjectiles(2, ((Entity)NPC).whoAmI);
+                            YharimEXUtil.ClearHostileProjectiles(2, ((Entity)NPC).whoAmI);
                             int n = NPC.NewNPC(((Entity)NPC).GetSource_FromAI((string)null), (int)((Entity)NPC).Center.X, (int)((Entity)NPC).Center.Y, modNPC.Type, 0, 0f, 0f, 0f, 0f, 255);
                             if (n != 200)
                             {
                                 Main.npc[n].homeless = true;
-                                if (Main.netMode == 2)
+                                if (Main.netMode == NetmodeID.Server)
                                 {
-                                    NetMessage.SendData(23, -1, -1, (NetworkText)null, n, 0f, 0f, 0f, 0, 0, 0);
+                                    NetMessage.SendData(MessageID.SyncNPC, -1, -1, (NetworkText)null, n, 0f, 0f, 0f, 0, 0, 0);
                                 }
                             }
                         }
@@ -2279,7 +2271,7 @@ namespace YharimEX.Content.NPCs
             {
                 return true;
             }
-            if ((double)(((Entity)player).Center.Y / 16f) > Main.worldSurface)
+            if ((double)(((Entity)Player).Center.Y / 16f) > Main.worldSurface)
             {
                 ((Entity)NPC).velocity.X *= 0.95f;
                 ((Entity)NPC).velocity.Y -= 1f;
@@ -2296,14 +2288,14 @@ namespace YharimEX.Content.NPCs
         {
             if (Main.expertMode && NPC.life < NPC.lifeMax / 2)
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     NPC.ai[0] = 10f;
                     NPC.ai[1] = 0f;
                     NPC.ai[2] = 0f;
                     NPC.ai[3] = 0f;
                     NPC.netUpdate = true;
-                    FargoSoulsUtil.ClearHostileProjectiles(1, ((Entity)NPC).whoAmI);
+                    YharimEXUtil.ClearHostileProjectiles(1, ((Entity)NPC).whoAmI);
                 }
                 return true;
             }
@@ -2314,12 +2306,9 @@ namespace YharimEX.Content.NPCs
         {
             float turnaroundModifier = 1f;
             float maxSpeed = 24f;
-            if (FargoSoulsWorld.MasochistModeReal)
-            {
-                speed *= 2f;
-                turnaroundModifier *= 2f;
-                maxSpeed *= 1.5f;
-            }
+            speed *= 2f;
+            turnaroundModifier *= 2f;
+            maxSpeed *= 1.5f;
             if (Math.Abs(((Entity)NPC).Center.X - target.X) > 10f)
             {
                 if (((Entity)NPC).Center.X < target.X)
@@ -2377,9 +2366,9 @@ namespace YharimEX.Content.NPCs
                 Main.player[NPC.target].ClearBuff(ModContent.BuffType<AbomRebirth>());
             }
             SoundStyle item = SoundID.Item27;
-            ((SoundStyle)(ref item)).Volume = 1.5f;
-            SoundEngine.PlaySound(ref item, (Vector2?)((Entity)NPC).Center);
-            if (normalAnimation && Main.netMode != 1)
+            item.Volume = 1.5f;
+            SoundEngine.PlaySound(item, (Vector2?)((Entity)NPC).Center);
+            if (normalAnimation && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantBomb>(), 0, 0f, Main.myPlayer, 0f, 0f);
             }
@@ -2389,8 +2378,8 @@ namespace YharimEX.Content.NPCs
                 int heal = (int)(Utils.NextFloat(Main.rand, 0.9f, 1.1f) * totalAmountToHeal / 40f);
                 Vector2 vel = (normalAnimation ? (Utils.NextFloat(Main.rand, 2f, 18f) * -Utils.RotatedByRandom(Vector2.UnitY, 6.2831854820251465)) : (0.1f * -Utils.RotatedBy(Vector2.UnitY, (double)((float)Math.PI / 20f * (float)i), default(Vector2))));
                 float ai0 = (fightIsOver ? (-((Entity)Main.player[NPC.target]).whoAmI - 1) : ((Entity)NPC).whoAmI);
-                float ai1 = ((Vector2)(ref vel)).Length() / (float)Main.rand.Next(fightIsOver ? 90 : 150, 180);
-                if (Main.netMode != 1)
+                float ai1 = ((Vector2)(vel)).Length() / (float)Main.rand.Next(fightIsOver ? 90 : 150, 180);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantHeal>(), heal, 0f, Main.myPlayer, ai0, ai1);
                 }
@@ -2404,7 +2393,7 @@ namespace YharimEX.Content.NPCs
                 return;
             }
             GameModeData gameModeInfo = Main.GameModeInfo;
-            if (((GameModeData)(ref gameModeInfo)).IsJourneyMode && ((ASharedTogglePower)CreativePowerManager.Instance.GetPower<FreezeTime>()).Enabled)
+            if (((GameModeData)(gameModeInfo)).IsJourneyMode && ((ASharedTogglePower)CreativePowerManager.Instance.GetPower<FreezeTime>()).Enabled)
             {
                 ((ASharedTogglePower)CreativePowerManager.Instance.GetPower<FreezeTime>()).SetPowerInfo(false);
             }
@@ -2413,7 +2402,7 @@ namespace YharimEX.Content.NPCs
                 ((EffectManager<CustomSky>)(object)SkyManager.Instance).Activate("FargowiltasSouls:MutantBoss", default(Vector2), Array.Empty<object>());
             }
             Mod musicMod = default(Mod);
-            if (ModLoader.TryGetMod("FargowiltasMusic", ref musicMod))
+            if (ModLoader.TryGetMod("FargowiltasMusic", out musicMod))
             {
                 if (FargoSoulsWorld.MasochistModeReal && musicMod.Version >= Version.Parse("0.1.1"))
                 {
@@ -2424,16 +2413,12 @@ namespace YharimEX.Content.NPCs
                     Music = MusicLoader.GetMusicSlot(musicMod, "Assets/Music/rePrologue");
                 }
             }
-            else
-            {
-                Music = MusicLoader.GetMusicSlot(((ModType)this).Mod, "Sounds/Music/Phase2");
-            }
         }
 
         private void TryMasoP3Theme()
         {
             Mod musicMod = default(Mod);
-            if (FargoSoulsWorld.MasochistModeReal && ModLoader.TryGetMod("FargowiltasMusic", ref musicMod) && musicMod.Version >= Version.Parse("0.1.1.3"))
+            if (FargoSoulsWorld.MasochistModeReal && ModLoader.TryGetMod("FargowiltasMusic", out musicMod) && musicMod.Version >= Version.Parse("0.1.1.3"))
             {
                 Music = MusicLoader.GetMusicSlot(musicMod, "Assets/Music/StoriaShort");
             }
@@ -2450,7 +2435,7 @@ namespace YharimEX.Content.NPCs
             float rotation = (float)Math.PI * 2f * modifier;
             for (int j = 0; j < 6; j++)
             {
-                int d = Dust.NewDust(((Entity)NPC).Center + distance * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 3f * (float)j), default(Vector2)), 0, 0, 259, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
+                int d = Dust.NewDust(((Entity)NPC).Center + distance * Utils.RotatedBy(Vector2.UnitX, (double)(rotation + (float)Math.PI / 3f * (float)j), default(Vector2)), 0, 0, DustID.SolarFlare, ((Entity)NPC).velocity.X * 0.3f, ((Entity)NPC).velocity.Y * 0.3f, 0, Color.White, 1f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].scale = 6f - 4f * modifier;
             }
@@ -2458,12 +2443,12 @@ namespace YharimEX.Content.NPCs
 
         private void SpearTossDirectP1AndChecks()
         {
-            if (!AliveCheck(player) || Phase2Check())
+            if (!AliveCheck(Player) || Phase2Check())
             {
                 return;
             }
             NPC.localAI[2] = 0f;
-            Vector2 targetPos = ((Entity)player).Center;
+            Vector2 targetPos = ((Entity)Player).Center;
             targetPos.X += 500 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
             if (((Entity)NPC).Distance(targetPos) > 50f)
             {
@@ -2480,7 +2465,7 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[1] < 145f)
             {
-                NPC.localAI[0] = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)player).Center + ((Entity)player).velocity * 30f));
+                NPC.localAI[0] = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)Player).Center + ((Entity)Player).velocity * 30f));
             }
             if (NPC.ai[1] > 150f)
             {
@@ -2489,69 +2474,51 @@ namespace YharimEX.Content.NPCs
                 if ((NPC.ai[2] += 1f) > NPC.ai[3])
                 {
                     P1NextAttackOrMasoOptions(NPC.ai[0]);
-                    ((Entity)NPC).velocity = ((Entity)NPC).DirectionTo(((Entity)player).Center) * 2f;
+                    ((Entity)NPC).velocity = ((Entity)NPC).DirectionTo(((Entity)Player).Center) * 2f;
                 }
-                else if (Main.netMode != 1)
+                else if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 vel = Utils.ToRotationVector2(NPC.localAI[0]) * 25f;
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, 0f);
                     if (FargoSoulsWorld.MasochistModeReal)
                     {
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                     }
                 }
                 NPC.localAI[0] = 0f;
             }
             else
             {
-                if (NPC.ai[1] != 61f || !(NPC.ai[2] < NPC.ai[3]) || Main.netMode == 1)
+                if (NPC.ai[1] != 61f || !(NPC.ai[2] < NPC.ai[3]) || Main.netMode == NetmodeID.MultiplayerClient)
                 {
-                    return;
-                }
-                if (FargoSoulsWorld.EternityMode && FargoSoulsWorld.skipMutantP1 >= 10 && !FargoSoulsWorld.MasochistModeReal)
-                {
-                    NPC.ai[0] = 10f;
-                    NPC.ai[1] = 0f;
-                    NPC.ai[2] = 0f;
-                    NPC.ai[3] = 0f;
-                    NPC.localAI[0] = 0f;
-                    NPC.netUpdate = true;
-                    if (FargoSoulsWorld.skipMutantP1 == 10)
-                    {
-                        FargoSoulsUtil.PrintLocalization("Mods." + ((ModType)this).Mod.Name + ".Message.MutantSkipP1", Color.LimeGreen);
-                    }
-                    if (FargoSoulsWorld.skipMutantP1 >= 10)
-                    {
-                        NPC.ai[2] = 1f;
-                    }
                     return;
                 }
                 if (FargoSoulsWorld.MasochistModeReal && NPC.ai[2] == 0f)
                 {
-                    SoundEngine.PlaySound(ref SoundID.NPCDeath13, (Vector2?)((Entity)NPC).Center);
-                    if (Main.netMode != 1)
+                    SoundEngine.PlaySound(SoundID.NPCDeath13, (Vector2?)((Entity)NPC).Center);
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         for (int j = 0; j < 8; j++)
                         {
-                            Vector2 vel2 = Utils.RotatedByRandom(((Entity)NPC).DirectionFrom(((Entity)player).Center), (double)MathHelper.ToRadians(120f)) * 10f;
+                            Vector2 vel2 = Utils.RotatedByRandom(((Entity)NPC).DirectionFrom(((Entity)Player).Center), (double)MathHelper.ToRadians(120f)) * 10f;
                             float ai1 = 0.8f + 0.4f * (float)j / 5f;
-                            int current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel2, ModContent.ProjectileType<MutantDestroyerHead>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, ai1);
+                            int current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel2, ModContent.ProjectileType<MutantDestroyerHead>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, ai1);
                             Main.projectile[current].timeLeft = 90 * ((int)NPC.ai[3] + 1) + 30 + j * 6;
                             int max = Main.rand.Next(8, 19);
                             for (int i = 0; i < max; i++)
                             {
-                                current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel2, ModContent.ProjectileType<MutantDestroyerBody>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[current].identity, 0f);
+                                current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel2, ModContent.ProjectileType<MutantDestroyerBody>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[current].identity, 0f);
                             }
                             int previous = current;
-                            current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel2, ModContent.ProjectileType<MutantDestroyerTail>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[current].identity, 0f);
+                            current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel2, ModContent.ProjectileType<MutantDestroyerTail>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[current].identity, 0f);
                             Main.projectile[previous].localAI[1] = Main.projectile[current].identity;
                             Main.projectile[previous].netUpdate = true;
                         }
                     }
                 }
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, ((Entity)NPC).DirectionTo(((Entity)player).Center + ((Entity)player).velocity * 30f), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 85f, (float)((Entity)NPC).whoAmI);
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 3f);
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, ((Entity)NPC).DirectionTo(((Entity)Player).Center + ((Entity)Player).velocity * 30f), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 85f, (float)((Entity)NPC).whoAmI);
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 3f);
             }
         }
 
@@ -2578,24 +2545,24 @@ namespace YharimEX.Content.NPCs
                 int max = (FargoSoulsWorld.MasochistModeReal ? 9 : 6);
                 float speed = (FargoSoulsWorld.MasochistModeReal ? 12 : 9);
                 int sign = ((!FargoSoulsWorld.MasochistModeReal) ? 1 : ((NPC.ai[2] % 2f == 0f) ? 1 : (-1)));
-                SpawnSphereRing(max, speed, (int)(0.8 * (double)FargoSoulsUtil.ScaledProjectileDamage(NPC.damage)), 1f * (float)sign);
-                SpawnSphereRing(max, speed, (int)(0.8 * (double)FargoSoulsUtil.ScaledProjectileDamage(NPC.damage)), -0.5f * (float)sign);
+                SpawnSphereRing(max, speed, (int)(0.8 * (double)YharimEXUtil.ScaledProjectileDamage(NPC.damage)), 1f * (float)sign);
+                SpawnSphereRing(max, speed, (int)(0.8 * (double)YharimEXUtil.ScaledProjectileDamage(NPC.damage)), -0.5f * (float)sign);
             }
         }
 
         private void PrepareTrueEyeDiveP1()
         {
-            if (!AliveCheck(player) || Phase2Check())
+            if (!AliveCheck(Player) || Phase2Check())
             {
                 return;
             }
-            Vector2 targetPos = ((Entity)player).Center;
+            Vector2 targetPos = ((Entity)Player).Center;
             targetPos.X += 700 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
             targetPos.Y -= 400f;
             Movement(targetPos, 0.6f);
             if (((Entity)NPC).Distance(targetPos) < 50f || (NPC.ai[1] += 1f) > 180f)
             {
-                ((Entity)NPC).velocity.X = 35f * (float)((((Entity)NPC).position.X < ((Entity)player).position.X) ? 1 : (-1));
+                ((Entity)NPC).velocity.X = 35f * (float)((((Entity)NPC).position.X < ((Entity)Player).position.X) ? 1 : (-1));
                 if (((Entity)NPC).velocity.Y < 0f)
                 {
                     ((Entity)NPC).velocity.Y *= -1f;
@@ -2604,7 +2571,7 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[0] += 1f;
                 NPC.ai[1] = 0f;
                 NPC.netUpdate = true;
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
             }
         }
 
@@ -2612,12 +2579,12 @@ namespace YharimEX.Content.NPCs
         {
             if (NPC.ai[3] == 0f)
             {
-                NPC.ai[3] = Math.Sign(((Entity)NPC).Center.X - ((Entity)player).Center.X);
+                NPC.ai[3] = Math.Sign(((Entity)NPC).Center.X - ((Entity)Player).Center.X);
             }
             if (NPC.ai[2] > 3f)
             {
-                Vector2 targetPos = ((Entity)player).Center;
-                targetPos.X += ((((Entity)NPC).Center.X < ((Entity)player).Center.X) ? (-500) : 500);
+                Vector2 targetPos = ((Entity)Player).Center;
+                targetPos.X += ((((Entity)NPC).Center.X < ((Entity)Player).Center.X) ? (-500) : 500);
                 if (((Entity)NPC).Distance(targetPos) > 50f)
                 {
                     Movement(targetPos, 0.3f);
@@ -2633,8 +2600,8 @@ namespace YharimEX.Content.NPCs
                 return;
             }
             NPC.ai[1] = 15f;
-            int maxEyeThreshold = (FargoSoulsWorld.MasochistModeReal ? 6 : 3);
-            int endlag = (FargoSoulsWorld.MasochistModeReal ? 3 : 5);
+            int maxEyeThreshold = 6;
+            int endlag = 3;
             if ((NPC.ai[2] += 1f) > (float)(maxEyeThreshold + endlag))
             {
                 if (NPC.ai[0] == 3f)
@@ -2650,21 +2617,21 @@ namespace YharimEX.Content.NPCs
                 {
                     return;
                 }
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     float ratio = NPC.ai[2] / (float)maxEyeThreshold * 3f;
                     int type = ((ratio <= 1f) ? ModContent.ProjectileType<MutantTrueEyeL>() : ((!(ratio <= 2f)) ? ModContent.ProjectileType<MutantTrueEyeR>() : ModContent.ProjectileType<MutantTrueEyeS>()));
-                    int p = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, type, FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, (float)NPC.target, 0f);
+                    int p = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, type, YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, (float)NPC.target, 0f);
                     if (p != 1000)
                     {
                         Main.projectile[p].localAI[1] = NPC.ai[3];
                         Main.projectile[p].netUpdate = true;
                     }
                 }
-                SoundEngine.PlaySound(ref SoundID.Item92, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Item92, (Vector2?)((Entity)NPC).Center);
                 for (int i = 0; i < 30; i++)
                 {
-                    int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 135, 0f, 0f, 0, default(Color), 3f);
+                    int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.IceTorch, 0f, 0f, 0, default(Color), 3f);
                     Main.dust[d].noGravity = true;
                     Main.dust[d].noLight = true;
                     Dust obj = Main.dust[d];
@@ -2681,19 +2648,19 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[3] == 0f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
                 NPC.ai[3] = 1f;
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 240f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 240f);
                 }
             }
             if ((NPC.ai[1] += 1f) > 240f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
@@ -2701,10 +2668,10 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[3] = 0f;
                 NPC.netUpdate = true;
             }
-            Vector2 targetPos = ((Entity)player).Center;
-            if (((Entity)NPC).Top.Y < ((Entity)player).Bottom.Y)
+            Vector2 targetPos = ((Entity)Player).Center;
+            if (((Entity)NPC).Top.Y < ((Entity)Player).Bottom.Y)
             {
-                targetPos.X += 600f * (float)Math.Sign(((Entity)NPC).Center.X - ((Entity)player).Center.X);
+                targetPos.X += 600f * (float)Math.Sign(((Entity)NPC).Center.X - ((Entity)Player).Center.X);
             }
             targetPos.Y += 400f;
             Movement(targetPos, 0.7f, fastX: false);
@@ -2735,14 +2702,14 @@ namespace YharimEX.Content.NPCs
                 return;
             }
             float speed = (FargoSoulsWorld.MasochistModeReal ? 45f : 30f);
-            ((Entity)NPC).velocity = speed * ((Entity)NPC).DirectionTo(((Entity)player).Center + ((Entity)player).velocity);
-            if (Main.netMode != 1)
+            ((Entity)NPC).velocity = speed * ((Entity)NPC).DirectionTo(((Entity)Player).Center + ((Entity)Player).velocity);
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
                 if (FargoSoulsWorld.MasochistModeReal)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                 }
             }
         }
@@ -2750,7 +2717,7 @@ namespace YharimEX.Content.NPCs
         private void WhileDashingP1()
         {
             ((Entity)NPC).direction = (NPC.spriteDirection = Math.Sign(((Entity)NPC).velocity.X));
-            if ((NPC.ai[1] += 1f) > 30f && AliveCheck(player))
+            if ((NPC.ai[1] += 1f) > 30f && AliveCheck(Player))
             {
                 NPC.netUpdate = true;
                 NPC.ai[0] -= 1f;
@@ -2760,11 +2727,11 @@ namespace YharimEX.Content.NPCs
 
         private void ApproachForNextAttackP1()
         {
-            if (!AliveCheck(player) || Phase2Check())
+            if (!AliveCheck(Player) || Phase2Check())
             {
                 return;
             }
-            Vector2 targetPos = ((Entity)player).Center + ((Entity)player).DirectionTo(((Entity)NPC).Center) * 250f;
+            Vector2 targetPos = ((Entity)Player).Center + ((Entity)Player).DirectionTo(((Entity)NPC).Center) * 250f;
             if (((Entity)NPC).Distance(targetPos) > 50f && (NPC.ai[2] += 1f) < 180f)
             {
                 Movement(targetPos, 0.5f);
@@ -2773,9 +2740,9 @@ namespace YharimEX.Content.NPCs
             NPC.netUpdate = true;
             NPC.ai[0] += 1f;
             NPC.ai[1] = 0f;
-            NPC.ai[2] = Utils.ToRotation(((Entity)player).DirectionTo(((Entity)NPC).Center));
+            NPC.ai[2] = Utils.ToRotation(((Entity)Player).DirectionTo(((Entity)NPC).Center));
             NPC.ai[3] = (float)Math.PI / 10f;
-            if (((Entity)player).Center.X < ((Entity)NPC).Center.X)
+            if (((Entity)Player).Center.X < ((Entity)NPC).Center.X)
             {
                 NPC.ai[3] *= -1f;
             }
@@ -2790,9 +2757,9 @@ namespace YharimEX.Content.NPCs
             ((Entity)NPC).velocity = Vector2.Zero;
             if ((NPC.ai[1] -= 1f) < 0f)
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(2f, 0f), (double)NPC.ai[2], default(Vector2)), ModContent.ProjectileType<MutantMark1>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(2f, 0f), (double)NPC.ai[2], default(Vector2)), ModContent.ProjectileType<MutantMark1>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                 }
                 NPC.ai[1] = (FargoSoulsWorld.MasochistModeReal ? 3 : 5);
                 NPC.ai[2] += NPC.ai[3];
@@ -2815,12 +2782,12 @@ namespace YharimEX.Content.NPCs
                 case 0:
                     if (NPC.ai[3] == 0f)
                     {
-                        if (!AliveCheck(player))
+                        if (!AliveCheck(Player))
                         {
                             break;
                         }
                         NPC.ai[3] = 1f;
-                        NPC.localAI[0] = Math.Sign(((Entity)NPC).Center.X - ((Entity)player).Center.X);
+                        NPC.localAI[0] = Math.Sign(((Entity)NPC).Center.X - ((Entity)Player).Center.X);
                     }
                     if (Phase2Check())
                     {
@@ -2829,15 +2796,15 @@ namespace YharimEX.Content.NPCs
                 ((Entity)NPC).velocity = Vector2.Zero;
                     if ((NPC.ai[1] += 1f) > 2f)
                     {
-                        SoundEngine.PlaySound(ref SoundID.Item12, (Vector2?)((Entity)NPC).Center);
+                        SoundEngine.PlaySound(SoundID.Item12, (Vector2?)((Entity)NPC).Center);
                         NPC.ai[1] = 0f;
                         NPC.ai[2] += (FargoSoulsWorld.MasochistModeReal ? (0.0008181231f * (NPC.ai[3] - 300f) * NPC.localAI[0]) : ((float)Math.PI / 77f));
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             int max = (FargoSoulsWorld.MasochistModeReal ? 5 : 4);
                             for (int i = 0; i < max; i++)
                             {
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(0f, -9f), (double)(NPC.ai[2] + (float)Math.PI * 2f / (float)max * (float)i), default(Vector2)), ModContent.ProjectileType<global::FargowiltasSouls.Projectiles.MutantBoss.MutantEye>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(0f, -9f), (double)(NPC.ai[2] + (float)Math.PI * 2f / (float)max * (float)i), default(Vector2)), ModContent.ProjectileType<global::FargowiltasSouls.Projectiles.MutantBoss.MutantEye>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                             }
                         }
                     }
@@ -2864,12 +2831,12 @@ namespace YharimEX.Content.NPCs
             int sign = ((NPC.ai[0] == 9f || NPC.localAI[2] % 2f != 1f) ? 1 : (-1));
             if (NPC.ai[2] == 0f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
-                Vector2 targetPos = ((Entity)player).Center;
-                targetPos.X += 420 * Math.Sign(((Entity)NPC).Center.X - ((Entity)player).Center.X);
+                Vector2 targetPos = ((Entity)Player).Center;
+                targetPos.X += 420 * Math.Sign(((Entity)NPC).Center.X - ((Entity)Player).Center.X);
                 targetPos.Y -= 210 * sign;
                 Movement(targetPos, 2f);
                 if ((!((NPC.localAI[0] += 1f) > 30f) && !FargoSoulsWorld.MasochistModeReal) || !(((Entity)NPC).Distance(targetPos) < 64f))
@@ -2878,15 +2845,15 @@ namespace YharimEX.Content.NPCs
                 }
                 ((Entity)NPC).velocity = Vector2.Zero;
                 NPC.netUpdate = true;
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                NPC.localAI[1] = Math.Sign(((Entity)player).Center.X - ((Entity)NPC).Center.X);
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                NPC.localAI[1] = Math.Sign(((Entity)Player).Center.X - ((Entity)NPC).Center.X);
                 float startAngle = (float)Math.PI / 4f * (0f - NPC.localAI[1]);
                 NPC.ai[2] = startAngle * -4f / 20f * (float)sign;
                 if (sign < 0)
                 {
                     startAngle += (float)Math.PI / 2f * (0f - NPC.localAI[1]);
                 }
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 offset = Utils.RotatedBy(Vector2.UnitY, (double)startAngle, default(Vector2)) * -80f;
                     for (int i = 0; i < 12; i++)
@@ -2919,7 +2886,7 @@ namespace YharimEX.Content.NPCs
                 }
                 makedSword = false;
                 NPC.localAI[2] += 1f;
-                Vector2 targetPos2 = ((Entity)player).Center;
+                Vector2 targetPos2 = ((Entity)Player).Center;
                 targetPos2.X -= 300f * NPC.ai[2];
                 ((Entity)NPC).velocity = (targetPos2 - ((Entity)NPC).Center) / 20f;
                 NPC.ai[1] = 0f;
@@ -2928,7 +2895,7 @@ namespace YharimEX.Content.NPCs
             ((Entity)NPC).direction = (NPC.spriteDirection = Math.Sign(NPC.localAI[1]));
             void MakeSword(Vector2 pos, float spacing, float rotation = 0f)
             {
-                Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + pos, Vector2.Zero, ModContent.ProjectileType<MutantSword>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, spacing);
+                Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + pos, Vector2.Zero, ModContent.ProjectileType<MutantSword>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, spacing);
             }
         }
 
@@ -2951,10 +2918,9 @@ namespace YharimEX.Content.NPCs
                 {
                     if (!Main.dedServ)
                     {
-                        SoundStyle val = default(SoundStyle);
-                        ((SoundStyle)(ref val))._002Ector("FargowiltasSouls/Sounds/Thunder", (SoundType)0);
-                        ((SoundStyle)(ref val)).Pitch = -0.5f;
-                        SoundEngine.PlaySound(ref val, (Vector2?)((Entity)NPC).Center);
+                        SoundStyle val = new SoundStyle("FargowiltasSouls/Sounds/Thunder", SoundType.Sound);
+                        val.Pitch = -0.5f;
+                        SoundEngine.PlaySound(val, (Vector2?)((Entity)NPC).Center);
                     }
                     float num = Math.Sign(NPC.localAI[1]);
                     float arcSign = Math.Sign(NPC.ai[2]);
@@ -2963,16 +2929,16 @@ namespace YharimEX.Content.NPCs
                     val2 = default(Vector2);
                     Vector2 offset = num * Utils.RotatedBy(unitX, num2, val2);
                     Vector2 spawnPos = ((Entity)NPC).Center + 480f * offset;
-                    Vector2 baseDirection = ((Entity)player).DirectionFrom(spawnPos);
+                    Vector2 baseDirection = ((Entity)Player).DirectionFrom(spawnPos);
                     for (int i = 0; i < 8; i++)
                     {
                         double num3 = (float)Math.PI / 4f * (float)i;
                         val2 = default(Vector2);
                         Vector2 angle = Utils.RotatedBy(baseDirection, num3, val2);
                         float ai1 = ((i <= 2 || i == 6) ? 48 : 24);
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromThis((string)null), spawnPos + Utils.NextVector2Circular(Main.rand, (float)(((Entity)NPC).width / 2), (float)(((Entity)NPC).height / 2)), Vector2.Zero, ModContent.ProjectileType<MoonLordMoonBlast>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, MathHelper.WrapAngle(Utils.ToRotation(angle)), ai1).extraUpdates = 1;
+                            Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromThis((string)null), spawnPos + Utils.NextVector2Circular(Main.rand, (float)(((Entity)NPC).width / 2), (float)(((Entity)NPC).height / 2)), Vector2.Zero, ModContent.ProjectileType<MoonLordMoonBlast>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, MathHelper.WrapAngle(Utils.ToRotation(angle)), ai1).extraUpdates = 1;
                         }
                     }
                 }
@@ -2990,17 +2956,17 @@ namespace YharimEX.Content.NPCs
                 if (Utils.NextBool(Main.rand, 2))
                 {
                     makedSword = true;
-                    val2 = ((Entity)player).Center - ((Entity)NPC).Center;
-                    float leng = MathHelper.Clamp(((Vector2)(ref val2)).Length(), 460f, 600f);
+                    val2 = ((Entity)Player).Center - ((Entity)NPC).Center;
+                    float leng = MathHelper.Clamp(((Vector2)(val2)).Length(), 460f, 600f);
                     for (int j = 0; j < 77; j++)
                     {
-                        Dust.NewDust(((Entity)NPC).Center + Utils.NextVector2Circular(Main.rand, 450f, 450f), 0, 0, 259, 0f, 0f, 0, default(Color), 1.2f);
+                        Dust.NewDust(((Entity)NPC).Center + Utils.NextVector2Circular(Main.rand, 450f, 450f), 0, 0, DustID.SolarFlare, 0f, 0f, 0, default(Color), 1.2f);
                     }
-                    swordTarget = ((Entity)player).Center + Utils.SafeNormalize(((Entity)player).Center - ((Entity)NPC).Center, Vector2.Zero) * 2.48f * leng;
-                    ((Entity)NPC).Center = ((Entity)player).Center + Utils.SafeNormalize(((Entity)player).Center - ((Entity)NPC).Center, Vector2.Zero) * leng;
+                    swordTarget = ((Entity)Player).Center + Utils.SafeNormalize(((Entity)Player).Center - ((Entity)NPC).Center, Vector2.Zero) * 2.48f * leng;
+                    ((Entity)NPC).Center = ((Entity)Player).Center + Utils.SafeNormalize(((Entity)Player).Center - ((Entity)NPC).Center, Vector2.Zero) * leng;
                     for (int k = 0; k < 77; k++)
                     {
-                        Dust.NewDust(((Entity)NPC).Center + Utils.NextVector2Circular(Main.rand, 450f, 450f), 0, 0, 173, 0f, 0f, 0, default(Color), 1.2f);
+                        Dust.NewDust(((Entity)NPC).Center + Utils.NextVector2Circular(Main.rand, 450f, 450f), 0, 0, DustID.ShadowbeamStaff, 0f, 0f, 0, default(Color), 1.2f);
                     }
                 }
                 else
@@ -3050,13 +3016,13 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[1] == 0f)
             {
-                FargoSoulsUtil.ClearAllProjectiles(2, ((Entity)NPC).whoAmI);
+                YharimEXUtil.ClearAllProjectiles(2, ((Entity)NPC).whoAmI);
                 if (FargoSoulsWorld.EternityMode)
                 {
                     DramaticTransition(fightIsOver: false, NPC.ai[2] == 0f);
-                    if (Main.netMode != 1)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        ritualProj = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
+                        ritualProj = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
                         if (FargoSoulsWorld.MasochistModeReal)
                         {
                             Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual2>(), 0, 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
@@ -3068,22 +3034,14 @@ namespace YharimEX.Content.NPCs
             }
             else if (NPC.ai[1] == 150f)
             {
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                if (Main.netMode != 1)
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowRingHollow>(), 0, 0f, Main.myPlayer, 5f, 0f);
                 }
-                if (FargoSoulsWorld.EternityMode && FargoSoulsWorld.skipMutantP1 <= 10)
-                {
-                    FargoSoulsWorld.skipMutantP1++;
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendData(7, -1, -1, (NetworkText)null, 0, 0f, 0f, 0f, 0, 0, 0);
-                    }
-                }
                 for (int i = 0; i < 50; i++)
                 {
-                    int d = Dust.NewDust(((Entity)Main.LocalPlayer).position, ((Entity)Main.LocalPlayer).width, ((Entity)Main.LocalPlayer).height, 60, 0f, 0f, 0, default(Color), 2.5f);
+                    int d = Dust.NewDust(((Entity)Main.LocalPlayer).position, ((Entity)Main.LocalPlayer).width, ((Entity)Main.LocalPlayer).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 2.5f);
                     Main.dust[d].noGravity = true;
                     Main.dust[d].noLight = true;
                     Dust obj = Main.dust[d];
@@ -3118,11 +3076,11 @@ namespace YharimEX.Content.NPCs
 
         private void ApproachForNextAttackP2()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
-            Vector2 targetPos = ((Entity)player).Center + ((Entity)player).DirectionTo(((Entity)NPC).Center) * 300f;
+            Vector2 targetPos = ((Entity)Player).Center + ((Entity)Player).DirectionTo(((Entity)NPC).Center) * 300f;
             if (((Entity)NPC).Distance(targetPos) > 50f && (NPC.ai[2] += 1f) < 180f)
             {
                 Movement(targetPos, 0.8f);
@@ -3131,11 +3089,11 @@ namespace YharimEX.Content.NPCs
             NPC.netUpdate = true;
             NPC.ai[0] += 1f;
             NPC.ai[1] = 0f;
-            NPC.ai[2] = Utils.ToRotation(((Entity)player).DirectionTo(((Entity)NPC).Center));
+            NPC.ai[2] = Utils.ToRotation(((Entity)Player).DirectionTo(((Entity)NPC).Center));
             NPC.ai[3] = (float)Math.PI / 10f;
             NPC.localAI[0] = 0f;
-            SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-            if (((Entity)player).Center.X < ((Entity)NPC).Center.X)
+            SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+            if (((Entity)Player).Center.X < ((Entity)NPC).Center.X)
             {
                 NPC.ai[3] *= -1f;
             }
@@ -3148,9 +3106,9 @@ namespace YharimEX.Content.NPCs
             {
                 return;
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(2f, 0f), (double)NPC.ai[2], default(Vector2)), ModContent.ProjectileType<MutantMark1>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(2f, 0f), (double)NPC.ai[2], default(Vector2)), ModContent.ProjectileType<MutantMark1>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
             }
             NPC.ai[1] = 3f;
             NPC.ai[2] += NPC.ai[3];
@@ -3173,19 +3131,19 @@ namespace YharimEX.Content.NPCs
         {
             if (NPC.ai[3] == 0f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
                 NPC.ai[3] = 1f;
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 180f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 180f);
                 }
             }
             if ((NPC.ai[1] += 1f) > 180f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
@@ -3194,12 +3152,12 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[1] = 0f;
                 NPC.ai[3] = 0f;
             }
-            Vector2 targetPos = ((Entity)player).Center;
-            targetPos.Y += 400f * (float)Math.Sign(((Entity)NPC).Center.Y - ((Entity)player).Center.Y);
+            Vector2 targetPos = ((Entity)Player).Center;
+            targetPos.Y += 400f * (float)Math.Sign(((Entity)NPC).Center.Y - ((Entity)Player).Center.Y);
             Movement(targetPos, 0.7f, fastX: false);
-            if (((Entity)NPC).Distance(((Entity)player).Center) < 200f)
+            if (((Entity)NPC).Distance(((Entity)Player).Center) < 200f)
             {
-                Movement(((Entity)NPC).Center + ((Entity)NPC).DirectionFrom(((Entity)player).Center), 1.4f);
+                Movement(((Entity)NPC).Center + ((Entity)NPC).DirectionFrom(((Entity)Player).Center), 1.4f);
             }
         }
 
@@ -3218,15 +3176,15 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[1] == 0f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
                 if (NPC.ai[2] == NPC.localAI[1] - 1f)
                 {
-                    if (((Entity)NPC).Distance(((Entity)player).Center) > 450f)
+                    if (((Entity)NPC).Distance(((Entity)Player).Center) > 450f)
                     {
-                        Movement(((Entity)player).Center, 0.6f);
+                        Movement(((Entity)Player).Center, 0.6f);
                         return;
                     }
                     NPC nPC = NPC;
@@ -3234,16 +3192,16 @@ namespace YharimEX.Content.NPCs
                 }
                 if (NPC.ai[2] < NPC.localAI[1])
                 {
-                    if (Main.netMode != 1)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, ((Entity)NPC).DirectionTo(((Entity)player).Center + ((Entity)player).velocity * 30f), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 55f, (float)((Entity)NPC).whoAmI);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, ((Entity)NPC).DirectionTo(((Entity)Player).Center + ((Entity)Player).velocity * 30f), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 55f, (float)((Entity)NPC).whoAmI);
                     }
                     if (NPC.ai[2] == NPC.localAI[1] - 1f)
                     {
-                        SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                        if (Main.netMode != 1)
+                        SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 4f);
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 4f);
                         }
                     }
                 }
@@ -3252,7 +3210,7 @@ namespace YharimEX.Content.NPCs
             ((Entity)nPC2).velocity = ((Entity)nPC2).velocity * 0.9f;
             if (NPC.ai[1] < 55f)
             {
-                NPC.localAI[0] = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)player).Center + ((Entity)player).velocity * 30f));
+                NPC.localAI[0] = Utils.ToRotation(((Entity)NPC).DirectionTo(((Entity)Player).Center + ((Entity)Player).velocity * 30f));
             }
             int endTime = 60;
             if (NPC.ai[2] == NPC.localAI[1] - 1f)
@@ -3283,11 +3241,11 @@ namespace YharimEX.Content.NPCs
                 {
                     spearAi = -2f;
                 }
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, spearAi);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, spearAi);
                 }
             }
             NPC.localAI[0] = 0f;
@@ -3296,14 +3254,14 @@ namespace YharimEX.Content.NPCs
         private void WhileDashingP2()
         {
             ((Entity)NPC).direction = (NPC.spriteDirection = Math.Sign(((Entity)NPC).velocity.X));
-            if ((NPC.ai[1] += 1f) > 30f && AliveCheck(player))
+            if ((NPC.ai[1] += 1f) > 30f && AliveCheck(Player))
             {
                 NPC.netUpdate = true;
                 NPC.ai[0] -= 1f;
                 NPC.ai[1] = 0f;
-                if (NPC.ai[0] == 14f && NPC.ai[2] == NPC.localAI[1] - 1f && ((Entity)NPC).Distance(((Entity)player).Center) > 450f)
+                if (NPC.ai[0] == 14f && NPC.ai[2] == NPC.localAI[1] - 1f && ((Entity)NPC).Distance(((Entity)Player).Center) > 450f)
                 {
-                    ((Entity)NPC).velocity = ((Entity)NPC).DirectionTo(((Entity)player).Center) * 16f;
+                    ((Entity)NPC).velocity = ((Entity)NPC).DirectionTo(((Entity)Player).Center) * 16f;
                 }
             }
         }
@@ -3313,22 +3271,22 @@ namespace YharimEX.Content.NPCs
             ((Entity)NPC).velocity = Vector2.Zero;
             if (NPC.localAI[0] == 0f)
             {
-                NPC.localAI[0] = Math.Sign(((Entity)NPC).Center.X - ((Entity)player).Center.X);
-                if (Main.netMode != 1)
+                NPC.localAI[0] = Math.Sign(((Entity)NPC).Center.X - ((Entity)Player).Center.X);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowRing>(), 0, 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, -2f);
                 }
             }
             if (NPC.ai[3] > 60f && (NPC.ai[1] += 1f) > 2f)
             {
-                SoundEngine.PlaySound(ref SoundID.Item12, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Item12, (Vector2?)((Entity)NPC).Center);
                 NPC.ai[1] = 0f;
                 NPC.ai[2] += 0.0008181231f * NPC.ai[3] * NPC.localAI[0];
                 if (NPC.ai[2] > (float)Math.PI)
                 {
                     NPC.ai[2] -= (float)Math.PI * 2f;
                 }
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int max = 4;
                     if (FargoSoulsWorld.EternityMode)
@@ -3341,7 +3299,7 @@ namespace YharimEX.Content.NPCs
                     }
                     for (int i = 0; i < max; i++)
                     {
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(0f, -6f), (double)NPC.ai[2] + Math.PI * 2.0 / (double)max * (double)i, default(Vector2)), ModContent.ProjectileType<global::FargowiltasSouls.Projectiles.MutantBoss.MutantEye>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(0f, -6f), (double)NPC.ai[2] + Math.PI * 2.0 / (double)max * (double)i, default(Vector2)), ModContent.ProjectileType<global::FargowiltasSouls.Projectiles.MutantBoss.MutantEye>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                     }
                 }
             }
@@ -3356,15 +3314,15 @@ namespace YharimEX.Content.NPCs
 
         private void PillarDunk()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
             int pillarAttackDelay = 60;
             if (NPC.ai[2] == 0f && NPC.ai[3] == 0f)
             {
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                if (Main.netMode != 1)
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Clone(-1f, 1f, pillarAttackDelay * 4);
                     Clone(1f, -1f, pillarAttackDelay * 2);
@@ -3389,7 +3347,7 @@ namespace YharimEX.Content.NPCs
                 Vector2 offset = 1000f * Utils.RotatedBy(Vector2.UnitX, (double)MathHelper.ToRadians(45f), default(Vector2));
                 if (Utils.NextBool(Main.rand))
                 {
-                    if (((Entity)player).Center.X > NPC.ai[2])
+                    if (((Entity)Player).Center.X > NPC.ai[2])
                     {
                         offset.X *= -1f;
                     }
@@ -3404,7 +3362,7 @@ namespace YharimEX.Content.NPCs
                     {
                         offset.X *= -1f;
                     }
-                    if (((Entity)player).Center.Y > NPC.ai[3])
+                    if (((Entity)Player).Center.Y > NPC.ai[3])
                     {
                         offset.Y *= -1f;
                     }
@@ -3414,8 +3372,8 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[2] = offset.Length();
                 NPC.ai[3] = Utils.ToRotation(offset);
             }
-            Vector2 targetPos = ((Entity)player).Center;
-            targetPos.X += ((((Entity)NPC).Center.X < ((Entity)player).Center.X) ? (-700) : 700);
+            Vector2 targetPos = ((Entity)Player).Center;
+            targetPos.X += ((((Entity)NPC).Center.X < ((Entity)Player).Center.X) ? (-700) : 700);
             targetPos.Y += ((NPC.ai[1] < 240f) ? 400 : 150);
             if (((Entity)NPC).Distance(targetPos) > 50f)
             {
@@ -3432,7 +3390,7 @@ namespace YharimEX.Content.NPCs
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Vector2 dir = ((Entity)player).Center - ((Entity)NPC).Center;
+                    Vector2 dir = ((Entity)Player).Center - ((Entity)NPC).Center;
                     float ai1New = (Utils.NextBool(Main.rand) ? 1 : (-1));
                     Vector2 vel = Vector2.Normalize(Utils.RotatedByRandom(dir, Math.PI / 4.0)) * 38f;
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<HostileLightning>(), 30, 0f, Main.myPlayer, Utils.ToRotation(dir), ai1New);
@@ -3444,24 +3402,24 @@ namespace YharimEX.Content.NPCs
             }
             else if (NPC.ai[1] == (float)pillarAttackDelay)
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.UnitY * -5f, ModContent.ProjectileType<MutantPillar>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 3f, (float)((Entity)NPC).whoAmI);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.UnitY * -5f, ModContent.ProjectileType<MutantPillar>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 3f, (float)((Entity)NPC).whoAmI);
                 }
             }
-            else if (FargoSoulsWorld.MasochistModeReal && NPC.ai[1] == (float)(pillarAttackDelay * 5) && Main.netMode != 1)
+            else if (FargoSoulsWorld.MasochistModeReal && NPC.ai[1] == (float)(pillarAttackDelay * 5) && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.UnitY * -5f, ModContent.ProjectileType<MutantPillar>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 1f, (float)((Entity)NPC).whoAmI);
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.UnitY * -5f, ModContent.ProjectileType<MutantPillar>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 1f, (float)((Entity)NPC).whoAmI);
             }
             void Clone(float ai1, float ai2, float ai3)
             {
-                FargoSoulsUtil.NewNPCEasy(((Entity)NPC).GetSource_FromAI((string)null), ((Entity)NPC).Center, ModContent.NPCType<MutantIllusion>(), ((Entity)NPC).whoAmI, ((Entity)NPC).whoAmI, ai1, ai2, ai3);
+                YharimEXUtil.NewNPCEasy(((Entity)NPC).GetSource_FromAI((string)null), ((Entity)NPC).Center, ModContent.NPCType<MutantIllusion>(), ((Entity)NPC).whoAmI, ((Entity)NPC).whoAmI, ai1, ai2, ai3);
             }
         }
 
         private void EOCStarSickles()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
@@ -3473,9 +3431,9 @@ namespace YharimEX.Content.NPCs
                     ai1 = 30f;
                     NPC.ai[1] = 30f;
                 }
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    int p = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.UnitY, ModContent.ProjectileType<MutantEyeOfCthulhu>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, ai1);
+                    int p = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.UnitY, ModContent.ProjectileType<MutantEyeOfCthulhu>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, ai1);
                     if (FargoSoulsWorld.MasochistModeReal && p != 1000)
                     {
                         Projectile obj = Main.projectile[p];
@@ -3485,14 +3443,14 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[1] < 120f)
             {
-                NPC.ai[2] = ((Entity)player).Center.X;
-                NPC.ai[3] = ((Entity)player).Center.Y;
+                NPC.ai[2] = ((Entity)Player).Center.X;
+                NPC.ai[3] = ((Entity)Player).Center.Y;
             }
             if (NPC.ai[1] == 120f || NPC.ai[1] == 156f)
             {
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                Vector2 offset = ((Entity)NPC).Center - ((Entity)player).Center;
-                Vector2 spawnPos = ((Entity)player).Center;
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                Vector2 offset = ((Entity)NPC).Center - ((Entity)Player).Center;
+                Vector2 spawnPos = ((Entity)Player).Center;
                 switch (Main.rand.Next(4))
                 {
                     case 0:
@@ -3536,11 +3494,11 @@ namespace YharimEX.Content.NPCs
             {
                 int max = (FargoSoulsWorld.MasochistModeReal ? 3 : 3);
                 int degree = 1;
-                int laserDamage = FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f);
+                int laserDamage = YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f);
                 Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawn, new Vector2(0f, -4f), ModContent.ProjectileType<BrainofConfusion>(), 0, 0f, Main.myPlayer, 0f, 0f);
                 for (int i = -max; i <= max; i++)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawn, 0.2f * Utils.RotatedBy(((Entity)player).DirectionFrom(spawn), (double)(MathHelper.ToRadians((float)degree) * (float)i), default(Vector2)), ModContent.ProjectileType<DestroyerLaser>(), laserDamage, 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawn, 0.2f * Utils.RotatedBy(((Entity)Player).DirectionFrom(spawn), (double)(MathHelper.ToRadians((float)degree) * (float)i), default(Vector2)), ModContent.ProjectileType<DestroyerLaser>(), laserDamage, 0f, Main.myPlayer, 0f, 0f);
                 }
             }
             void TelegraphConfusion(Vector2 spawn)
@@ -3555,19 +3513,19 @@ namespace YharimEX.Content.NPCs
         {
             if (NPC.ai[3] == 0f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
                 NPC.ai[3] = 1f;
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 180f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 180f);
                 }
             }
             if ((NPC.ai[1] += 1f) > 180f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
@@ -3576,12 +3534,12 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[1] = 0f;
                 NPC.ai[3] = 0f;
             }
-            Vector2 targetPos = ((Entity)player).Center;
-            targetPos.Y += 450f * (float)Math.Sign(((Entity)NPC).Center.Y - ((Entity)player).Center.Y);
+            Vector2 targetPos = ((Entity)Player).Center;
+            targetPos.Y += 450f * (float)Math.Sign(((Entity)NPC).Center.Y - ((Entity)Player).Center.Y);
             Movement(targetPos, 0.7f, fastX: false);
-            if (((Entity)NPC).Distance(((Entity)player).Center) < 200f)
+            if (((Entity)NPC).Distance(((Entity)Player).Center) < 200f)
             {
-                Movement(((Entity)NPC).Center + ((Entity)NPC).DirectionFrom(((Entity)player).Center), 1.4f);
+                Movement(((Entity)NPC).Center + ((Entity)NPC).DirectionFrom(((Entity)Player).Center), 1.4f);
             }
         }
 
@@ -3620,28 +3578,28 @@ namespace YharimEX.Content.NPCs
             }
             else
             {
-                ((Entity)NPC).velocity = ((Entity)NPC).DirectionTo(((Entity)player).Center) * (FargoSoulsWorld.MasochistModeReal ? 60f : 45f);
-                if (Main.netMode != 1)
+                ((Entity)NPC).velocity = ((Entity)NPC).DirectionTo(((Entity)Player).Center) * (FargoSoulsWorld.MasochistModeReal ? 60f : 45f);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(((Entity)NPC).velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
                 }
             }
         }
 
         private void SpawnDestroyersForPredictiveThrow()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
             if (FargoSoulsWorld.EternityMode)
             {
-                Vector2 targetPos = ((Entity)player).Center + ((Entity)NPC).DirectionFrom(((Entity)player).Center) * 500f;
-                if (Math.Abs(targetPos.X - ((Entity)player).Center.X) < 150f)
+                Vector2 targetPos = ((Entity)Player).Center + ((Entity)NPC).DirectionFrom(((Entity)Player).Center) * 500f;
+                if (Math.Abs(targetPos.X - ((Entity)Player).Center.X) < 150f)
                 {
-                    targetPos.X = ((Entity)player).Center.X + (float)(150 * Math.Sign(targetPos.X - ((Entity)player).Center.X));
+                    targetPos.X = ((Entity)Player).Center.X + (float)(150 * Math.Sign(targetPos.X - ((Entity)Player).Center.X));
                     Movement(targetPos, 0.3f);
                 }
                 if (((Entity)NPC).Distance(targetPos) > 50f)
@@ -3651,7 +3609,7 @@ namespace YharimEX.Content.NPCs
             }
             else
             {
-                Vector2 targetPos2 = ((Entity)player).Center;
+                Vector2 targetPos2 = ((Entity)Player).Center;
                 targetPos2.X += 500 * ((!(((Entity)NPC).Center.X < targetPos2.X)) ? 1 : (-1));
                 if (((Entity)NPC).Distance(targetPos2) > 50f)
                 {
@@ -3692,24 +3650,24 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[2] = 0f;
                 return;
             }
-            SoundEngine.PlaySound(ref SoundID.NPCDeath13, (Vector2?)((Entity)NPC).Center);
-            if (Main.netMode != 1)
+            SoundEngine.PlaySound(SoundID.NPCDeath13, (Vector2?)((Entity)NPC).Center);
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Vector2 vel = Utils.RotatedByRandom(((Entity)NPC).DirectionFrom(((Entity)player).Center), (double)MathHelper.ToRadians(120f)) * 10f;
+                Vector2 vel = Utils.RotatedByRandom(((Entity)NPC).DirectionFrom(((Entity)Player).Center), (double)MathHelper.ToRadians(120f)) * 10f;
                 float ai1 = 0.8f + 0.4f * NPC.ai[2] / 5f;
                 if (FargoSoulsWorld.MasochistModeReal)
                 {
                     ai1 += 0.4f;
                 }
-                int current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantDestroyerHead>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, ai1);
+                int current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantDestroyerHead>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, ai1);
                 Main.projectile[current].timeLeft = 30 * (cap - (int)NPC.ai[2]) + 60 * (int)NPC.localAI[1] + 30 + (int)NPC.ai[2] * 6;
                 int max = Main.rand.Next(8, 19);
                 for (int i = 0; i < max; i++)
                 {
-                    current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantDestroyerBody>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[current].identity, 0f);
+                    current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantDestroyerBody>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[current].identity, 0f);
                 }
                 int previous = current;
-                current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantDestroyerTail>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[current].identity, 0f);
+                current = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantDestroyerTail>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[current].identity, 0f);
                 Main.projectile[previous].localAI[1] = Main.projectile[current].identity;
                 Main.projectile[previous].netUpdate = true;
             }
@@ -3717,11 +3675,11 @@ namespace YharimEX.Content.NPCs
 
         private void SpearTossPredictiveP2()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
-            Vector2 targetPos = ((Entity)player).Center;
+            Vector2 targetPos = ((Entity)Player).Center;
             targetPos.X += 500 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
             if (((Entity)NPC).Distance(targetPos) > 25f)
             {
@@ -3744,23 +3702,23 @@ namespace YharimEX.Content.NPCs
                         ChooseNextAttack(11, 19, 20, 26, 26, 26, 29, 31, 33, 35, 37, 39, 42, 44);
                     }
                 }
-                if ((shouldAttack || FargoSoulsWorld.MasochistModeReal) && Main.netMode != 1)
+                if ((shouldAttack || FargoSoulsWorld.MasochistModeReal) && Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Vector2 vel = ((Entity)NPC).DirectionTo(((Entity)player).Center + ((Entity)player).velocity * 30f) * 30f;
+                    Vector2 vel = ((Entity)NPC).DirectionTo(((Entity)Player).Center + ((Entity)Player).velocity * 30f) * 30f;
                     for (int i = -1; i <= 1; i++)
                     {
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.Normalize(vel), (double)((float)i * 0.12f), default(Vector2)), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Utils.RotatedBy(Vector2.Normalize(vel), (double)((float)i * 0.12f), default(Vector2)), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(vel, (double)((float)i * 0.12f), default(Vector2)), ModContent.ProjectileType<MutantSpearThrown>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, 1f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.Normalize(vel), (double)((float)i * 0.12f), default(Vector2)), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Utils.RotatedBy(Vector2.Normalize(vel), (double)((float)i * 0.12f), default(Vector2)), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(vel, (double)((float)i * 0.12f), default(Vector2)), ModContent.ProjectileType<MutantSpearThrown>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, 1f);
                     }
                 }
             }
-            else if (NPC.ai[1] == 1f && (NPC.ai[2] < NPC.localAI[1] || FargoSoulsWorld.MasochistModeReal) && Main.netMode != 1)
+            else if (NPC.ai[1] == 1f && (NPC.ai[2] < NPC.localAI[1] || FargoSoulsWorld.MasochistModeReal) && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(((Entity)NPC).DirectionTo(((Entity)player).Center + ((Entity)player).velocity * 30f), (double)((float)j * 0.12f), default(Vector2)), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 60f, (float)((Entity)NPC).whoAmI);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 2f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(((Entity)NPC).DirectionTo(((Entity)Player).Center + ((Entity)Player).velocity * 30f), (double)((float)j * 0.12f), default(Vector2)), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 60f, (float)((Entity)NPC).whoAmI);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 2f);
                 }
             }
         }
@@ -3769,7 +3727,7 @@ namespace YharimEX.Content.NPCs
         {
             if (NPC.ai[1] == 0f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
@@ -3780,8 +3738,8 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[1] == 30f)
             {
-                SoundEngine.PlaySound(ref SoundID.ForceRoarPitched, (Vector2?)((Entity)NPC).Center);
-                if (Main.netMode != 1)
+                SoundEngine.PlaySound(SoundID.ForceRoarPitched, (Vector2?)((Entity)NPC).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowRing>(), 0, 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 125f);
                 }
@@ -3789,7 +3747,7 @@ namespace YharimEX.Content.NPCs
             Vector2 targetPos;
             if (NPC.ai[1] < 30f)
             {
-                targetPos = ((Entity)player).Center + Utils.RotatedBy(((Entity)NPC).DirectionFrom(((Entity)player).Center), (double)MathHelper.ToRadians(15f), default(Vector2)) * 500f;
+                targetPos = ((Entity)Player).Center + Utils.RotatedBy(((Entity)NPC).DirectionFrom(((Entity)Player).Center), (double)MathHelper.ToRadians(15f), default(Vector2)) * 500f;
                 if (((Entity)NPC).Distance(targetPos) > 50f)
                 {
                     Movement(targetPos, 0.3f);
@@ -3799,13 +3757,13 @@ namespace YharimEX.Content.NPCs
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    int d = Dust.NewDust(((Entity)NPC).Center, 0, 0, 6, 0f, 0f, 0, default(Color), 3f);
+                    int d = Dust.NewDust(((Entity)NPC).Center, 0, 0, DustID.Torch, 0f, 0f, 0, default(Color), 3f);
                     Main.dust[d].noGravity = true;
                     Main.dust[d].noLight = true;
                     Dust obj = Main.dust[d];
                     obj.velocity *= 12f;
                 }
-                targetPos = ((Entity)player).Center;
+                targetPos = ((Entity)Player).Center;
                 targetPos.X += 600 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
                 Movement(targetPos, 1.2f, fastX: false);
             }
@@ -3816,7 +3774,7 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[1] = 0f;
                 NPC.ai[2] = 0f;
                 NPC.ai[3] = 0f;
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
             }
         }
 
@@ -3827,7 +3785,7 @@ namespace YharimEX.Content.NPCs
             {
                 NPC.ai[2] = ((!Utils.NextBool(Main.rand)) ? 1 : (-1));
             }
-            if (NPC.ai[3] == 0f && Main.netMode != 1)
+            if (NPC.ai[3] == 0f && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int max = 7;
                 for (int i = 0; i <= max; i++)
@@ -3841,7 +3799,7 @@ namespace YharimEX.Content.NPCs
             if (NPC.ai[3] > (float)(FargoSoulsWorld.MasochistModeReal ? 45 : 60) && NPC.ai[3] < 240f && (NPC.ai[1] += 1f) > 10f)
             {
                 NPC.ai[1] = 0f;
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     float rotation = MathHelper.ToRadians(245f) * NPC.ai[2] / 80f;
                     timeBeforeAttackEnds = endTime - (int)NPC.ai[3];
@@ -3855,14 +3813,14 @@ namespace YharimEX.Content.NPCs
                     }
                 }
             }
-            if (NPC.ai[3] > 210f && Main.netMode != 1)
+            if (NPC.ai[3] > 210f && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 float spawnOffset = (float)((!Utils.NextBool(Main.rand)) ? 1 : (-1)) * Utils.NextFloat(Main.rand, 1400f, 1800f);
                 float maxVariance = MathHelper.ToRadians(16f);
                 Vector2 aimPoint = ((Entity)NPC).Center - Vector2.UnitY * NPC.ai[2] * 600f;
                 Vector2 spawnPos2 = aimPoint + spawnOffset * Utils.RotatedBy(Utils.RotatedByRandom(Vector2.UnitX, (double)maxVariance), (double)MathHelper.ToRadians(0f), default(Vector2));
                 Vector2 vel = 32f * Vector2.Normalize(aimPoint - spawnPos2);
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos2, vel, ModContent.ProjectileType<MutantGuardian>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos2, vel, ModContent.ProjectileType<MutantGuardian>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 0f, 0f);
             }
             if (NPC.ai[3] < 180f && (NPC.localAI[0] += 1f) > 1f)
             {
@@ -3886,20 +3844,20 @@ namespace YharimEX.Content.NPCs
             }
             void SpawnPrime(float varianceInDegrees, float rotationInDegrees)
             {
-                SoundEngine.PlaySound(ref SoundID.Item21, (Vector2?)((Entity)NPC).Center);
-                if (Main.netMode != 1)
+                SoundEngine.PlaySound(SoundID.Item21, (Vector2?)((Entity)NPC).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     float spawnOffset2 = (float)((!Utils.NextBool(Main.rand)) ? 1 : (-1)) * Utils.NextFloat(Main.rand, 1400f, 1800f);
                     float maxVariance2 = MathHelper.ToRadians(varianceInDegrees);
                     Vector2 aimPoint2 = ((Entity)NPC).Center - Vector2.UnitY * NPC.ai[2] * 600f;
                     Vector2 spawnPos3 = aimPoint2 + spawnOffset2 * Utils.RotatedBy(Utils.RotatedByRandom(Vector2.UnitY, (double)maxVariance2), (double)MathHelper.ToRadians(rotationInDegrees), default(Vector2));
                     Vector2 vel2 = 32f * Vector2.Normalize(aimPoint2 - spawnPos3);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos3, vel2, ModContent.ProjectileType<MutantGuardian>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos3, vel2, ModContent.ProjectileType<MutantGuardian>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 0f, 0f);
                 }
             }
             void SpawnRay(Vector2 pos, float angleInDegrees, float turnRotation)
             {
-                int p = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), pos, Utils.ToRotationVector2(MathHelper.ToRadians(angleInDegrees)), ModContent.ProjectileType<MutantDeathray3>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, turnRotation, (float)((Entity)NPC).whoAmI);
+                int p = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), pos, Utils.ToRotationVector2(MathHelper.ToRadians(angleInDegrees)), ModContent.ProjectileType<MutantDeathray3>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, turnRotation, (float)((Entity)NPC).whoAmI);
                 if (p != 1000 && Main.projectile[p].timeLeft > timeBeforeAttackEnds)
                 {
                     Main.projectile[p].timeLeft = timeBeforeAttackEnds;
@@ -3909,14 +3867,14 @@ namespace YharimEX.Content.NPCs
 
         private void PrepareFishron1()
         {
-            if (AliveCheck(player))
+            if (AliveCheck(Player))
             {
                 Vector2 targetPos = default(Vector2);
-                targetPos = new Vector2(player.Center.X, player.Center.Y + 600f * Math.Sign(NPC.Center.Y - player.Center.Y));
+                targetPos = new Vector2(Player.Center.X, Player.Center.Y + 600f * Math.Sign(NPC.Center.Y - Player.Center.Y));
                 Movement(targetPos, 1.4f, fastX: false);
                 if (NPC.ai[1] == 0f)
                 {
-                    NPC.ai[2] = Math.Sign(((Entity)NPC).Center.X - ((Entity)player).Center.X);
+                    NPC.ai[2] = Math.Sign(((Entity)NPC).Center.X - ((Entity)Player).Center.X);
                 }
                 if ((NPC.ai[1] += 1f) > 60f || ((Entity)NPC).Distance(targetPos) < 64f)
                 {
@@ -3940,7 +3898,7 @@ namespace YharimEX.Content.NPCs
             int maxFishronSets = (FargoSoulsWorld.MasochistModeReal ? 3 : 2);
             if (NPC.ai[1] % 3f == 0f && NPC.ai[1] <= (float)(3 * maxFishronSets))
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     for (int j = -1; j <= 1; j += 2)
                     {
@@ -3951,7 +3909,7 @@ namespace YharimEX.Content.NPCs
                             {
                                 float spread = 0.5711987f / (float)(maxFishronSets + 1);
                                 Vector2 offset = ((NPC.ai[2] == 0f) ? (Utils.RotatedBy(Vector2.UnitY, (double)(spread * (float)i), default(Vector2)) * -450f * (float)j) : (Utils.RotatedBy(Vector2.UnitX, (double)(spread * (float)i), default(Vector2)) * 475f * (float)j));
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantFishron>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, offset.X, offset.Y);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantFishron>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, offset.X, offset.Y);
                             }
                         }
                         for (int k = -max; k <= max; k++)
@@ -3960,14 +3918,14 @@ namespace YharimEX.Content.NPCs
                             {
                                 float spread2 = (float)Math.PI / 36f / (float)(maxFishronSets + 1);
                                 Vector2 offset2 = ((NPC.ai[2] == 0f) ? (Utils.RotatedBy(Vector2.UnitX, (double)(spread2 * (float)k), default(Vector2)) * -450f * (float)j) : (Utils.RotatedBy(Vector2.UnitY, (double)(spread2 * (float)k), default(Vector2)) * 615f * (float)j));
-                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantFishron>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, offset2.X, offset2.Y);
+                                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantFishron>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, offset2.X, offset2.Y);
                             }
                         }
                     }
                 }
                 for (int l = 0; l < 30; l++)
                 {
-                    int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 135, 0f, 0f, 0, default(Color), 3f);
+                    int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.IceTorch, 0f, 0f, 0, default(Color), 3f);
                     Main.dust[d].noGravity = true;
                     Main.dust[d].noLight = true;
                     Dust obj = Main.dust[d];
@@ -3988,17 +3946,17 @@ namespace YharimEX.Content.NPCs
 
         private void PrepareTrueEyeDiveP2()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
-            Vector2 targetPos = ((Entity)player).Center;
+            Vector2 targetPos = ((Entity)Player).Center;
             targetPos.X += 400 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
             targetPos.Y += 400f;
             Movement(targetPos, 1.2f);
             if ((NPC.ai[1] += 1f) > 60f)
             {
-                ((Entity)NPC).velocity.X = 30f * (float)((((Entity)NPC).position.X < ((Entity)player).position.X) ? 1 : (-1));
+                ((Entity)NPC).velocity.X = 30f * (float)((((Entity)NPC).position.X < ((Entity)Player).position.X) ? 1 : (-1));
                 if (((Entity)NPC).velocity.Y > 0f)
                 {
                     ((Entity)NPC).velocity.Y *= -1f;
@@ -4012,30 +3970,30 @@ namespace YharimEX.Content.NPCs
 
         private void PrepareNuke()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
-            Vector2 targetPos = ((Entity)player).Center;
+            Vector2 targetPos = ((Entity)Player).Center;
             targetPos.X += 400 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
             targetPos.Y -= 400f;
             Movement(targetPos, 1.2f, fastX: false);
             if ((NPC.ai[1] += 1f) > 60f)
             {
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                if (Main.netMode != 1)
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     float gravity = 0.2f;
                     float time = (FargoSoulsWorld.MasochistModeReal ? 120f : 180f);
-                    Vector2 distance = ((Entity)player).Center - ((Entity)NPC).Center;
+                    Vector2 distance = ((Entity)Player).Center - ((Entity)NPC).Center;
                     distance.X /= time;
                     distance.Y = distance.Y / time - 0.5f * gravity * time;
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, distance, ModContent.ProjectileType<MutantNuke>(), FargoSoulsWorld.MasochistModeReal ? FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f) : 0, 0f, Main.myPlayer, gravity, 0f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantFishronRitual>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, distance, ModContent.ProjectileType<MutantNuke>(), FargoSoulsWorld.MasochistModeReal ? YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f) : 0, 0f, Main.myPlayer, gravity, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantFishronRitual>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
                 }
                 NPC.ai[0] += 1f;
                 NPC.ai[1] = 0f;
-                if (Math.Sign(((Entity)player).Center.X - ((Entity)NPC).Center.X) == Math.Sign(((Entity)NPC).velocity.X))
+                if (Math.Sign(((Entity)Player).Center.X - ((Entity)NPC).Center.X) == Math.Sign(((Entity)NPC).velocity.X))
                 {
                     ((Entity)NPC).velocity.X *= -1f;
                 }
@@ -4052,11 +4010,11 @@ namespace YharimEX.Content.NPCs
 
         private void Nuke()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
-            Vector2 target = ((((Entity)NPC).Bottom.Y < ((Entity)player).Top.Y) ? (((Entity)player).Center + 300f * Vector2.UnitX * (float)Math.Sign(((Entity)NPC).Center.X - ((Entity)player).Center.X)) : (((Entity)NPC).Center + 30f * Utils.RotatedBy(((Entity)NPC).DirectionFrom(((Entity)player).Center), (double)(MathHelper.ToRadians(60f) * (float)Math.Sign(((Entity)player).Center.X - ((Entity)NPC).Center.X)), default(Vector2))));
+            Vector2 target = ((((Entity)NPC).Bottom.Y < ((Entity)Player).Top.Y) ? (((Entity)Player).Center + 300f * Vector2.UnitX * (float)Math.Sign(((Entity)NPC).Center.X - ((Entity)Player).Center.X)) : (((Entity)NPC).Center + 30f * Utils.RotatedBy(((Entity)NPC).DirectionFrom(((Entity)Player).Center), (double)(MathHelper.ToRadians(60f) * (float)Math.Sign(((Entity)Player).Center.X - ((Entity)NPC).Center.X)), default(Vector2))));
             Movement(target, 0.1f);
             if (NPC.velocity.LengthSquared() > 2f * 2f)
             {
@@ -4068,7 +4026,7 @@ namespace YharimEX.Content.NPCs
                 {
                     Main.LocalPlayer.GetModPlayer<FargoSoulsPlayer>().Screenshake = 2;
                 }
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 safeZone = ((Entity)NPC).Center;
                     safeZone.Y -= 100f;
@@ -4080,7 +4038,7 @@ namespace YharimEX.Content.NPCs
                             Vector2 directionOut = Utils.SafeNormalize(spawnPos - safeZone, Vector2.UnitX);
                             spawnPos = safeZone + directionOut * Main.rand.NextFloat(350f, 1200f);
                         }
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantBomb>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantBomb>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f), 0f, Main.myPlayer, 0f, 0f);
                     }
                 }
             }
@@ -4105,7 +4063,7 @@ namespace YharimEX.Content.NPCs
                 double angle = Main.rand.NextDouble() * 2.0 * Math.PI;
                 offset.X += (float)(Math.Sin(angle) * 150.0);
                 offset.Y += (float)(Math.Cos(angle) * 150.0);
-                Dust dust = Main.dust[Dust.NewDust(((Entity)NPC).Center + offset - new Vector2(4f, 4f), 0, 0, 60, 0f, 0f, 100, Color.White, 1.5f)];
+                Dust dust = Main.dust[Dust.NewDust(((Entity)NPC).Center + offset - new Vector2(4f, 4f), 0, 0, DustID.RedTorch, 0f, 0f, 100, Color.White, 1.5f)];
                 dust.velocity = ((Entity)NPC).velocity;
                 if (Utils.NextBool(Main.rand, 3))
                 {
@@ -4117,9 +4075,9 @@ namespace YharimEX.Content.NPCs
 
         private void PrepareSlimeRain()
         {
-            if (AliveCheck(player))
+            if (AliveCheck(Player))
             {
-                Vector2 targetPos = ((Entity)player).Center;
+                Vector2 targetPos = ((Entity)Player).Center;
                 targetPos.X += 700 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
                 targetPos.Y += 200f;
                 Movement(targetPos, 2f);
@@ -4139,10 +4097,10 @@ namespace YharimEX.Content.NPCs
             if (NPC.ai[3] == 0f)
             {
                 NPC.ai[3] = 1f;
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                if (Main.netMode != 1)
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSlimeRain>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSlimeRain>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 0f);
                 }
             }
             if (NPC.ai[1] == 0f)
@@ -4151,20 +4109,20 @@ namespace YharimEX.Content.NPCs
                 NPC.localAI[0] = Main.rand.Next(5, 9) * 120;
                 if (num)
                 {
-                    if (((Entity)player).Center.X < ((Entity)NPC).Center.X && NPC.localAI[0] > 1200f)
+                    if (((Entity)Player).Center.X < ((Entity)NPC).Center.X && NPC.localAI[0] > 1200f)
                     {
                         NPC.localAI[0] -= 1200f;
                     }
-                    else if (((Entity)player).Center.X > ((Entity)NPC).Center.X && NPC.localAI[0] < 1200f)
+                    else if (((Entity)Player).Center.X > ((Entity)NPC).Center.X && NPC.localAI[0] < 1200f)
                     {
                         NPC.localAI[0] += 1200f;
                     }
                 }
-                else if (((Entity)player).Center.X < ((Entity)NPC).Center.X && NPC.localAI[0] < 1200f)
+                else if (((Entity)Player).Center.X < ((Entity)NPC).Center.X && NPC.localAI[0] < 1200f)
                 {
                     NPC.localAI[0] += 1200f;
                 }
-                else if (((Entity)player).Center.X > ((Entity)NPC).Center.X && NPC.localAI[0] > 1200f)
+                else if (((Entity)Player).Center.X > ((Entity)NPC).Center.X && NPC.localAI[0] > 1200f)
                 {
                     NPC.localAI[0] -= 1200f;
                 }
@@ -4173,7 +4131,7 @@ namespace YharimEX.Content.NPCs
                 basePos.X -= 1200f;
                 for (int i = -360; i <= 2760; i += 120)
                 {
-                    if (Main.netMode != 1 && i + 60 != (int)NPC.localAI[0])
+                    if (Main.netMode != NetmodeID.MultiplayerClient && i + 60 != (int)NPC.localAI[0])
                     {
                         Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), basePos.X + (float)i + 60f, basePos.Y, 0f, 0f, ModContent.ProjectileType<MutantReticle>(), 0, 0f, Main.myPlayer, 0f, 0f);
                     }
@@ -4186,8 +4144,8 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[1] > 120f && NPC.ai[1] % 5f == 0f)
             {
-                SoundEngine.PlaySound(ref SoundID.Item34, (Vector2?)((Entity)player).Center);
-                if (Main.netMode != 1)
+                SoundEngine.PlaySound(SoundID.Item34, (Vector2?)((Entity)Player).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 basePos2 = ((Entity)NPC).Center;
                     basePos2.X -= 1200f;
@@ -4209,7 +4167,7 @@ namespace YharimEX.Content.NPCs
             }
             if ((NPC.ai[1] += 1f) > 180f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
@@ -4226,7 +4184,7 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[2] == 480f)
             {
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
             }
             int endTime = 540;
             if (FargoSoulsWorld.MasochistModeReal)
@@ -4247,8 +4205,8 @@ namespace YharimEX.Content.NPCs
             {
                 if (NPC.ai[2] % 3f == 1f && NPC.ai[2] < (float)(endTime - 80))
                 {
-                    Vector2 range = ((Entity)player).Center + new Vector2(((float)Main.rand.Next(2) - 0.5f) * 2200f, 0f);
-                    Vector2 vel = Utils.SafeNormalize(((Entity)player).Center - range, Vector2.Zero) * (15f + ((float)Main.rand.Next(2) - 0.5f) * 4f);
+                    Vector2 range = ((Entity)Player).Center + new Vector2(((float)Main.rand.Next(2) - 0.5f) * 2200f, 0f);
+                    Vector2 vel = Utils.SafeNormalize(((Entity)Player).Center - range, Vector2.Zero) * (15f + ((float)Main.rand.Next(2) - 0.5f) * 4f);
                     Projectile obj2 = Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromAI((string)null), range + new Vector2(0f, ((float)Main.rand.Next(2) - 0.5f) * 12f), vel, ModContent.ProjectileType<BigSting22>(), 50, 0f, 0, 256f, 0f);
                     obj2.hostile = true;
                     obj2.friendly = false;
@@ -4268,22 +4226,22 @@ namespace YharimEX.Content.NPCs
             {
                 int flip = ((!FargoSoulsWorld.MasochistModeReal || !(NPC.ai[2] < 360f) || !Utils.NextBool(Main.rand)) ? 1 : (-1));
                 Vector2 spawnPos2 = pos + off * Vector2.UnitY * (float)flip;
-                float ai0 = ((FargoSoulsUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null) ? 0f : ((Entity)NPC).Distance(((Entity)Main.projectile[ritualProj]).Center));
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos2, val * (float)flip, ModContent.ProjectileType<MutantSlimeBall>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, ai0, 0f);
+                float ai0 = ((YharimEXUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null) ? 0f : ((Entity)NPC).Distance(((Entity)Main.projectile[ritualProj]).Center));
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos2, val * (float)flip, ModContent.ProjectileType<MutantSlimeBall>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, ai0, 0f);
             }
         }
 
         private void PrepareFishron2()
         {
-            if (AliveCheck(player))
+            if (AliveCheck(Player))
             {
-                Vector2 targetPos = ((Entity)player).Center;
+                Vector2 targetPos = ((Entity)Player).Center;
                 targetPos.X += 400 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
                 targetPos.Y -= 400f;
                 Movement(targetPos, 0.9f);
                 if ((NPC.ai[1] += 1f) > 60f || (FargoSoulsWorld.MasochistModeReal && ((Entity)NPC).Distance(targetPos) < 32f))
                 {
-                    ((Entity)NPC).velocity.X = 35f * (float)((((Entity)NPC).position.X < ((Entity)player).position.X) ? 1 : (-1));
+                    ((Entity)NPC).velocity.X = 35f * (float)((((Entity)NPC).position.X < ((Entity)Player).position.X) ? 1 : (-1));
                     ((Entity)NPC).velocity.Y = 10f;
                     NPC.ai[0] += 1f;
                     NPC.ai[1] = 0f;
@@ -4294,9 +4252,9 @@ namespace YharimEX.Content.NPCs
 
         private void PrepareOkuuSpheresP2()
         {
-            if (AliveCheck(player))
+            if (AliveCheck(Player))
             {
-                Vector2 targetPos = ((Entity)player).Center + ((Entity)player).DirectionTo(((Entity)NPC).Center) * 450f;
+                Vector2 targetPos = ((Entity)Player).Center + ((Entity)Player).DirectionTo(((Entity)NPC).Center) * 450f;
                 if ((NPC.ai[1] += 1f) < 180f && ((Entity)NPC).Distance(targetPos) > 50f)
                 {
                     Movement(targetPos, 0.8f);
@@ -4320,15 +4278,15 @@ namespace YharimEX.Content.NPCs
                 float rotation = MathHelper.ToRadians(60f) * (NPC.ai[3] - 45f) / 240f * NPC.ai[2];
                 int max = (FargoSoulsWorld.MasochistModeReal ? 10 : 9);
                 float speed = (FargoSoulsWorld.MasochistModeReal ? 11f : 10f);
-                SpawnSphereRing(max, speed, FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), -1f, rotation);
-                SpawnSphereRing(max, speed, FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 1f, rotation);
+                SpawnSphereRing(max, speed, YharimEXUtil.ScaledProjectileDamage(NPC.damage), -1f, rotation);
+                SpawnSphereRing(max, speed, YharimEXUtil.ScaledProjectileDamage(NPC.damage), 1f, rotation);
             }
             if (NPC.ai[2] == 0f)
             {
                 NPC.ai[2] = ((!Utils.NextBool(Main.rand)) ? 1 : (-1));
                 NPC.ai[3] = Utils.NextFloat(Main.rand, (float)Math.PI * 2f);
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                if (Main.netMode != 1)
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowRing>(), 0, 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, -2f);
                 }
@@ -4342,7 +4300,7 @@ namespace YharimEX.Content.NPCs
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 60, 0f, 0f, 0, default(Color), 1.5f);
+                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Dust obj2 = Main.dust[d];
@@ -4352,13 +4310,13 @@ namespace YharimEX.Content.NPCs
 
         private void SpearTossDirectP2()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
             if (NPC.ai[1] == 0f)
             {
-                NPC.localAI[0] = MathHelper.WrapAngle(Utils.ToRotation(((Entity)NPC).Center - ((Entity)player).Center));
+                NPC.localAI[0] = MathHelper.WrapAngle(Utils.ToRotation(((Entity)NPC).Center - ((Entity)Player).Center));
                 if (FargoSoulsWorld.EternityMode)
                 {
                     NPC.localAI[1] = Main.rand.Next(FargoSoulsWorld.MasochistModeReal ? 3 : 5, 9);
@@ -4374,7 +4332,7 @@ namespace YharimEX.Content.NPCs
                 NPC.localAI[2] = ((!Utils.NextBool(Main.rand)) ? 1 : (-1));
                 NPC.netUpdate = true;
             }
-            Vector2 targetPos = ((Entity)player).Center + 500f * Utils.RotatedBy(Vector2.UnitX, (double)((float)Math.PI / 150f * NPC.ai[3] * NPC.localAI[2] + NPC.localAI[0]), default(Vector2));
+            Vector2 targetPos = ((Entity)Player).Center + 500f * Utils.RotatedBy(Vector2.UnitX, (double)((float)Math.PI / 150f * NPC.ai[3] * NPC.localAI[2] + NPC.localAI[0]), default(Vector2));
             if (((Entity)NPC).Distance(targetPos) > 25f)
             {
                 Movement(targetPos, 0.6f);
@@ -4419,32 +4377,32 @@ namespace YharimEX.Content.NPCs
             }
             else if (NPC.ai[1] == 151f)
             {
-                if (NPC.ai[2] > 0f && (NPC.ai[2] < NPC.localAI[1] || FargoSoulsWorld.MasochistModeReal) && Main.netMode != 1)
+                if (NPC.ai[2] > 0f && (NPC.ai[2] < NPC.localAI[1] || FargoSoulsWorld.MasochistModeReal) && Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 1f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 1f);
                 }
             }
-            else if (NPC.ai[1] == 1f && Main.netMode != 1)
+            else if (NPC.ai[1] == 1f && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, -1f);
+                Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, -1f);
             }
             void Attack()
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Vector2 vel = ((Entity)NPC).DirectionTo(((Entity)player).Center) * 30f;
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, 0f);
+                    Vector2 vel = ((Entity)NPC).DirectionTo(((Entity)Player).Center) * 30f;
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.8f), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)NPC.target, 0f);
                 }
             }
         }
 
         private void PrepareTwinRangsAndCrystals()
         {
-            if (AliveCheck(player))
+            if (AliveCheck(Player))
             {
-                Vector2 targetPos = ((Entity)player).Center;
+                Vector2 targetPos = ((Entity)Player).Center;
                 targetPos.X += 500 * ((!(((Entity)NPC).Center.X < targetPos.X)) ? 1 : (-1));
                 if (((Entity)NPC).Distance(targetPos) > 50f)
                 {
@@ -4466,24 +4424,24 @@ namespace YharimEX.Content.NPCs
             ((Entity)NPC).velocity = Vector2.Zero;
             if (NPC.ai[3] == 0f)
             {
-                NPC.localAI[0] = Utils.ToRotation(((Entity)NPC).DirectionFrom(((Entity)player).Center));
-                if (!FargoSoulsWorld.MasochistModeReal && Main.netMode != 1)
+                NPC.localAI[0] = Utils.ToRotation(((Entity)NPC).DirectionFrom(((Entity)Player).Center));
+                if (!FargoSoulsWorld.MasochistModeReal && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + Utils.RotatedBy(Vector2.UnitX, Math.PI / 2.0 * (double)i, default(Vector2)) * 525f, Vector2.Zero, ModContent.ProjectileType<GlowRingHollow>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 1f, 0f);
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + Utils.RotatedBy(Vector2.UnitX, Math.PI / 2.0 * (double)i + Math.PI / 4.0, default(Vector2)) * 350f, Vector2.Zero, ModContent.ProjectileType<GlowRingHollow>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 2f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + Utils.RotatedBy(Vector2.UnitX, Math.PI / 2.0 * (double)i, default(Vector2)) * 525f, Vector2.Zero, ModContent.ProjectileType<GlowRingHollow>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 1f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center + Utils.RotatedBy(Vector2.UnitX, Math.PI / 2.0 * (double)i + Math.PI / 4.0, default(Vector2)) * 350f, Vector2.Zero, ModContent.ProjectileType<GlowRingHollow>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 2f, 0f);
                     }
                 }
             }
             int ringDelay = (FargoSoulsWorld.MasochistModeReal ? 12 : 15);
             int ringMax = (FargoSoulsWorld.MasochistModeReal ? 5 : 4);
-            if (NPC.ai[3] % (float)ringDelay == 0f && NPC.ai[3] < (float)(ringDelay * ringMax) && Main.netMode != 1)
+            if (NPC.ai[3] % (float)ringDelay == 0f && NPC.ai[3] < (float)(ringDelay * ringMax) && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 float rotationOffset = (float)Math.PI * 2f / (float)ringMax * NPC.ai[3] / (float)ringDelay + NPC.localAI[0];
                 int baseDelay = 60;
                 float flyDelay = 120f + NPC.ai[3] / (float)ringDelay * (float)(FargoSoulsWorld.MasochistModeReal ? 40 : 50);
-                int p = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, 300f / (float)baseDelay * Utils.RotatedBy(Vector2.UnitX, (double)rotationOffset, default(Vector2)), ModContent.ProjectileType<MutantMark2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)baseDelay, (float)baseDelay + flyDelay);
+                int p = Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, 300f / (float)baseDelay * Utils.RotatedBy(Vector2.UnitX, (double)rotationOffset, default(Vector2)), ModContent.ProjectileType<MutantMark2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)baseDelay, (float)baseDelay + flyDelay);
                 if (p != 1000)
                 {
                     float rotation = (float)Math.PI * 2f / 5f;
@@ -4491,7 +4449,7 @@ namespace YharimEX.Content.NPCs
                     {
                         float myRot = rotation * (float)j + rotationOffset;
                         Vector2 spawnPos = ((Entity)NPC).Center + Utils.RotatedBy(new Vector2(125f, 0f), (double)myRot, default(Vector2));
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantCrystalLeaf>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[p].identity, myRot);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantCrystalLeaf>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)Main.projectile[p].identity, myRot);
                     }
                 }
             }
@@ -4500,8 +4458,8 @@ namespace YharimEX.Content.NPCs
                 NPC.netUpdate = true;
                 NPC.ai[1] = 20f;
                 NPC.ai[2] = ((!(NPC.ai[2] > 0f)) ? 1 : (-1));
-                SoundEngine.PlaySound(ref SoundID.Item92, (Vector2?)((Entity)NPC).Center);
-                if (Main.netMode != 1 && NPC.ai[3] < 330f)
+                SoundEngine.PlaySound(SoundID.Item92, (Vector2?)((Entity)NPC).Center);
+                if (Main.netMode != NetmodeID.MultiplayerClient && NPC.ai[3] < 330f)
                 {
                     float retiSpeed = 10.995575f;
                     float spazSpeed = 12.217305f;
@@ -4510,14 +4468,14 @@ namespace YharimEX.Content.NPCs
                     float rotationOffset2 = (FargoSoulsWorld.MasochistModeReal ? ((float)Math.PI / 4f) : 0f);
                     for (int k = 0; k < 4; k++)
                     {
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.UnitX, Math.PI / 2.0 * (double)k + (double)rotationOffset2, default(Vector2)) * retiSpeed, ModContent.ProjectileType<MutantRetirang>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, retiAcc, 300f);
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.UnitX, Math.PI / 2.0 * (double)k + Math.PI / 4.0 + (double)rotationOffset2, default(Vector2)) * spazSpeed, ModContent.ProjectileType<MutantSpazmarang>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, spazAcc, 180f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.UnitX, Math.PI / 2.0 * (double)k + (double)rotationOffset2, default(Vector2)) * retiSpeed, ModContent.ProjectileType<MutantRetirang>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, retiAcc, 300f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.UnitX, Math.PI / 2.0 * (double)k + Math.PI / 4.0 + (double)rotationOffset2, default(Vector2)) * spazSpeed, ModContent.ProjectileType<MutantSpazmarang>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, spazAcc, 180f);
                     }
                 }
             }
             if (NPC.ai[3] > 350f && NPC.ai[3] < 450f)
             {
-                Vector2 v = ((Entity)NPC).DirectionTo(((Entity)player).Center);
+                Vector2 v = ((Entity)NPC).DirectionTo(((Entity)Player).Center);
                 for (int l = -1; l <= 1; l += 2)
                 {
                     Projectile.NewProjectile((IEntitySource)null, ((Entity)NPC).Center, 21f * Utils.RotatedBy(v, (double)((float)l * (0.734f - (NPC.ai[3] - 360f) / 150f) + Utils.NextFloat(Main.rand, -0.05f, 0.05f)), default(Vector2)), 259, 66, 0f, 0, 0f, 0f);
@@ -4531,7 +4489,7 @@ namespace YharimEX.Content.NPCs
 
         private void EmpressSwordWave()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
@@ -4546,14 +4504,14 @@ namespace YharimEX.Content.NPCs
             int startup = 90;
             if (NPC.ai[1] == 0f)
             {
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
                 NPC.ai[3] = Utils.NextFloat(Main.rand, (float)Math.PI * 2f);
             }
             if (NPC.ai[1] >= (float)startup && NPC.ai[1] < (float)(startup + attackThreshold * timesToAttack) && (NPC.ai[2] -= 1f) < 0f)
             {
                 NPC.ai[2] = attackThreshold - 15;
                 float gap = 220f;
-                SoundEngine.PlaySound(ref SoundID.Item163, (Vector2?)((Entity)player).Center);
+                SoundEngine.PlaySound(SoundID.Item163, (Vector2?)((Entity)Player).Center);
                 float randomrot = Utils.NextFloat(Main.rand, 6.283f);
                 Vector2 RandomOffset2 = Utils.NextVector2Circular(Main.rand, 75f, 75f);
                 Vector2 RandomOffset3 = Utils.NextVector2Circular(Main.rand, 120f, 120f);
@@ -4571,9 +4529,9 @@ namespace YharimEX.Content.NPCs
             int swordSwarmTime = startup + attackThreshold * timesToAttack + 40;
             if (NPC.ai[1] == (float)swordSwarmTime)
             {
-                MegaSwordSwarm(((Entity)player).Center);
-                NPC.localAI[0] = ((Entity)player).Center.X;
-                NPC.localAI[1] = ((Entity)player).Center.Y;
+                MegaSwordSwarm(((Entity)Player).Center);
+                NPC.localAI[0] = ((Entity)Player).Center.X;
+                NPC.localAI[1] = ((Entity)Player).Center.Y;
             }
             if (FargoSoulsWorld.MasochistModeReal && NPC.ai[1] == (float)(swordSwarmTime + 30))
             {
@@ -4594,7 +4552,7 @@ namespace YharimEX.Content.NPCs
             }
             void MegaSwordSwarm(Vector2 target)
             {
-                SoundEngine.PlaySound(ref SoundID.Item164, (Vector2?)((Entity)player).Center);
+                SoundEngine.PlaySound(SoundID.Item164, (Vector2?)((Entity)Player).Center);
                 float safeAngle = NPC.ai[3];
                 float safeRange = MathHelper.ToRadians(10f);
                 int max = 60;
@@ -4613,19 +4571,19 @@ namespace YharimEX.Content.NPCs
             }
             void Sword(Vector2 pos, float ai0, float ai1, Vector2 vel, bool shouldUpdate)
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromThis((string)null), pos - vel * 60f, vel, 919, FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, ai0, ai1).extraUpdates = (shouldUpdate ? 1 : 0);
+                    Projectile.NewProjectileDirect(((Entity)NPC).GetSource_FromThis((string)null), pos - vel * 60f, vel, 919, YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, ai0, ai1).extraUpdates = (shouldUpdate ? 1 : 0);
                 }
             }
         }
 
         private void P2NextAttackPause()
         {
-            if (AliveCheck(player))
+            if (AliveCheck(Player))
             {
                 EModeSpecialEffects();
-                Vector2 targetPos = ((Entity)player).Center + ((Entity)NPC).DirectionFrom(((Entity)player).Center) * 400f;
+                Vector2 targetPos = ((Entity)Player).Center + ((Entity)NPC).DirectionFrom(((Entity)Player).Center) * 400f;
                 Movement(targetPos, 0.3f);
                 if (((Entity)NPC).Distance(targetPos) > 200f)
                 {
@@ -4663,16 +4621,16 @@ namespace YharimEX.Content.NPCs
             }
             if (NPC.ai[1] == 360f)
             {
-                SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
             }
             if ((NPC.ai[1] += 1f) > 480f)
             {
                 retval = false;
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return retval;
                 }
-                Vector2 targetPos = ((Entity)player).Center;
+                Vector2 targetPos = ((Entity)Player).Center;
                 targetPos.Y -= 300f;
                 Movement(targetPos, 1f, fastX: true, obeySpeedCap: false);
                 if (((Entity)NPC).Distance(targetPos) < 50f || NPC.ai[1] > 720f)
@@ -4682,10 +4640,10 @@ namespace YharimEX.Content.NPCs
                     NPC.localAI[0] = 0f;
                     NPC.ai[0] -= 1f;
                     NPC.ai[1] = 0f;
-                    NPC.ai[2] = Utils.ToRotation(((Entity)NPC).DirectionFrom(((Entity)player).Center));
+                    NPC.ai[2] = Utils.ToRotation(((Entity)NPC).DirectionFrom(((Entity)Player).Center));
                     NPC.ai[3] = (float)Math.PI / 20f;
-                    SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                    if (((Entity)player).Center.X < ((Entity)NPC).Center.X)
+                    SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                    if (((Entity)Player).Center.X < ((Entity)NPC).Center.X)
                     {
                         NPC.ai[3] *= -1f;
                     }
@@ -4704,7 +4662,7 @@ namespace YharimEX.Content.NPCs
                 if ((NPC.localAI[0] -= 1f) < 0f)
                 {
                     NPC.localAI[0] = Main.rand.Next(15);
-                    if (Main.netMode != 1)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Vector2 spawnPos = ((Entity)NPC).position + new Vector2((float)Main.rand.Next(((Entity)NPC).width), (float)Main.rand.Next(((Entity)NPC).height));
                         int type = ModContent.ProjectileType<PhantasmalBlast>();
@@ -4714,7 +4672,7 @@ namespace YharimEX.Content.NPCs
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 60, 0f, 0f, 0, default(Color), 1.5f);
+                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Dust obj = Main.dust[d];
@@ -4727,10 +4685,10 @@ namespace YharimEX.Content.NPCs
         {
             if ((NPC.ai[1] -= 1f) < 0f)
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     float speed = ((FargoSoulsWorld.MasochistModeReal && NPC.localAI[0] <= 40f) ? 4f : 2f);
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, speed * Utils.RotatedBy(Vector2.UnitX, (double)NPC.ai[2], default(Vector2)), ModContent.ProjectileType<MutantMark1>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, speed * Utils.RotatedBy(Vector2.UnitX, (double)NPC.ai[2], default(Vector2)), ModContent.ProjectileType<MutantMark1>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                 }
                 NPC.ai[1] = 1f;
                 NPC.ai[2] += NPC.ai[3];
@@ -4756,7 +4714,7 @@ namespace YharimEX.Content.NPCs
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 60, 0f, 0f, 0, default(Color), 1.5f);
+                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Dust obj = Main.dust[d];
@@ -4769,7 +4727,7 @@ namespace YharimEX.Content.NPCs
         {
             if (NPC.ai[2] == 0f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
@@ -4787,8 +4745,8 @@ namespace YharimEX.Content.NPCs
                 float rotation = MathHelper.ToRadians(45f) * (NPC.ai[3] - 60f) / 240f * NPC.ai[2];
                 int max = (FargoSoulsWorld.MasochistModeReal ? 11 : 10);
                 float speed = (FargoSoulsWorld.MasochistModeReal ? 11f : 10f);
-                SpawnSphereRing(max, speed, FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), -0.75f, rotation);
-                SpawnSphereRing(max, speed, FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0.75f, rotation);
+                SpawnSphereRing(max, speed, YharimEXUtil.ScaledProjectileDamage(NPC.damage), -0.75f, rotation);
+                SpawnSphereRing(max, speed, YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0.75f, rotation);
             }
             if (NPC.ai[3] < 30f)
             {
@@ -4805,7 +4763,7 @@ namespace YharimEX.Content.NPCs
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 60, 0f, 0f, 0, default(Color), 1.5f);
+                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Dust obj = Main.dust[d];
@@ -4818,27 +4776,27 @@ namespace YharimEX.Content.NPCs
         {
             if (NPC.localAI[0] == 0f)
             {
-                if (!AliveCheck(player))
+                if (!AliveCheck(Player))
                 {
                     return;
                 }
-                NPC.localAI[0] = Math.Sign(((Entity)NPC).Center.X - ((Entity)player).Center.X);
+                NPC.localAI[0] = Math.Sign(((Entity)NPC).Center.X - ((Entity)Player).Center.X);
             }
             if ((NPC.ai[1] += 1f) > 3f)
             {
-                SoundEngine.PlaySound(ref SoundID.Item12, (Vector2?)((Entity)NPC).Center);
+                SoundEngine.PlaySound(SoundID.Item12, (Vector2?)((Entity)NPC).Center);
                 NPC.ai[1] = 0f;
                 NPC.ai[2] += 0.0014959965f * NPC.ai[3] * NPC.localAI[0] * (FargoSoulsWorld.MasochistModeReal ? 2f : 1f);
                 if (NPC.ai[2] > (float)Math.PI)
                 {
                     NPC.ai[2] -= (float)Math.PI * 2f;
                 }
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int max = (FargoSoulsWorld.MasochistModeReal ? 10 : 8);
                     for (int i = 0; i < max; i++)
                     {
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(0f, -6f), (double)(NPC.ai[2] + (float)Math.PI * 2f / (float)max * (float)i), default(Vector2)), ModContent.ProjectileType<global::FargowiltasSouls.Projectiles.MutantBoss.MutantEye>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(new Vector2(0f, -6f), (double)(NPC.ai[2] + (float)Math.PI * 2f / (float)max * (float)i), default(Vector2)), ModContent.ProjectileType<global::FargowiltasSouls.Projectiles.MutantBoss.MutantEye>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, 0f, 0f);
                     }
                 }
             }
@@ -4863,7 +4821,7 @@ namespace YharimEX.Content.NPCs
             }
             for (int j = 0; j < 5; j++)
             {
-                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 60, 0f, 0f, 0, default(Color), 1.5f);
+                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Dust obj = Main.dust[d];
@@ -4879,14 +4837,14 @@ namespace YharimEX.Content.NPCs
                 NPC.localAI[2] += 1f;
                 if (NPC.localAI[2] > 120f)
                 {
-                    AliveCheck(player, forceDespawn: true);
+                    AliveCheck(Player, forceDespawn: true);
                 }
                 return;
             }
             if ((NPC.localAI[0] -= 1f) < 0f)
             {
                 NPC.localAI[0] = Main.rand.Next(30);
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 spawnPos = ((Entity)NPC).position + new Vector2((float)Main.rand.Next(((Entity)NPC).width), (float)Main.rand.Next(((Entity)NPC).height));
                     int type = ModContent.ProjectileType<PhantasmalBlast>();
@@ -4899,10 +4857,10 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[1] = 0f;
                 EModeSpecialEffects();
                 TryMasoP3Theme();
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int max = 10;
-                    int damage = FargoSoulsUtil.ScaledProjectileDamage(NPC.damage);
+                    int damage = YharimEXUtil.ScaledProjectileDamage(NPC.damage);
                     SpawnSphereRing(max, 6f, damage, 0.5f);
                     SpawnSphereRing(max, 6f, damage, -0.5f);
                 }
@@ -4921,16 +4879,16 @@ namespace YharimEX.Content.NPCs
                     NPC.localAI[1] = 1f;
                     NPC.ai[2] -= 780f;
                     NPC.ai[3] -= MathHelper.ToRadians(20f);
-                    if (Main.netMode != 1)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.UnitX, (double)NPC.ai[3], default(Vector2)), ModContent.ProjectileType<MutantGiantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.5f), 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
+                        Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.UnitX, (double)NPC.ai[3], default(Vector2)), ModContent.ProjectileType<MutantGiantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.5f), 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
                     }
                     NPC.netUpdate = true;
                 }
                 else
                 {
-                    SoundEngine.PlaySound(ref SoundID.Roar, (Vector2?)((Entity)NPC).Center);
-                    if (Main.netMode != 1)
+                    SoundEngine.PlaySound(SoundID.Roar, (Vector2?)((Entity)NPC).Center);
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         for (int i = 0; i < 8; i++)
                         {
@@ -4944,40 +4902,37 @@ namespace YharimEX.Content.NPCs
             {
                 if (NPC.localAI[1] == 0f || NPC.ai[2] > 330f)
                 {
-                    NPC.ai[3] = Utils.ToRotation(((Entity)NPC).DirectionFrom(((Entity)player).Center));
+                    NPC.ai[3] = Utils.ToRotation(((Entity)NPC).DirectionFrom(((Entity)Player).Center));
                 }
             }
             else
             {
                 if (!Main.dedServ)
                 {
-                    ((EffectManager<Filter>)(object)Filters.Scene)["FargowiltasSouls:FinalSpark"].IsActive();
+                    ((EffectManager<Filter>)(object)Terraria.Graphics.Effects.Filters.Scene)["FargowiltasSouls:FinalSpark"].IsActive();
                 }
-                if (NPC.ai[1] % 3f == 0f && Main.netMode != 1)
+                if (NPC.ai[1] % 3f == 0f && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, 24f * Utils.RotatedBy(Vector2.UnitX, (double)NPC.ai[3], default(Vector2)), ModContent.ProjectileType<MutantEyeWavy>(), 0, 0f, Main.myPlayer, Utils.NextFloat(Main.rand, 0.5f, 1.25f) * (float)((!Utils.NextBool(Main.rand)) ? 1 : (-1)), (float)Main.rand.Next(10, 60));
                 }
             }
             int endTime = 1020;
-            if (FargoSoulsWorld.MasochistModeReal)
-            {
-                endTime += 180;
-            }
+            endTime += 180;
             if ((NPC.ai[2] += 1f) > (float)endTime)
             {
                 NPC.netUpdate = true;
                 NPC.ai[0] -= 1f;
                 NPC.ai[1] = 0f;
                 NPC.ai[2] = 0f;
-                FargoSoulsUtil.ClearAllProjectiles(2, ((Entity)NPC).whoAmI);
+                YharimEXUtil.ClearAllProjectiles(2, ((Entity)NPC).whoAmI);
             }
             else if (NPC.ai[2] == 420f)
             {
                 NPC.netUpdate = true;
-                NPC.ai[3] += MathHelper.ToRadians(20f) * (float)(FargoSoulsWorld.MasochistModeReal ? 1 : (-1));
-                if (Main.netMode != 1)
+                NPC.ai[3] += MathHelper.ToRadians(20f) * 1;
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.UnitX, (double)NPC.ai[3], default(Vector2)), ModContent.ProjectileType<MutantGiantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.damage, 0.5f), 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
+                    Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Utils.RotatedBy(Vector2.UnitX, (double)NPC.ai[3], default(Vector2)), ModContent.ProjectileType<MutantGiantDeathray2>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 0.5f), 0f, Main.myPlayer, 0f, (float)((Entity)NPC).whoAmI);
                 }
             }
             else if (NPC.ai[2] < 300f && NPC.localAI[1] != 0f)
@@ -5013,7 +4968,7 @@ namespace YharimEX.Content.NPCs
                 }
             }
             SpinLaser(FargoSoulsWorld.MasochistModeReal && NPC.ai[2] >= 420f);
-            if (AliveCheck(player))
+            if (AliveCheck(Player))
             {
                 NPC.localAI[2] = 0f;
             }
@@ -5038,7 +4993,7 @@ namespace YharimEX.Content.NPCs
 
         private void DyingDramaticPause()
         {
-            if (!AliveCheck(player))
+            if (!AliveCheck(Player))
             {
                 return;
             }
@@ -5051,7 +5006,7 @@ namespace YharimEX.Content.NPCs
                 NPC.ai[1] = 0f;
                 NPC.ai[3] = -(float)Math.PI / 2f;
                 NPC.netUpdate = true;
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.UnitY * -1f, ModContent.ProjectileType<MutantGiantDeathray2>(), 0, 0f, Main.myPlayer, 1f, (float)((Entity)NPC).whoAmI);
                 }
@@ -5059,7 +5014,7 @@ namespace YharimEX.Content.NPCs
             if ((NPC.localAI[0] -= 1f) < 0f)
             {
                 NPC.localAI[0] = Main.rand.Next(15);
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 spawnPos = ((Entity)NPC).position + new Vector2((float)Main.rand.Next(((Entity)NPC).width), (float)Main.rand.Next(((Entity)NPC).height));
                     int type = ModContent.ProjectileType<PhantasmalBlast>();
@@ -5068,7 +5023,7 @@ namespace YharimEX.Content.NPCs
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 60, 0f, 0f, 0, default(Color), 1.5f);
+                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Dust obj = Main.dust[d];
@@ -5081,7 +5036,7 @@ namespace YharimEX.Content.NPCs
             ((Entity)NPC).velocity = Vector2.Zero;
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, 60, 0f, 0f, 0, default(Color), 2.5f);
+                int d = Dust.NewDust(((Entity)NPC).position, ((Entity)NPC).width, ((Entity)NPC).height, DustID.RedTorch, 0f, 0f, 0, default(Color), 2.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Dust obj = Main.dust[d];
@@ -5090,14 +5045,14 @@ namespace YharimEX.Content.NPCs
             if ((NPC.localAI[0] -= 1f) < 0f)
             {
                 NPC.localAI[0] = Main.rand.Next(5);
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 spawnPos = ((Entity)NPC).Center + Utils.NextVector2Circular(Main.rand, 240f, 240f);
                     int type = ModContent.ProjectileType<PhantasmalBlast>();
                     Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), spawnPos, Vector2.Zero, type, 0, 0f, Main.myPlayer, 0f, 0f);
                 }
             }
-            if ((NPC.ai[1] += 1f) % 3f == 0f && Main.netMode != 1)
+            if ((NPC.ai[1] += 1f) % 3f == 0f && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, 24f * Utils.RotatedBy(Vector2.UnitX, (double)NPC.ai[3], default(Vector2)), ModContent.ProjectileType<MutantEyeWavy>(), 0, 0f, Main.myPlayer, Utils.NextFloat(Main.rand, 0.75f, 1.5f) * (float)((!Utils.NextBool(Main.rand)) ? 1 : (-1)), (float)Main.rand.Next(10, 90));
             }
@@ -5120,9 +5075,9 @@ namespace YharimEX.Content.NPCs
             if (n != 200)
             {
                 Main.npc[n].homeless = true;
-                if (Main.netMode == 2)
+                if (Main.netMode == NetmodeID.Server)
                 {
-                    NetMessage.SendData(23, -1, -1, (NetworkText)null, n, 0f, 0f, 0f, 0, 0, 0);
+                    NetMessage.SendData(MessageID.SyncNPC, -1, -1, (NetworkText)null, n, 0f, 0f, 0f, 0, 0, 0);
                 }
             }
         }
@@ -5142,7 +5097,7 @@ namespace YharimEX.Content.NPCs
         {
             for (int i = 0; i < 3; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, 60, 0f, 0f, 0, default, 1f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.RedTorch, 0f, 0f, 0, default, 1f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Dust obj = Main.dust[d];
@@ -5163,8 +5118,8 @@ namespace YharimEX.Content.NPCs
                 return true;
             }
             NPC.life = 1;
-            active = true;
-            if (Main.netMode != 1 && NPC.ai[0] > -1f)
+            NPC.active = true;
+            if (Main.netMode != NetmodeID.MultiplayerClient && NPC.ai[0] > -1f)
             {
                 NPC.ai[0] = ((!FargoSoulsWorld.EternityMode) ? (-6) : ((NPC.ai[0] >= 10f) ? (-1) : 10));
                 NPC.ai[1] = 0f;
@@ -5175,7 +5130,7 @@ namespace YharimEX.Content.NPCs
                 NPC.localAI[2] = 0f;
                 NPC.dontTakeDamage = true;
                 NPC.netUpdate = true;
-                FargoSoulsUtil.ClearAllProjectiles(2, whoAmI, NPC.ai[0] < 0f);
+                YharimEXUtil.ClearAllProjectiles(2, NPC.whoAmI, NPC.ai[0] < 0f);
             }
             return false;
         }
