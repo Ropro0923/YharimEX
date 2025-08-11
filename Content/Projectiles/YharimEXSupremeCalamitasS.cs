@@ -21,7 +21,7 @@ namespace YharimEX.Content.Projectiles
     {
         private float localAI0;
         private float localAI1;
-        public override string Texture => "CalamityMod/NPCs/SupremeCalamitas/SupremeCalamitasHooded";
+        public override string Texture => "Terraria/Images/Projectile_650"; //i really don't like the just having floating supcals so i'd rather keep the moonlord eyes.
 
         public override void SetStaticDefaults()
         {

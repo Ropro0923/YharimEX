@@ -245,12 +245,11 @@ namespace YharimEX.Content.NPCs
             TeleportDust();
             SoundEngine.PlaySound(SoundID.Item84, (Vector2?)NPC.Center);
         }
-        /*
         private void GoNextAI0()
         {
             NPC.ai[0] += 1f;
         }
-
+        /*
         public override void AI()
         {
             if (YharimEXCrossmod.FargowiltasSouls.Loaded) 
