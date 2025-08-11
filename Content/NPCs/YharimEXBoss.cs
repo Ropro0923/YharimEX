@@ -298,7 +298,7 @@ namespace YharimEX.Content.NPCs
                                     Vector2 center3 = ((Entity)NPC).Center;
                                     Vector2 unitY = Vector2.UnitY;
                                     val = default(Vector2);
-                                    Projectile.NewProjectile(source_FromThis, center3 + -Utils.RotatedBy(unitY, angle, val) * 90f, Vector2.Zero, ModContent.ProjectileType<SparklingLove>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 2f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 90f);
+                                    Projectile.NewProjectile(source_FromThis, center3 + -Utils.RotatedBy(unitY, angle, val) * 90f, Vector2.Zero, ModContent.ProjectileType<YharimEXSparklingLove>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 2f), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, 90f);
                                 }
                                 Vector2 unitY2 = Vector2.UnitY;
                                 val = default(Vector2);
@@ -332,7 +332,7 @@ namespace YharimEX.Content.NPCs
                                         Vector2 speed2 = 2f * target / 90f;
                                         float acceleration = (0f - ((Vector2)(speed2)).Length()) / 90f;
                                         int damage = (NPC.localAI[3] > 1f) ? YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.3333334f) : YharimEXUtil.ScaledProjectileDamage(NPC.damage);
-                                        Projectile.NewProjectile(NPC.GetSource_FromThis(null), NPC.Center, speed2, ModContent.ProjectileType<DeviEnergyHeart>(), damage, 0f, Main.myPlayer, 0f, acceleration);
+                                        Projectile.NewProjectile(NPC.GetSource_FromThis(null), NPC.Center, speed2, ModContent.ProjectileType<YharimEXDeviEnergyHeart>(), damage, 0f, Main.myPlayer, 0f, acceleration);
                                     }
                                 }
                             }
@@ -490,13 +490,13 @@ namespace YharimEX.Content.NPCs
                                 Vector2 unitY3 = Vector2.UnitY;
                                 double num18 = (double)MathHelper.ToRadians(20f) * (Main.rand.NextDouble() - 0.5) + (double)R;
                                 val = default(Vector2);
-                                Projectile.NewProjectile(source_FromThis2, center6, Utils.RotatedBy(unitY3, num18, val), ModContent.ProjectileType<AbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft, 0f);
+                                Projectile.NewProjectile(source_FromThis2, center6, Utils.RotatedBy(unitY3, num18, val), ModContent.ProjectileType<YharimEXYharimEXAbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft, 0f);
                                 IEntitySource source_FromThis3 = ((Entity)NPC).GetSource_FromThis((string)null);
                                 Vector2 center7 = ((Entity)NPC).Center;
                                 Vector2 unitY4 = Vector2.UnitY;
                                 double num19 = (double)MathHelper.ToRadians(20f) * (Main.rand.NextDouble() - 0.5) + (double)R;
                                 val = default(Vector2);
-                                Projectile.NewProjectile(source_FromThis3, center7, -Utils.RotatedBy(unitY4, num19, val), ModContent.ProjectileType<AbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft, 0f);
+                                Projectile.NewProjectile(source_FromThis3, center7, -Utils.RotatedBy(unitY4, num19, val), ModContent.ProjectileType<YharimEXYharimEXAbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft, 0f);
                             }
                         }
                         if ((NewAI[1] += 1f) > 218.18182f)
@@ -617,13 +617,13 @@ namespace YharimEX.Content.NPCs
                                 Vector2 unitY5 = Vector2.UnitY;
                                 double num23 = (double)MathHelper.ToRadians(20f) * (Main.rand.NextDouble() - 0.5) + (double)R2;
                                 val = default(Vector2);
-                                Projectile.NewProjectile(source_FromThis4, center8, Utils.RotatedBy(unitY5, num23, val), ModContent.ProjectileType<AbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft2, 0f);
+                                Projectile.NewProjectile(source_FromThis4, center8, Utils.RotatedBy(unitY5, num23, val), ModContent.ProjectileType<YharimEXYharimEXAbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft2, 0f);
                                 IEntitySource source_FromThis5 = ((Entity)NPC).GetSource_FromThis((string)null);
                                 Vector2 center9 = ((Entity)NPC).Center;
                                 Vector2 unitY6 = Vector2.UnitY;
                                 double num24 = (double)MathHelper.ToRadians(20f) * (Main.rand.NextDouble() - 0.5) + (double)R2;
                                 val = default(Vector2);
-                                Projectile.NewProjectile(source_FromThis5, center9, -Utils.RotatedBy(unitY6, num24, val), ModContent.ProjectileType<AbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft2, 0f);
+                                Projectile.NewProjectile(source_FromThis5, center9, -Utils.RotatedBy(unitY6, num24, val), ModContent.ProjectileType<YharimEXYharimEXAbomDeathrayMark>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage, 1.5f), 0f, Main.myPlayer, timeLeft2, 0f);
                             }
                         }
                         if (!((NewAI[1] += 1f) > 218.18182f))
@@ -637,15 +637,15 @@ namespace YharimEX.Content.NPCs
                         Projectile[] projectile = Main.projectile;
                         foreach (Projectile proj2 in projectile)
                         {
-                            if (proj2.type == ModContent.ProjectileType<AbomDeathrayMark>())
+                            if (proj2.type == ModContent.ProjectileType<YharimEXYharimEXAbomDeathrayMark>())
                             {
-                                ((AbomDeathrayMark)(object)proj2.ModProjectile).DontS = true;
+                                ((YharimEXYharimEXAbomDeathrayMark)(object)proj2.ModProjectile).DontS = true;
                             }
-                            if (proj2.type == ModContent.ProjectileType<AbomDeathray>())
+                            if (proj2.type == ModContent.ProjectileType<YharimEXAbomDeathray>())
                             {
-                                ((AbomDeathray)(object)proj2.ModProjectile).DontSpawn = true;
+                                ((YharimEXAbomDeathray)(object)proj2.ModProjectile).DontSpawn = true;
                             }
-                            if (proj2.type == ModContent.ProjectileType<AbomScytheSplit>())
+                            if (proj2.type == ModContent.ProjectileType<YharimEXAbomScyteSplit>())
                             {
                                 proj2.Kill();
                             }
@@ -681,7 +681,7 @@ namespace YharimEX.Content.NPCs
                         }
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<GlowRingEX>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, -20f);
+                            Projectile.NewProjectile(((Entity)NPC).GetSource_FromThis((string)null), ((Entity)NPC).Center, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRingEX>(), YharimEXUtil.ScaledProjectileDamage(NPC.damage), 0f, Main.myPlayer, (float)((Entity)NPC).whoAmI, -20f);
                         }
                     }
                     if ((NewAI[2] += 1f) <= 315f)

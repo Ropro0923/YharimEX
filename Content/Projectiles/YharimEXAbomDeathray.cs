@@ -16,14 +16,14 @@ using YharimEX.Core;
 
 namespace YharimEX.Content.Projectiles
 {
-    public class AbomDeathray : BaseDeathray
+    public class YharimEXAbomDeathray : BaseDeathray
     {
         private Vector2 spawnPos;
         public bool DontSpawn;
 
-        public override string Texture => "YharimEX/Content/Projectiles/AbomDeathray";
+        public override string Texture => "YharimEX/Content/Projectiles/YharimEXAbomDeathray";
 
-        public AbomDeathray() : base(120f) { }
+        public YharimEXAbomDeathray() : base(120f) { }
 
         public override void SetStaticDefaults()
         {
@@ -79,7 +79,7 @@ namespace YharimEX.Content.Projectiles
                             Projectile.GetSource_FromThis(),
                             Projectile.Center + Projectile.velocity * i,
                             Vector2.Zero,
-                            ModContent.ProjectileType<AbomScytheSplit>(),
+                            ModContent.ProjectileType<YharimEXAbomScyteSplit>(),
                             Projectile.damage,
                             Projectile.knockBack,
                             Projectile.owner,

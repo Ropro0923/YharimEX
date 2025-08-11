@@ -14,13 +14,12 @@ using Terraria.ModLoader;
 
 namespace YharimEX.Content.Projectiles
 {
-    public class AbomScytheSplit : ModProjectile
+    public class YharimEXAbomScyteSplit : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_274";
 
         public override void SetStaticDefaults()
         {
-            // Use localization file for display name in 1.4.4 ((ModProjectile)this).DisplayName.SetDefault("Abominationn Scythe");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }

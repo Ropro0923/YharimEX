@@ -17,7 +17,7 @@ using Terraria.ModLoader;
 
 namespace YharimEX.Content.Projectiles
 {
-    public class GlowRingEX : ModProjectile
+    public class YharimEXGlowRingEX : ModProjectile
     {
         private Color ringColor = new(255, 255, 255, 0);
 

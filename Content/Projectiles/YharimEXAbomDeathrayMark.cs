@@ -11,13 +11,13 @@ using Terraria.ID;
 
 namespace YharimEX.Content.Projectiles
 {
-    public class AbomDeathrayMark : BaseDeathray
+    public class YharimEXYharimEXAbomDeathrayMark : BaseDeathray
     {
         public bool DontS;
 
-        public override string Texture => "YharimEX/Content/Projectiles/AbomDeathray";
+        public override string Texture => "YharimEX/Content/Projectiles/YharimEXAbomDeathray";
 
-        public AbomDeathrayMark() : base(30f) { }
+        public YharimEXYharimEXAbomDeathrayMark() : base(30f) { }
 
         public override void SetStaticDefaults()
         {
@@ -89,7 +89,7 @@ namespace YharimEX.Content.Projectiles
                 Projectile.GetSource_FromThis(),
                 Projectile.Center,
                 Projectile.velocity,
-                ModContent.ProjectileType<AbomDeathray>(),
+                ModContent.ProjectileType<YharimEXAbomDeathray>(),
                 Projectile.damage,
                 Projectile.knockBack,
                 Projectile.owner,
@@ -97,7 +97,7 @@ namespace YharimEX.Content.Projectiles
                 Projectile.ai[1]
             );
 
-            if (proj.ModProjectile is AbomDeathray ray)
+            if (proj.ModProjectile is YharimEXAbomDeathray ray)
                 ray.DontSpawn = DontS;
         }
     }

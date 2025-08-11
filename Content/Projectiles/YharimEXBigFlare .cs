@@ -5,34 +5,37 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Content.Buffs.Boss;
 using FargowiltasSouls.Core.Systems;
+using FargowiltasSouls.Content.Buffs.Masomode;
+using FargowiltasSouls.Content.Buffs.Souls;
+using FargowiltasSouls.Content.Buffs.Boss;
 using YharimEX.Core;
 using FargowiltasSouls.Core.ModPlayers;
+
+
 
 namespace YharimEX.Content.Projectiles
 {
 	public class YharimEXBigFlare : ModProjectile
 	{
-		public override string Texture => "CalamityMod/Projectiles/Boss/BigFlare";
+		public override string Texture => "CalamityMod/Projectiles/Boss/Flare";
 		public override void SetStaticDefaults()
 		{
-			Main.projFrames[Projectile.type] = 4;
-			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8;
-			ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+			Main.projFrames[((ModProjectile)this).Projectile.type] = 4;
+			ProjectileID.Sets.TrailCacheLength[((ModProjectile)this).Projectile.type] = 8;
+			ProjectileID.Sets.TrailingMode[((ModProjectile)this).Projectile.type] = 2;
 		}
 
 		public override void SetDefaults()
 		{
-			Projectile.width = 30;
-			Projectile.height = 30;
-			Projectile.hostile = true;
-			Projectile.ignoreWater = true;
-			Projectile.tileCollide = false;
-			Projectile.timeLeft = 600;
-			Projectile.alpha = 100;
-			CooldownSlot = 1;
+			((Entity)((ModProjectile)this).Projectile).width = 30;
+			((Entity)((ModProjectile)this).Projectile).height = 30;
+			((ModProjectile)this).Projectile.hostile = true;
+			((ModProjectile)this).Projectile.ignoreWater = true;
+			((ModProjectile)this).Projectile.tileCollide = false;
+			((ModProjectile)this).Projectile.timeLeft = 600;
+			((ModProjectile)this).Projectile.alpha = 100;
+			((ModProjectile)this).CooldownSlot = 1;
 		}
 
 		public override bool CanHitPlayer(Player target)
@@ -47,7 +50,7 @@ namespace YharimEX.Content.Projectiles
 			for (int index1 = 0; index1 < cap; index1++)
 			{
 				Vector2 vector2_1 = ((Entity)((ModProjectile)this).Projectile).velocity;
-				vector2_1 = Utils.SafeNormalize(vector2_1, Vector2.UnitX);
+				vector2_1.Normalize();
 				vector2_1.X *= ((Entity)((ModProjectile)this).Projectile).width;
 				vector2_1.Y *= ((Entity)((ModProjectile)this).Projectile).height;
 				vector2_1 /= 2f;
@@ -55,7 +58,7 @@ namespace YharimEX.Content.Projectiles
 				vector2_1 += ((Entity)((ModProjectile)this).Projectile).Center;
 				Vector2 vector2_2 = Utils.ToRotationVector2(Utils.NextFloat(Main.rand) * (float)Math.PI - (float)Math.PI / 2f);
 				vector2_2 *= (float)Main.rand.Next(3, 8);
-				int index2 = Dust.NewDust(vector2_1 + vector2_2, 0, 0, 172, vector2_2.X * 2f, vector2_2.Y * 2f, 100, default(Color), 1.4f);
+				int index2 = Dust.NewDust(vector2_1 + vector2_2, 0, 0, DustID.DungeonWater, vector2_2.X * 2f, vector2_2.Y * 2f, 100, default(Color), 1.4f);
 				Main.dust[index2].noGravity = true;
 				Main.dust[index2].noLight = true;
 				Dust obj = Main.dust[index2];
@@ -73,16 +76,18 @@ namespace YharimEX.Content.Projectiles
 			}
 		}
 
-		public override void OnHitPlayer(Player player, Player.HurtInfo hurtInfo)
+		public override void OnHitPlayer(Player player, Player.HurtInfo info)
 		{
-
-			if (WorldSavingSystem.EternityMode)
+			if (YharimEXCrossmod.FargowiltasSouls.Loaded)
 			{
-				player.GetModPlayer<FargoSoulsPlayer>().MaxLifeReduction += 100;
-				player.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400, true, false);
-				player.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180, true, false);
+				if (WorldSavingSystem.EternityMode)
+				{
+					player.GetModPlayer<FargoSoulsPlayer>().MaxLifeReduction += 100;
+					player.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400, true, false);
+					player.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180, true, false);
+				}
+				player.AddBuff(ModContent.BuffType<DefenselessBuff>(), Main.rand.Next(600, 900), true, false);
 			}
-			player.AddBuff(ModContent.BuffType<DefenselessBuff>(), Main.rand.Next(600, 900), true, false);
 			player.AddBuff(196, Main.rand.Next(300, 600), true, false);
 		}
 
@@ -93,7 +98,7 @@ namespace YharimEX.Content.Projectiles
 			{
 				Vector2 val = Utils.RotatedBy(Vector2.Normalize(((Entity)((ModProjectile)this).Projectile).velocity) * new Vector2((float)((Entity)((ModProjectile)this).Projectile).width / 2f, (float)((Entity)((ModProjectile)this).Projectile).height) * 0.75f, (double)(index1 - (num1 / 2 - 1)) * 6.28318548202515 / (double)num1, default(Vector2)) + ((Entity)((ModProjectile)this).Projectile).Center;
 				Vector2 vector2_2 = val - ((Entity)((ModProjectile)this).Projectile).Center;
-				int index2 = Dust.NewDust(val + vector2_2, 0, 0, DustID.DungeonWater, vector2_2.X * 2f, vector2_2.Y * 2f, 100, default(Color), 1.4f);
+				int index2 = Dust.NewDust(val + vector2_2, 0, 0, 172, vector2_2.X * 2f, vector2_2.Y * 2f, 100, default(Color), 1.4f);
 				Main.dust[index2].noGravity = true;
 				Main.dust[index2].noLight = true;
 				Main.dust[index2].velocity = vector2_2;
@@ -105,7 +110,8 @@ namespace YharimEX.Content.Projectiles
 			Texture2D texture2D13 = TextureAssets.Projectile[((ModProjectile)this).Projectile.type].Value;
 			int num156 = TextureAssets.Projectile[((ModProjectile)this).Projectile.type].Value.Height / Main.projFrames[((ModProjectile)this).Projectile.type];
 			int y3 = num156 * ((ModProjectile)this).Projectile.frame;
-			Rectangle rectangle = new Rectangle(0, y3, texture2D13.Width, num156);
+			Rectangle rectangle = default(Rectangle);
+			rectangle = new Rectangle(0, y3, texture2D13.Width, num156);
 			Vector2 origin2 = Utils.Size(rectangle) / 2f;
 			Color color26 = lightColor;
 			color26 = ((ModProjectile)this).Projectile.GetAlpha(color26);

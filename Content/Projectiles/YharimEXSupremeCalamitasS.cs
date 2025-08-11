@@ -1,3 +1,7 @@
+/*
+
+If you don't want it to be supreme calamitas, you can just summon MoonLordFreeEye
+
 using System;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -9,11 +13,9 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using FargowiltasSouls; // for FargoSoulsGlobalProjectile (if available)
 using FargowiltasSouls.Content.Buffs.Masomode;
 using FargowiltasSouls.Content.Buffs.Boss;
 using FargowiltasSouls.Core.Systems;
-using FargowiltasSouls.Content.Projectiles;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -25,7 +27,7 @@ namespace YharimEX.Content.Projectiles
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 42;
+            Main.projFrames[Projectile.type] = 4;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -204,32 +206,25 @@ namespace YharimEX.Content.Projectiles
 
         public override Color? GetAlpha(Color lightColor) => Color.White * Projectile.Opacity;
 
+        // ...existing code...
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-
-            const int Columns = 2;
-            const int Rows = 21;
-
-            int frameIndex = Projectile.frame;
-            int xFrame = frameIndex / Rows;
-            int yFrame = frameIndex % Rows;
-
-            int frameWidth = texture.Width / Columns;
-            int frameHeight = texture.Height / Rows;
-
-            Rectangle rectangle = new Rectangle(frameWidth * xFrame, frameHeight * yFrame, frameWidth, frameHeight);
-            Vector2 origin = rectangle.Size() / 2f;
+            int frameHeight = texture.Height / Main.projFrames[Projectile.type];
+            int y = frameHeight * Projectile.frame;
+            Rectangle frame = new Rectangle(0, y, texture.Width, frameHeight);
+            Vector2 origin = frame.Size() / 2f;
 
             Color baseColor = Projectile.GetAlpha(lightColor);
             float scale = ((int)Main.mouseTextColor / 200f - 0.35f) * 0.4f + 1f;
             scale *= Projectile.scale;
 
+            // Draw trail
             for (int i = 0; i < ProjectileID.Sets.TrailCacheLength[Projectile.type]; i++)
             {
-                Color color27 = baseColor * 0.75f;
-                color27.A = 0;
-                color27 *= (ProjectileID.Sets.TrailCacheLength[Projectile.type] - i) / (float)ProjectileID.Sets.TrailCacheLength[Projectile.type];
+                Color trailColor = baseColor * 0.75f;
+                trailColor.A = 0;
+                trailColor *= (ProjectileID.Sets.TrailCacheLength[Projectile.type] - i) / (float)ProjectileID.Sets.TrailCacheLength[Projectile.type];
 
                 Vector2 oldPos = Projectile.oldPos[i] + Projectile.Size / 2f;
                 float oldRot = Projectile.oldRot[i];
@@ -237,8 +232,8 @@ namespace YharimEX.Content.Projectiles
                 Main.EntitySpriteDraw(
                     texture,
                     oldPos - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
-                    rectangle,
-                    color27,
+                    frame,
+                    trailColor,
                     oldRot,
                     origin,
                     scale,
@@ -247,13 +242,29 @@ namespace YharimEX.Content.Projectiles
                 );
             }
 
+            // Draw main sprite
             Main.EntitySpriteDraw(
                 texture,
                 Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
-                rectangle,
+                frame,
                 baseColor,
                 Projectile.rotation,
                 origin,
+                Projectile.scale,
+                SpriteEffects.None,
+                0
+            );
+
+            // Draw the pupil (TrueEyePupil)
+            Texture2D pupilTexture = ModContent.Request<Texture2D>("YharimEX/Content/Projectiles/YharimEXSparklingLove", AssetRequestMode.ImmediateLoad).Value;            Vector2 pupilOffset = Utils.RotatedBy(new Vector2(localAI1 / 2f, 0f), localAI0) + Utils.RotatedBy(new Vector2(0f, -6f), Projectile.rotation);
+            Vector2 pupilOrigin = pupilTexture.Size() / 2f;
+            Main.EntitySpriteDraw(
+                pupilTexture,
+                Projectile.Center + pupilOffset - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
+                null,
+                Color.White,
+                Projectile.rotation,
+                pupilOrigin,
                 Projectile.scale,
                 SpriteEffects.None,
                 0
@@ -263,3 +274,5 @@ namespace YharimEX.Content.Projectiles
         }
     }
 }
+
+*/

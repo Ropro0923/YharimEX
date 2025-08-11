@@ -16,7 +16,7 @@ using YharimEX.Core;
 
 namespace YharimEX.Content.Projectiles
 {
-    public class SparklingLove : ModProjectile
+    public class YharimEXSparklingLove : ModProjectile
     {
         public int scaleCounter;
 
@@ -60,7 +60,7 @@ namespace YharimEX.Content.Projectiles
                 Projectile.localAI[1] = Projectile.DirectionFrom(npc.Center).ToRotation();
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GlowRingEX>(), 0, 0f, Main.myPlayer, -1f, -17f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRingEX>(), 0, 0f, Main.myPlayer, -1f, -17f);
             }
 
             if (Projectile.alpha > 0)
@@ -86,7 +86,7 @@ namespace YharimEX.Content.Projectiles
                     MakeDust();
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GlowRingEX>(), 0, 0f, Main.myPlayer, -1f, -16 + scaleCounter);
+                        Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRingEX>(), 0, 0f, Main.myPlayer, -1f, -16 + scaleCounter);
 
                     SoundEngine.PlaySound(SoundID.Item92, Projectile.Center);
                 }
@@ -103,7 +103,7 @@ namespace YharimEX.Content.Projectiles
                 SoundEngine.PlaySound(SoundID.Item92, Projectile.Center);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GlowRingEX>(), 0, 0f, Main.myPlayer, -1f, -14f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRingEX>(), 0, 0f, Main.myPlayer, -1f, -14f);
 
                 if (!Main.dedServ && Main.LocalPlayer.active)
                     YharimEXUtil.ScreenshakeRumble(30);
@@ -123,7 +123,7 @@ namespace YharimEX.Content.Projectiles
                             float accel = -speed.Length() / 90f;
                             float rot = speed.ToRotation();
 
-                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, speed, ModContent.ProjectileType<DeviEnergyHeart>(), (int)(Projectile.damage * 0.75), 0f, Main.myPlayer, rot + MathHelper.PiOver2, accel);
+                            Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, speed, ModContent.ProjectileType<YharimEXDeviEnergyHeart>(), (int)(Projectile.damage * 0.75), 0f, Main.myPlayer, rot + MathHelper.PiOver2, accel);
                             Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, Vector2.Zero, ModContent.ProjectileType<GlowLine>(), Projectile.damage, 0f, Main.myPlayer, 2f, rot);
                             Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, speed, ModContent.ProjectileType<GlowLine>(), Projectile.damage, 0f, Main.myPlayer, 2f, rot + MathHelper.PiOver2);
                             Projectile.NewProjectile(Projectile.GetSource_FromThis(), center, speed, ModContent.ProjectileType<GlowLine>(), Projectile.damage, 0f, Main.myPlayer, 2f, rot - MathHelper.PiOver2);
@@ -198,7 +198,7 @@ namespace YharimEX.Content.Projectiles
             Vector2 drawPos = Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY);
             Main.EntitySpriteDraw(tex, drawPos, frame, Projectile.GetAlpha(lightColor), Projectile.rotation, origin, Projectile.scale, effects, 0);
 
-            Texture2D glow = ModContent.Request<Texture2D>("YharimEX/Content/Projectiles/SparklingLove_glow", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D glow = ModContent.Request<Texture2D>("YharimEX/Content/Projectiles/YharimEXSparklingLove_glow", AssetRequestMode.ImmediateLoad).Value;
             Main.EntitySpriteDraw(glow, drawPos, frame, Color.White * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, effects, 0);
 
             return false;

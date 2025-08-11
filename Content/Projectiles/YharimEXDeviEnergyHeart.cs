@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace YharimEX.Content.Projectiles
 {
-    public class DeviEnergyHeart : ModProjectile
+    public class YharimEXDeviEnergyHeart : ModProjectile
     {
         public override void SetStaticDefaults()
         {
