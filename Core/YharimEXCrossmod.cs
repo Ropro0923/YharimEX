@@ -17,11 +17,5 @@ namespace YharimEX.Core
             public static bool Loaded => ModLoader.HasMod(Name);
             public static Mod Mod => ModLoader.GetMod(Name);
         }
-        public static class Calamity
-        {
-            public const string Name = "Calamity";
-            public static bool Loaded => ModLoader.HasMod(Name);
-            public static Mod Mod => ModLoader.GetMod(Name);
-        }
     }
 }

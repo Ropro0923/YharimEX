@@ -1,1 +1,3 @@
-Retirang has been merged with YharimEXHammer
+MutantTyphoon = YharimEXBigFlare
+MutantTrueEyeSphere = YharimEXSkyFlare
+MutantTrueEyeS = YharimEXSupremeCalamitasS

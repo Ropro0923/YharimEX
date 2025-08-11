@@ -14,4 +14,7 @@ You should try out these mods too!
 
 Thanks to 永恒群冠 and 我在风中凌乱啊 for making the original fight.
 Thanks to the Fargo's Souls team for making the mod.
+Thanks to the Calamity team for making the sprites.
 For these people, any inquiries or concerns can be sent to Ropro0923
+
+The point of this mod is to port the 1.4.3 fight to 1.4.4, I am not using the sprites and the boss with malicious intent, just renewing an old mod.
