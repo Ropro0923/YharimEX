@@ -1,3 +1,0 @@
-MutantTyphoon = YharimEXBigFlare
-MutantTrueEyeSphere = YharimEXSkyFlare
-MutantTrueEyeS = YharimEXSupremeCalamitasS
