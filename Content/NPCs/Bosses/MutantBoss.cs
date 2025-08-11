@@ -36,13 +36,16 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
+using FargowiltasSouls.Content.Bosses.MutantBoss;
+using FargowiltasSouls;
+using FargowiltasSouls.Content.Projectiles;
 
-namespace FargowiltasSouls.Content.Bosses.MutantBoss
+namespace YharimEX.Content.NPCs.Bosses
 {
-    [AutoloadBossHead]
-    public class MutantBoss : ModNPC
+    public class YharimEX : ModNPC
     {
         public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBoss";
+        public override string BossHeadTexture => "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBoss_Head";
 
         public SlotId? TelegraphSound = null;
 
@@ -145,9 +148,6 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
                 Music = MusicID.OtherworldlyTowers;
             }
             SceneEffectPriority = SceneEffectPriority.BossHigh;
-
-            if (FargoSoulsUtil.AprilFools)
-                NPC.GivenName = Language.GetTextValue("Mods.FargowiltasSouls.NPCs.MutantBoss_April.DisplayName");
         }
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
@@ -1849,7 +1849,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
                 NPC.localAI[0] = Math.Sign(NPC.Center.X - player.Center.X);
                 //if (WorldSavingSystem.MasochistMode) NPC.ai[2] = NPC.SafeDirectionTo(player.Center).ToRotation(); //starting rotation offset to avoid hitting at close range
                 if (FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
 
                 EdgyBossText(GFBQuote(11));
 
@@ -2296,7 +2296,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
             {
                 SoundEngine.PlaySound(SoundID.ForceRoarPitched, NPC.Center); //eoc roar
                 if (FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, NPCID.Retinazer);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, NPCID.Retinazer);
 
                 EdgyBossText(GFBQuote(17));
             }
@@ -2956,7 +2956,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
                 NPC.ai[3] = Main.rand.NextFloat((float)Math.PI * 2);
                 SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
                 if (FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
 
                 EdgyBossText(GFBQuote(22));
             }
@@ -3089,8 +3089,8 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i) * 525, Vector2.Zero, ModContent.ProjectileType<Projectiles.GlowRingHollow>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 1f);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i + Math.PI / 4) * 350, Vector2.Zero, ModContent.ProjectileType<Projectiles.GlowRingHollow>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 2f);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i) * 525, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRingHollow>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 1f);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i + Math.PI / 4) * 350, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRingHollow>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 2f);
                     }
                 }
             }
@@ -3734,7 +3734,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
                         for (int i = 0; i < max; i++)
                         {
                             float offset = i - 0.5f;
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, (NPC.ai[3] + MathHelper.TwoPi / max * offset).ToRotationVector2(), ModContent.ProjectileType<Projectiles.GlowLine>(), 0, 0f, Main.myPlayer, 13f, NPC.whoAmI);
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, (NPC.ai[3] + MathHelper.TwoPi / max * offset).ToRotationVector2(), ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowLine>(), 0, 0f, Main.myPlayer, 13f, NPC.whoAmI);
                         }
                     }
                 }
@@ -3753,8 +3753,8 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
                     ManagedScreenFilter filter = ShaderManager.GetFilter("FargowiltasSouls.FinalSpark");
                     filter.Activate();
 
-                    if (SoulConfig.Instance.ForcedFilters && Main.WaveQuality == 0)
-                        Main.WaveQuality = 1;
+                //    if (SoulConfig.Instance.ForcedFilters && Main.WaveQuality == 0)
+                //        Main.WaveQuality = 1;
                 }
 
                 if (NPC.ai[1] % 3 == 0 && FargoSoulsUtil.HostCheck)
@@ -4017,15 +4017,15 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
         {
             base.ModifyNPCLoot(npcLoot);
 
-            npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<MutantBag>()));
-            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MutantTrophy>(), 10));
+        //    npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<MutantBag>()));
+        //    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MutantTrophy>(), 10));
 
-            npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<MutantRelic>()));
-            npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<SpawnSack>(), 4));
+        //    npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<MutantRelic>()));
+        //    npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<SpawnSack>(), 4));
 
-            LeadingConditionRule emodeRule = new(new EModeDropCondition());
-            emodeRule.OnSuccess(FargoSoulsUtil.BossBagDropCustom(ModContent.ItemType<Items.Accessories.Masomode.MutantEye>()));
-            npcLoot.Add(emodeRule);
+        //    LeadingConditionRule emodeRule = new(new EModeDropCondition());
+        //    emodeRule.OnSuccess(FargoSoulsUtil.BossBagDropCustom(ModContent.ItemType<Items.Accessories.Masomode.MutantEye>()));
+        //    npcLoot.Add(emodeRule);
         }
 
     //  public override void BossLoot(ref string name, ref int potionType)
@@ -4068,15 +4068,14 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
 
             return false;
         }
-
+    
         public void DrawAura(SpriteBatch spriteBatch, Vector2 position, float auraScale)
         {
-            Color outerColor = FargoSoulsUtil.AprilFools ? Color.Red : Color.CadetBlue;
+            Color outerColor = Color.DarkRed;
             outerColor.A = 0;
-
             Color darkColor = outerColor;
-            Color mediumColor = Color.Lerp(outerColor, Color.White, 0.75f);
-            Color lightColor2 = Color.Lerp(outerColor, Color.White, 0.5f);
+            Color mediumColor = Color.Lerp(outerColor, Color.Red, 0.75f);
+            Color lightColor2 = Color.Lerp(outerColor, Color.OrangeRed, 0.5f);
 
             Vector2 auraPos = position;
             float radius = 2000f * auraScale;
@@ -4087,10 +4086,10 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
                 return;
             var maxOpacity = NPC.Opacity;
 
-            ManagedShader borderShader = ShaderManager.GetShader("FargowiltasSouls.MutantP1Aura");
+            ManagedShader borderShader = ShaderManager.GetShader("YharimEX.YharimEXP1Aura");
             borderShader.TrySetParameter("colorMult", 7.35f);
             borderShader.TrySetParameter("time", Main.GlobalTimeWrappedHourly);
-            borderShader.TrySetParameter("radius", radius);
+            borderShader.TrySetParameter("radius", radius); 
             borderShader.TrySetParameter("anchorPoint", auraPos);
             borderShader.TrySetParameter("screenPosition", Main.screenPosition);
             borderShader.TrySetParameter("screenSize", Main.ScreenSize.ToVector2());
@@ -4111,6 +4110,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
 
             //spriteBatch.Draw(FargosTextureRegistry.SoftEdgeRing.Value, position, null, outerColor * 0.7f, 0f, FargosTextureRegistry.SoftEdgeRing.Value.Size() * 0.5f, 9.2f * auraScale, SpriteEffects.None, 0f);
         }
+    
         public static void ArenaAura(Vector2 center, float distance, bool reverse = false, int dustid = -1, Color color = default, params int[] buffs)
         {
             Player p = Main.LocalPlayer;
