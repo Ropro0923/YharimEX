@@ -1,1 +1,7 @@
 NPCs.YharimEXBoss.DisplayName: Yharim EX
+
+Projectiles: {
+	YharimEXBigFlare.DisplayName: Yharim EX Big Flare
+	YharimEXSkyFlare.DisplayName: Yharim EX Sky Flare
+	YharimEXSupremeCalamitasS.DisplayName: Yharim EgX Supreme Calamitas S
+}

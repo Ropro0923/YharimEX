@@ -70,19 +70,15 @@ namespace YharimEX.Content.NPCs
             NPCID.Sets.BossBestiaryPriority.Add(NPC.type);
             NPCID.Sets.MustAlwaysDraw[Type] = true;
             NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
-
-            if (YharimEXCrossmod.FargowiltasSouls.Loaded)
-            {
-                NPC.buffImmune[ModContent.BuffType<LethargicBuff>()] = true;
-                NPC.buffImmune[ModContent.BuffType<ClippedWingsBuff>()] = true;
-                NPC.buffImmune[ModContent.BuffType<MutantNibbleBuff>()] = true;
-                NPC.buffImmune[ModContent.BuffType<OceanicMaulBuff>()] = true;
-                NPC.buffImmune[ModContent.BuffType<LightningRodBuff>()] = true;
-                NPC.buffImmune[ModContent.BuffType<SadismBuff>()] = true;
-                NPC.buffImmune[ModContent.BuffType<GodEaterBuff>()] = true;
-                NPC.buffImmune[ModContent.BuffType<TimeFrozenBuff>()] = true;
-                NPC.buffImmune[ModContent.BuffType<LeadPoisonBuff>()] = true;
-            }
+            NPC.buffImmune[ModContent.BuffType<LethargicBuff>()] = true;
+            NPC.buffImmune[ModContent.BuffType<ClippedWingsBuff>()] = true;
+            NPC.buffImmune[ModContent.BuffType<MutantNibbleBuff>()] = true;
+            NPC.buffImmune[ModContent.BuffType<OceanicMaulBuff>()] = true;
+            NPC.buffImmune[ModContent.BuffType<LightningRodBuff>()] = true;
+            NPC.buffImmune[ModContent.BuffType<SadismBuff>()] = true;
+            NPC.buffImmune[ModContent.BuffType<GodEaterBuff>()] = true;
+            NPC.buffImmune[ModContent.BuffType<TimeFrozenBuff>()] = true;
+            NPC.buffImmune[ModContent.BuffType<LeadPoisonBuff>()] = true;
         }
 
         public override void PostAI()
@@ -249,6 +245,7 @@ namespace YharimEX.Content.NPCs
             TeleportDust();
             SoundEngine.PlaySound(SoundID.Item84, (Vector2?)NPC.Center);
         }
+        /*
         private void GoNextAI0()
         {
             NPC.ai[0] += 1f;
@@ -349,12 +346,10 @@ namespace YharimEX.Content.NPCs
                             NPC.velocity = (targetPos - NPC.Center) / 30f;
                             NPC.netUpdate = true;
                             NPC.direction = (NPC.spriteDirection = Math.Sign(NewAI[2]));
-                            /*
                             if (!FargoSoulsWorld.MasochistModeReal && Math.Sign(targetPos.X - ((Entity)NPC).Center.X) != Math.Sign(NewAI[2]))
                             {
                                 ((Entity)NPC).velocity.X *= 0.5f;
                             }
-                            */
                         }
                         else if (NewAI[1] < 180f)
                         {
@@ -5066,11 +5061,10 @@ namespace YharimEX.Content.NPCs
             NPC.dontTakeDamage = false;
             NPC.checkDead();
             ModNPC modNPC = default(ModNPC);
-            /*  if (Main.netMode == 1 || !ModContent.TryFind<ModNPC>("Fargowiltas", "Mutant", ref modNPC) || NPC.AnyNPCs(modNPC.Type))
-                {
-                    return;
-                }
-            */
+            if (Main.netMode == 1 || !ModContent.TryFind<ModNPC>("Fargowiltas", "Mutant", ref modNPC) || NPC.AnyNPCs(modNPC.Type))
+            {
+                return;
+            }
             int n = NPC.NewNPC(NPC.GetSource_FromAI((string)null), (int)NPC.Center.X, (int)NPC.Center.Y, modNPC.Type, 0, 0f, 0f, 0f, 0f, 255);
             if (n != 200)
             {
@@ -5180,5 +5174,6 @@ namespace YharimEX.Content.NPCs
             outerColor.A = 0;
             spriteBatch.Draw(FargosTextureRegistry.SoftEdgeRing.Value, position, (Rectangle?)null, outerColor * 0.7f, 0f, Utils.Size(FargosTextureRegistry.SoftEdgeRing.Value) * 0.5f, 9.2f, (SpriteEffects)0, 0f);
         }
+        */
     }
 }
