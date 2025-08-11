@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("YharimEX")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+23129edb5f19df81f3df55c39046b10994f3c293")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d9ec289a1847a90b0ad8eedd52e74dd446539ec6")]
 [assembly: System.Reflection.AssemblyProductAttribute("YharimEX")]
 [assembly: System.Reflection.AssemblyTitleAttribute("YharimEX")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
