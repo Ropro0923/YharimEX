@@ -1,7 +1,7 @@
 using YharimEX.Assets.Sounds;
 using YharimEX.Content.Items;
 using YharimEX.Core.Globals;
-//using FargowiltasSouls.Core.Systems;
+using FargowiltasSouls.Core.Systems;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,13 +20,13 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
-//using FargowiltasSouls.Content.Bosses.MutantBoss;
-//using FargowiltasSouls;
+using FargowiltasSouls.Content.Bosses.MutantBoss;
+using FargowiltasSouls;
 using YharimEX.Assets.ExtraTextures;
 using YharimEX.Content.BossBars;
-//using FargowiltasSouls.Content.Buffs.Boss;
-//using FargowiltasSouls.Content.Buffs.Masomode;
-//using FargowiltasSouls.Content.Buffs.Souls;
+using FargowiltasSouls.Content.Buffs.Boss;
+using FargowiltasSouls.Content.Buffs.Masomode;
+using FargowiltasSouls.Content.Buffs.Souls;
 using YharimEX.Content.Projectiles;
 
 
@@ -413,7 +413,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
         #region helper functions
 
-        bool spawned;
+            bool spawned;
         void ManageAurasAndPreSpawn()
         {
             if (!spawned)
@@ -452,9 +452,8 @@ namespace YharimEX.Content.NPCs.Bosses
                     SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
                     EdgyBossText(GFBQuote(2));
 
-                        if (YharimWorldFlags.AngryYharimEX && (YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode))
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BossRush>(), 0, 0f, Main.myPlayer, NPC.whoAmI);
-                    }
+                    if (YharimWorldFlags.AngryYharimEX && (YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode))
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BossRush>(), 0, 0f, Main.myPlayer, NPC.whoAmI);
                 }
             }
             else if (NPC.localAI[3] == 1)
