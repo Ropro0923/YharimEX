@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CalamityMod.NPCs.TownNPCs;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -9,6 +10,7 @@ namespace YharimEX.Core.Systems
 {
     public class YharimWorldFlags : ModSystem
     {
+        /* pretty sure we don't need this enum anymore
         public enum Downed
         {
             TimberChampion,
@@ -26,23 +28,89 @@ namespace YharimEX.Core.Systems
             BanishedBaron,
             Magmaw
         }
+        */
+        internal static bool infernumMode;
         internal static bool downedYharimEX;
         internal static bool angryYharimEX;
         internal static int skipYharimEXP1;
-        internal static bool[] downedBoss = new bool[Enum.GetValues(typeof(Downed)).Length];
+        //internal static bool[] downedBoss = new bool[Enum.GetValues(typeof(Downed)).Length];
         public static int SkipYharimEXP1 { get => skipYharimEXP1; set => skipYharimEXP1 = value; }
-        public static bool[] DownedBoss { get => downedBoss; set => downedBoss = value; }
+        //public static bool[] DownedBoss { get => downedBoss; set => downedBoss = value; }
         public static bool DownedYharimEX { get => downedYharimEX; set => downedYharimEX = value; }
-        public static bool AngryYharimEX { get => angryYharimEX; set => angryYharimEX = value; }        
-        public override void Unload() => DownedBoss = null;
+        public static bool AngryYharimEX { get => angryYharimEX; set => angryYharimEX = value; }
+        //public override void Unload() => DownedBoss = null;
+
+        public static bool RevengenceMode
+        {
+            get
+            {
+                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                {
+                    return calamity.Call("GetDifficultyActive", "revengeance") is bool b && b;
+                }
+                return false;
+            }
+        }
+
+        public static bool DeathMode
+        {
+            get
+            {
+                if (ModLoader.TryGetMod("CalamityMod", out Mod calamity))
+                {
+                    return calamity.Call("GetDifficultyActive", "death") is bool b && b;
+                }
+                return false;
+            }
+        }
+        public static bool InfernumMode
+        {
+            get
+            {
+                if (YharimEXCrossmodSystem.InfernumMode.Loaded)
+                {
+                    return YharimEXCrossmodSystem.InfernumMode.Mod.Call("GetInfernumActive") is bool b && b;
+                }
+                return false;
+            }
+        }
+
+        public static bool EternityMode
+        {
+            get
+            {
+                if (!YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    return false;
+                }
+
+                return YharimEXCrossmodSystem.FargowiltasSouls.Mod.Call("EternityMode") is bool active && active;
+            }
+        }
+
+        public static bool MasochistModeReal
+        {
+            get
+            {
+                if (!YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    return false;
+                }
+
+                return YharimEXCrossmodSystem.FargowiltasSouls.Mod.Call("MasochistMode") is bool active && active;
+            }
+        }
+
 
         private static void ResetFlags()
         {
             DownedYharimEX = false;
             AngryYharimEX = false;
             SkipYharimEXP1 = 0;
+            /*
             for (int i = 0; i < DownedBoss.Length; i++)
                 DownedBoss[i] = false;
+            */
         }
 
         public override void OnWorldLoad() => ResetFlags();
@@ -56,11 +124,13 @@ namespace YharimEX.Core.Systems
                 downed.Add("downedYharimEX");
             if (AngryYharimEX)
                 downed.Add("AngryYharimEX");
+            /*
             for (int i = 0; i < DownedBoss.Length; i++)
             {
                 if (DownedBoss[i])
                     downed.Add("downedBoss" + i.ToString());
             }
+            */
             tag.Add("downed", downed);
             tag.Add("YharimEXP1", SkipYharimEXP1);
         }
@@ -70,8 +140,10 @@ namespace YharimEX.Core.Systems
             IList<string> downed = tag.GetList<string>("downed");
             DownedYharimEX = downed.Contains("downedYharimEX");
             AngryYharimEX = downed.Contains("AngryYharimEX");
+            /*
             for (int i = 0; i < DownedBoss.Length; i++)
                 DownedBoss[i] = downed.Contains($"downedBoss{i}") || downed.Contains($"downedChampion{i}");
+            */
             if (tag.ContainsKey("YharimEXP1"))
                 SkipYharimEXP1 = tag.GetAsInt("YharimEXP1");
         }
@@ -84,6 +156,7 @@ namespace YharimEX.Core.Systems
             DownedYharimEX = flags[5];
             AngryYharimEX = flags[6];            
             flags = reader.ReadByte();
+            /*
             for (int i = 0; i < DownedBoss.Length; i++)
             {
                 int bits = i % 8;
@@ -92,6 +165,7 @@ namespace YharimEX.Core.Systems
 
                 DownedBoss[i] = flags[bits];
             }
+            */
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -104,6 +178,7 @@ namespace YharimEX.Core.Systems
                 [2] = AngryYharimEX,
             });
 
+            /*
             BitsByte bitsByte = new();
             for (int i = 0; i < DownedBoss.Length; i++)
             {
@@ -117,6 +192,7 @@ namespace YharimEX.Core.Systems
 
                 bitsByte[bit] = DownedBoss[i];
             }
+            */
         }
     }
 }
