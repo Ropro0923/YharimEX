@@ -1,16 +1,17 @@
 NPCs: {
-	YharimEX.DisplayName: Yharim EX
-	YharimEXBoss.DisplayName: Yharim E X Boss
+	YharimEXBoss.DisplayName: Yharim, the God Seeker
 }
 
 Projectiles: {
-	YharimEXSunBlast.DisplayName: Yharim E X Sun Blast
-	YharimEXBrain.DisplayName: Yharim E X Brain
+	YharimEXSunBlast.DisplayName: Sun Blast
+	YharimEXBrain.DisplayName: Brain
 }
 
 Items: {
 	YharimsRage: {
 		Tooltip: ""
-		DisplayName: Yharims Rage
+		DisplayName: Yharim's Rage
 	}
 }
+
+LifeUp: +5 max life

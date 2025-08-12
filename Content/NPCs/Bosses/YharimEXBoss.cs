@@ -1,7 +1,6 @@
 using YharimEX.Assets.Sounds;
 using YharimEX.Content.Items;
 using YharimEX.Core.Globals;
-using FargowiltasSouls.Core.Systems;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,13 +20,13 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
 using FargowiltasSouls.Content.Bosses.MutantBoss;
-using FargowiltasSouls;
 using YharimEX.Assets.ExtraTextures;
 using YharimEX.Content.BossBars;
 using FargowiltasSouls.Content.Buffs.Boss;
 using FargowiltasSouls.Content.Buffs.Masomode;
 using FargowiltasSouls.Content.Buffs.Souls;
 using YharimEX.Content.Projectiles;
+using CalamityMod;
 
 
 
@@ -397,7 +396,7 @@ namespace YharimEX.Content.NPCs.Bosses
             //drop summon
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if ((YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode) && WorldSavingSystem.DownedAbom && !WorldSavingSystem.DownedMutant && FargoSoulsUtil.HostCheck && NPC.HasPlayerTarget && !droppedSummon)
+                if ((YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode) && (DownedBossSystem.downedCalamitas || DownedBossSystem.downedExoMechs) && !YharimWorldFlags.DownedYharimEX && YharimEXGlobalUtilities.HostCheck && NPC.HasPlayerTarget && !droppedSummon)
                 {
                     Item.NewItem(NPC.GetSource_Loot(), player.Hitbox, ModContent.ItemType<YharimsRage>());
                     droppedSummon = true;
@@ -413,7 +412,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
         #region helper functions
 
-            bool spawned;
+        bool spawned;
         void ManageAurasAndPreSpawn()
         {
             if (!spawned)
@@ -428,11 +427,6 @@ namespace YharimEX.Content.NPCs.Bosses
                         NPC.lifeMax = int.MaxValue;
                 }
                 NPC.life = NPC.lifeMax;
-                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                {
-                    if (player.FargoSouls().TerrariaSoul && (YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode))
-                        EdgyBossText(GFBQuote(1));
-                }
             }
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
@@ -718,11 +712,11 @@ namespace YharimEX.Content.NPCs.Bosses
 
         bool AliveCheck(Player p, bool forceDespawn = false)
         {
-            if (WorldSavingSystem.SwarmActive || forceDespawn || (!p.active || p.dead || Vector2.Distance(NPC.Center, p.Center) > 3000f) && NPC.localAI[3] > 0)
+            if (forceDespawn || (!p.active || p.dead || Vector2.Distance(NPC.Center, p.Center) > 3000f) && NPC.localAI[3] > 0)
             {
                 NPC.TargetClosest();
                 p = Main.player[NPC.target];
-                if (WorldSavingSystem.SwarmActive || forceDespawn || !p.active || p.dead || Vector2.Distance(NPC.Center, p.Center) > 3000f)
+                if (forceDespawn || !p.active || p.dead || Vector2.Distance(NPC.Center, p.Center) > 3000f)
                 {
                     if (NPC.timeLeft > 30)
                         NPC.timeLeft = 30;
@@ -986,7 +980,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             else if (NPC.ai[1] == 61 && NPC.ai[2] < NPC.ai[3] && YharimEXGlobalUtilities.HostCheck)
             {
-                if ((YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode) && WorldSavingSystem.SkipMutantP1 >= 10 && !(YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode))
+                if ((YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode) && YharimWorldFlags.SkipYharimEXP1 >= 10 && !(YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode))
                 {
                     AttackChoice = 10; //skip to phase 2
                     NPC.ai[1] = 0;
@@ -995,10 +989,10 @@ namespace YharimEX.Content.NPCs.Bosses
                     NPC.localAI[0] = 0;
                     NPC.netUpdate = true;
 
-                    if (WorldSavingSystem.SkipMutantP1 == 10)
+                    if (YharimWorldFlags.SkipYharimEXP1 == 10)
                         YharimEXGlobalUtilities.PrintLocalization($"Mods.{Mod.Name}.NPCs.MutantBoss.SkipP1", Color.LimeGreen);
 
-                    if (WorldSavingSystem.SkipMutantP1 >= 10)
+                    if (YharimWorldFlags.SkipYharimEXP1 >= 10)
                         NPC.ai[2] = 1; //flag for different p2 transition animation
 
                     return;
@@ -1605,9 +1599,9 @@ namespace YharimEX.Content.NPCs.Bosses
                     //Projectile.NewProjectile(npc.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -22);
                 }
 
-                if ((YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode) && WorldSavingSystem.SkipMutantP1 <= 10)
+                if ((YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode) && YharimWorldFlags.SkipYharimEXP1 <= 10)
                 {
-                    WorldSavingSystem.SkipMutantP1++;
+                    YharimWorldFlags.SkipYharimEXP1++;
                     if (Main.netMode == NetmodeID.Server)
                         NetMessage.SendData(MessageID.WorldData);
                 }
@@ -1618,11 +1612,6 @@ namespace YharimEX.Content.NPCs.Bosses
                     Main.dust[d].noGravity = true;
                     Main.dust[d].noLight = true;
                     Main.dust[d].velocity *= 9f;
-                }
-                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                {
-                    if (player.FargoSouls().TerrariaSoul)
-                        EdgyBossText(GFBQuote(1));
                 }
             }
             else if (NPC.ai[1] > 150)
@@ -3936,15 +3925,13 @@ namespace YharimEX.Content.NPCs.Bosses
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            if (YharimWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if ((YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode))
-                {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
-                }
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
+               target.YharimPlayer().MaxLifeReduction += 100;
+            }
+            else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                EterntiyDebuffs.ManageOnHItDebuffs(target);
             }
         }
 
@@ -3983,8 +3970,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.localAI[2] = 0;
                 NPC.dontTakeDamage = true;
                 NPC.netUpdate = true;
-    // NOTE            YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI, AttackChoice < 0);
-                EdgyBossText(GFBQuote(34));
+                YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI, AttackChoice < 0);
             }
             return false;
         }
@@ -3996,17 +3982,6 @@ namespace YharimEX.Content.NPCs.Bosses
         //    if ((YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode) || (!playerInvulTriggered && (YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode)))
         //    {
         //        Item.NewItem(NPC.GetSource_Loot(), NPC.Hitbox, ModContent.ItemType<PhantasmalEnergy>());
-        //    }
-
-        //    if ((YharimWorldFlags.EternityMode || YharimWorldFlags.DeathMode))
-        //    {
-        //        if (Main.LocalPlayer.active)
-        //        {
-        //            if (!Main.LocalPlayer.FargoSouls().Toggler.CanPlayMaso && Main.netMode != NetmodeID.Server)
-        //              Main.NewText(Language.GetTextValue($"Mods.{Mod.Name}.Message.MasochistModeUnlocked"), new Color(51, 255, 191, 0));
-        //            Main.LocalPlayer.FargoSouls().Toggler.CanPlayMaso = true;
-        //        }
-        //        WorldSavingSystem.CanPlayMaso = true;
         //    }
 
             YharimWorldFlags.SkipYharimEXP1 = 0;

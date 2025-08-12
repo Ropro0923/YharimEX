@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Globals;
 using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.Items
 {
@@ -28,7 +29,14 @@ namespace YharimEX.Content.Items
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;
-            Item.consumable = true;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                Item.consumable = true;
+            }
+            else
+            {
+                Item.consumable = false;
+            }
             Item.value = Item.buyPrice(1);
         }
 

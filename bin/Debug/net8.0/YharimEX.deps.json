@@ -14,10 +14,12 @@
           "CsvHelper": "2.0.0.0",
           "DotNetZip": "1.16.0.0",
           "Fargowiltas": "0.0.0.0",
+          "FargowiltasCrossmod": "0.0.0.0",
           "FargowiltasSouls": "0.0.0.0",
           "FNA": "23.10.0.0",
           "Hjson": "1.0.0.0",
           "Humanizer": "2.14.0.0",
+          "InfernumMode": "0.0.0.0",
           "log4net": "2.0.8.0",
           "Luminance": "1.0.0.0",
           "Microsoft.Build": "15.1.0.0",
@@ -126,6 +128,14 @@
           }
         }
       },
+      "FargowiltasCrossmod/0.0.0.0": {
+        "runtime": {
+          "FargowiltasCrossmod.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
       "FargowiltasSouls/0.0.0.0": {
         "runtime": {
           "FargowiltasSouls.dll": {
@@ -155,6 +165,14 @@
           "Humanizer.dll": {
             "assemblyVersion": "2.14.0.0",
             "fileVersion": "2.14.1.48190"
+          }
+        }
+      },
+      "InfernumMode/0.0.0.0": {
+        "runtime": {
+          "InfernumMode.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -940,6 +958,11 @@
       "serviceable": false,
       "sha512": ""
     },
+    "FargowiltasCrossmod/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
     "FargowiltasSouls/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
@@ -956,6 +979,11 @@
       "sha512": ""
     },
     "Humanizer/2.14.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "InfernumMode/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

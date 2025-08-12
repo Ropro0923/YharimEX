@@ -14,6 +14,7 @@ using Terraria.ModLoader;
 using Terraria;
 using Microsoft.Xna.Framework;
 using YharimEX.Core.Globals;
+using YharimEX.Core.Players;
 
 namespace YharimEX
 {
@@ -129,10 +130,10 @@ namespace YharimEX
         //    return projectile.GetGlobalProjectile<EModeGlobalProjectile>();
         //}
 
-        //public static FargoSoulsPlayer FargoSouls(this Player player)
-        //{
-        //    return player.GetModPlayer<FargoSoulsPlayer>();
-        //}
+        public static YharimEXPlayer YharimPlayer(this Player player)
+        {
+            return player.GetModPlayer<YharimEXPlayer>();
+        }
 
         //public static EModePlayer Eternity(this Player player)
         //{
@@ -204,15 +205,15 @@ namespace YharimEX
             return false;
         }
 
-        public static NPC GetSourceNPC(this Projectile projectile)
-        {
-            return projectile.GetGlobalProjectile<A_SourceNPCGlobalProjectile>().sourceNPC;
-        }
+        //public static NPC GetSourceNPC(this Projectile projectile)
+        //{
+        //    return projectile.GetGlobalProjectile<A_SourceNPCGlobalProjectile>().sourceNPC;
+        //}
 
-        public static void SetSourceNPC(this Projectile projectile, NPC npc)
-        {
-            projectile.GetGlobalProjectile<A_SourceNPCGlobalProjectile>().sourceNPC = npc;
-        }
+        //public static void SetSourceNPC(this Projectile projectile, NPC npc)
+        //{
+        //    projectile.GetGlobalProjectile<A_SourceNPCGlobalProjectile>().sourceNPC = npc;
+        //}
 
         public static float ActualClassDamage(this Player player, DamageClass damageClass)
         {
@@ -264,15 +265,15 @@ namespace YharimEX
             return vector.SafeNormalize(Vector2.UnitY) * magnitude;
         }
 
-        public static float ActualClassCrit(this Player player, DamageClass damageClass)
-        {
-            if ((damageClass != DamageClass.Summon && damageClass != DamageClass.SummonMeleeSpeed) || player.FargoSouls().MinionCrits)
-            {
-                return player.GetTotalCritChance(damageClass);
-            }
+        //public static float ActualClassCrit(this Player player, DamageClass damageClass)
+        //{
+        //    if ((damageClass != DamageClass.Summon && damageClass != DamageClass.SummonMeleeSpeed) || player.FargoSouls().MinionCrits)
+        //    {
+        //        return player.GetTotalCritChance(damageClass);
+        //    }
 
-            return 0f;
-        }
+        //    return 0f;
+        //}
 
         public static bool FeralGloveReuse(this Player player, Item item)
         {
@@ -289,61 +290,61 @@ namespace YharimEX
             return false;
         }
 
-        public static bool CannotUseItems(this Player player)
-        {
-            if (!player.CCed && !player.noItems && player.FargoSouls().NoUsingItems <= 0)
-            {
-                if (player.HeldItem != null)
-                {
-                    if (ItemLoader.CanUseItem(player.HeldItem, player))
-                    {
-                        return !PlayerLoader.CanUseItem(player, player.HeldItem);
-                    }
+        //public static bool CannotUseItems(this Player player)
+        //{
+        //    if (!player.CCed && !player.noItems && player.FargoSouls().NoUsingItems <= 0)
+        //    {
+        //        if (player.HeldItem != null)
+        //        {
+        //            if (ItemLoader.CanUseItem(player.HeldItem, player))
+        //            {
+        //                return !PlayerLoader.CanUseItem(player, player.HeldItem);
+        //            }
 
-                    return true;
-                }
+        //            return true;
+        //        }
 
-                return false;
-            }
+        //        return false;
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        public static void Incapacitate(this Player player, bool preventDashing = true)
-        {
-            player.controlLeft = false;
-            player.controlRight = false;
-            player.controlJump = false;
-            player.controlDown = false;
-            player.controlUseItem = false;
-            player.controlUseTile = false;
-            player.controlHook = false;
-            player.releaseHook = true;
-            if (player.grapCount > 0)
-            {
-                player.RemoveAllGrapplingHooks();
-            }
+        //public static void Incapacitate(this Player player, bool preventDashing = true)
+        //{
+        //    player.controlLeft = false;
+        //    player.controlRight = false;
+        //    player.controlJump = false;
+        //    player.controlDown = false;
+        //    player.controlUseItem = false;
+        //    player.controlUseTile = false;
+        //    player.controlHook = false;
+        //    player.releaseHook = true;
+        //    if (player.grapCount > 0)
+        //    {
+        //        player.RemoveAllGrapplingHooks();
+        //    }
 
-            if (player.mount.Active)
-            {
-                player.mount.Dismount(player);
-            }
+        //    if (player.mount.Active)
+        //    {
+        //        player.mount.Dismount(player);
+        //    }
 
-            player.FargoSouls().NoUsingItems = 2;
-            if (preventDashing)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    player.doubleTapCardinalTimer[i] = 0;
-                    player.holdDownCardinalTimer[i] = 0;
-                }
-            }
+        //    player.FargoSouls().NoUsingItems = 2;
+        //    if (preventDashing)
+        //    {
+        //        for (int i = 0; i < 4; i++)
+        //        {
+        //            player.doubleTapCardinalTimer[i] = 0;
+        //            player.holdDownCardinalTimer[i] = 0;
+        //        }
+        //    }
 
-            if (player.dashDelay < 10 && preventDashing)
-            {
-                player.dashDelay = 10;
-            }
-        }
+        //    if (player.dashDelay < 10 && preventDashing)
+        //    {
+        //        player.dashDelay = 10;
+        //    }
+        //}
 
         public static bool CountsAsClass(this DamageClass damageClass, DamageClass intendedClass)
         {
