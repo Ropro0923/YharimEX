@@ -98,7 +98,7 @@ namespace YharimEX.Content.Projectiles
                 Projectile.Center = Projectile.position;
             }
 
-            if (++Projectile.localAI[1] == 6 && Projectile.ai[1] > 0 && FargoSoulsUtil.HostCheck)
+            if (++Projectile.localAI[1] == 6 && Projectile.ai[1] > 0 && YharimEXGlobalUtilities.HostCheck)
             {
                 Projectile.ai[1]--;
 
@@ -145,7 +145,7 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (FargoSoulsUtil.BossIsAlive(ref YharimEXGlobalNPC.yharimEXBoss, ModContent.NPCType<YharimEXBoss>()))
+                if (YharimEXGlobalUtilities.BossIsAlive(ref YharimEXGlobalNPC.yharimEXBoss, ModContent.NPCType<YharimEXBoss>()))
                 {
                     target.FargoSouls().MaxLifeReduction += 100;
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
