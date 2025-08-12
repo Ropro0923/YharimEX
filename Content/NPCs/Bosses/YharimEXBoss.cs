@@ -1,6 +1,15 @@
+// YHARIMEX
 using YharimEX.Assets.Sounds;
 using YharimEX.Content.Items;
 using YharimEX.Core.Globals;
+using YharimEX.Content.Projectiles;
+using YharimEX.Assets.ExtraTextures;
+using YharimEX.Content.BossBars;
+using YharimEX.Content.NPCs.Town;
+using YharimEX.Core.Systems;
+
+// IMPORTANT
+using CalamityMod;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,17 +27,12 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using YharimEX.Core.Systems;
-using FargowiltasSouls.Content.Bosses.MutantBoss;
-using YharimEX.Assets.ExtraTextures;
-using YharimEX.Content.BossBars;
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Content.Buffs.Souls;
-using YharimEX.Content.Projectiles;
-using CalamityMod;
-using YharimEX.Content.NPCs.Town;
 
+// FARGOS
+using FargowiltasSouls.Content.Bosses.MutantBoss;
+using FargowiltasSouls.Content.Buffs.Boss;   // NO LONGER DEPENDENT
+using FargowiltasSouls.Content.Buffs.Masomode;  // NO LONGER DEPENDENT
+using FargowiltasSouls.Content.Buffs.Souls;  // NO LONGER DEPENDENT
 
 
 namespace YharimEX.Content.NPCs.Bosses
@@ -199,7 +203,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 if ((YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode) && !Main.dedServ)
                 {
                     if (!Main.LocalPlayer.ItemTimeIsZero && (Main.LocalPlayer.HeldItem.type == ItemID.RodofDiscord || Main.LocalPlayer.HeldItem.type == ItemID.RodOfHarmony))
-                        Main.LocalPlayer.AddBuff(ModContent.BuffType<TimeFrozenBuff>(), 600);
+                         Main.LocalPlayer.AddBuff(ModContent.BuffType<TimeFrozenBuff>(), 600);
                 }
             }
 
@@ -3825,10 +3829,15 @@ namespace YharimEX.Content.NPCs.Bosses
                 return;
             NPC.ai[3] -= (float)Math.PI / 6f / 60f;
             NPC.velocity = Vector2.Zero;
+            bool killPlayer = YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                bool killPlayer = (YharimWorldFlags.MasochistModeReal || YharimWorldFlags.InfernumMode) && Main.player[NPC.target].HasBuff(ModContent.BuffType<TimeFrozenBuff>());
-                if (killPlayer)
+                if (Main.player[NPC.target].HasBuff(ModContent.BuffType<TimeFrozenBuff>()))
+                {
+                    killPlayer = true;
+                }
+            }
+            if (killPlayer)
                 {
                     if (++NPC.ai[2] > 15)
                     {
@@ -3839,7 +3848,6 @@ namespace YharimEX.Content.NPCs.Bosses
                         NPC.defDamage = realDefDamage;
                     }
                 }
-            }
             if (++NPC.ai[1] > 120)
             {
                 NPC.netUpdate = true;

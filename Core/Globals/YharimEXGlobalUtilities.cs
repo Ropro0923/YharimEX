@@ -25,6 +25,7 @@ namespace YharimEX.Core.Globals
 {
     public static class YharimEXGlobalUtilities
     {
+        public static void SetTexture1(this Texture2D texture) => Main.instance.GraphicsDevice.Textures[1] = texture;
         public static readonly BindingFlags UniversalBindingFlags = LumUtils.UniversalBindingFlags;
 
         public static bool WorldIsExpertOrHarder() => Main.expertMode || (Main.GameModeInfo.IsJourneyMode && CreativePowerManager.Instance.GetPower<CreativePowers.DifficultySliderPower>().StrengthMultiplierToGiveNPCs >= 2);
