@@ -1,61 +1,83 @@
-﻿using YharimEX.Content.Deathrays;
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls;
-using Luminance.Core.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
+using Luminance.Core.Graphics;
 using Terraria.ModLoader;
-using YharimEX.Core.Systems;
+using YharimEX.Content.Deathrays;
 using YharimEX.Core.Globals;
+using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Core.Systems;
 using YharimEX.Assets.ExtraTextures;
 
 namespace YharimEX.Content.Projectiles
 {
-    public class YharimEXDeathray2 : YharimEXSpecialDeathray, IPixelatedPrimitiveRenderer
+	public class YharimEXDeathrayAim : BaseDeathray, IPixelatedPrimitiveRenderer
     {
-        public YharimEXDeathray2() : base(180) { }
+        public override string Texture => "YharimEX/Assets/Deathrays/PhantasmalDeathrayML";
+        public YharimEXDeathrayAim() : base(60) { }
+
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+        }
 
         public override bool? CanDamage()
         {
-            return Projectile.scale >= .7f;
-        }
-        public override bool CanHitPlayer(Player target)
-        {
-            return target.hurtCooldowns[1] == 0;
+            return false;
         }
 
         public override void AI()
         {
-            base.AI();
+            maxTime = Projectile.ai[0];
             Vector2? vector78 = null;
             if (Projectile.velocity.HasNaNs() || Projectile.velocity == Vector2.Zero)
             {
                 Projectile.velocity = -Vector2.UnitY;
             }
+            NPC npc = YharimEXGlobalUtilities.NPCExists(Projectile.ai[1], ModContent.NPCType<YharimEXBoss>());
+            if (npc != null && !npc.dontTakeDamage && !YharimEXWorldFlags.MasochistModeReal)
+            {
+                Projectile.Center = npc.Center;
+            }
+            else
+            {
+                Projectile.Kill();
+                return;
+            }
             if (Projectile.velocity.HasNaNs() || Projectile.velocity == Vector2.Zero)
             {
                 Projectile.velocity = -Vector2.UnitY;
             }
-            if (Projectile.localAI[0] == 0f)
+            /*if (Projectile.localAI[0] == 0f)
             {
-                Projectile.frame = Main.rand.Next(10);
-            }
-            float num801 = .7f;
+                SoundEngine.PlaySound(SoundID.Zombie104, Projectile.Center);
+            }*/
+            float num801 = 0.3f;
             Projectile.localAI[0] += 1f;
             if (Projectile.localAI[0] >= maxTime)
             {
                 Projectile.Kill();
                 return;
             }
-            Projectile.scale = (float)Math.Sin(Projectile.localAI[0] * 3.14159274f / maxTime) * 2.5f * num801;
+            Projectile.scale = (float)Math.Sin(Projectile.localAI[0] * 3.14159274f / maxTime) * 0.6f * num801;
             if (Projectile.scale > num801)
             {
                 Projectile.scale = num801;
             }
+            //float num804 = Projectile.velocity.ToRotation();
+            //num804 += Projectile.ai[0];
+            //Projectile.rotation = num804 - 1.57079637f;
+            //float num804 = npc.ai[3] - 1.57079637f;
+            //if (Projectile.ai[0] != 0f) num804 -= (float)Math.PI;
+            //Projectile.rotation = num804;
+            //num804 += 1.57079637f;
+            //Projectile.velocity = num804.ToRotationVector2();
+
+            Projectile.velocity = Projectile.velocity.ToRotation().AngleLerp(npc.SafeDirectionTo(Main.player[npc.target].Center + Main.player[npc.target].velocity * 30).ToRotation(), 0.2f).ToRotationVector2();
+            Projectile.rotation = Projectile.velocity.ToRotation() - (float)Math.PI / 2;
+
             float num805 = 3f;
             float num806 = Projectile.width;
             Vector2 samplingPoint = Projectile.Center;
@@ -64,6 +86,7 @@ namespace YharimEX.Content.Projectiles
                 samplingPoint = vector78.Value;
             }
             float[] array3 = new float[(int)num805];
+            //Collision.LaserScan(samplingPoint, Projectile.velocity, num806 * Projectile.scale, 3000f, array3);
             for (int i = 0; i < array3.Length; i++)
                 array3[i] = 3000f;
             float num807 = 0f;
@@ -95,22 +118,11 @@ namespace YharimEX.Content.Projectiles
                 dust.velocity *= 0.5f;
                 Main.dust[num813].velocity.Y = -Math.Abs(Main.dust[num813].velocity.Y);
             }
+            //DelegateMethods.v3_1 = new Vector3(0.3f, 0.65f, 0.7f);
+            //Utils.PlotTileLine(Projectile.Center, Projectile.Center + Projectile.velocity * Projectile.localAI[1], (float)Projectile.width * Projectile.scale, new Utils.PerLinePoint(DelegateMethods.CastLight));
+
             Projectile.position -= Projectile.velocity;
             Projectile.rotation = Projectile.velocity.ToRotation() - 1.57079637f;
-        }
-
-        public override void OnHitPlayer(Player target, Player.HurtInfo info)
-        {
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                if (YharimEXWorldFlags.EternityMode)
-                {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
-                }
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
-            }
         }
 
         public override bool PreDraw(ref Color lightColor) => false;
@@ -123,19 +135,30 @@ namespace YharimEX.Content.Projectiles
             color.A = 100;
             return color;
         }
-
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
             if (Projectile.hide)
                 return;
 
             ManagedShader shader = ShaderManager.GetShader("FargowiltasSouls.GenericDeathray");
+
+            // Get the laser end position.
             Vector2 laserEnd = Projectile.Center + Projectile.velocity.SafeNormalize(Vector2.UnitY) * drawDistance * 1.1f;
-            Vector2 initialDrawPoint = Projectile.Center - Projectile.velocity * 85f;
+
+            // Create 8 points that span across the draw distance from the projectile center.
+
+            // This allows the drawing to be pushed back, which is needed due to the shader fading in at the start to avoid
+            // sharp lines.
+            Vector2 initialDrawPoint = Projectile.Center - Projectile.velocity * 150f;
             Vector2[] baseDrawPoints = new Vector2[8];
             for (int i = 0; i < baseDrawPoints.Length; i++)
-            baseDrawPoints[i] = Vector2.Lerp(initialDrawPoint, laserEnd, i / (float)(baseDrawPoints.Length - 1f));
+                baseDrawPoints[i] = Vector2.Lerp(initialDrawPoint, laserEnd, i / (float)(baseDrawPoints.Length - 1f));
+
+            // Set shader parameters. This one takes a fademap and a color.
+
+            // GameShaders.Misc["FargoswiltasSouls:MutantDeathray"].UseImage1(); cannot be used due to only accepting vanilla paths.
             YharimEXGlobalUtilities.SetTexture1(YharimEXTextureRegistry.YharimEXStreak.Value);
+            // The laser should fade to this in the middle.
             shader.TrySetParameter("mainColor", new Color(255, 255, 183, 100));
             shader.TrySetParameter("stretchAmount", 3);
             shader.TrySetParameter("scrollSpeed", 2f);
@@ -143,7 +166,6 @@ namespace YharimEX.Content.Projectiles
             shader.TrySetParameter("useFadeIn", true);
 
             PrimitiveRenderer.RenderTrail(baseDrawPoints, new(WidthFunction, ColorFunction, Pixelate: true, Shader: shader), 20);
-
         }
     }
 }

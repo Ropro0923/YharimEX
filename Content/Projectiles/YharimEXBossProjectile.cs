@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Systems;
 using FargowiltasSouls;
+using YharimEX.Core.Globals;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -51,7 +52,7 @@ namespace YharimEX.Content.Projectiles
         {
             Cake = false;
 
-            NPC npc = FargoSoulsUtil.NPCExists(Projectile.ai[1], npcType);
+            NPC npc = YharimEXGlobalUtilities.NPCExists(Projectile.ai[1], npcType);
             if (npc != null)
             {
                 Projectile.Center = npc.Center;
@@ -70,20 +71,20 @@ namespace YharimEX.Content.Projectiles
                     npc.ai[0] == 10 && npc.ai[1] > 150
                     || npc.ai[0] == -5 && npc.ai[2] > 420 - 90 && npc.ai[2] < 420;
 
-                if (npc.ai[0] == 10 && YharimWorldFlags.EternityMode)
+                if (npc.ai[0] == 10 && YharimEXWorldFlags.EternityMode)
                 {
                     SHADOWMUTANTREAL += 0.03f;
                     if (SHADOWMUTANTREAL > 0.75f)
                         SHADOWMUTANTREAL = 0.75f;
 
-                    if (npc.ai[1] > 150 && YharimWorldFlags.MasochistModeReal && Main.getGoodWorld)
+                    if (npc.ai[1] > 150 && YharimEXWorldFlags.MasochistModeReal && Main.getGoodWorld)
                         Cake = true;
                 }
 
                 Projectile.localAI[1] = sansEye ? MathHelper.Lerp(Projectile.localAI[1], 1f, 0.05f) : 0; //for rotation of sans eye
                 Projectile.ai[0] = sansEye ? Projectile.ai[0] + 1 : 0;
 
-                if (YharimWorldFlags.MasochistModeReal && (npc.ai[0] >= 11 || npc.ai[0] < 0))
+                if (YharimEXWorldFlags.MasochistModeReal && (npc.ai[0] >= 11 || npc.ai[0] < 0))
                 {
                     sansEye = true;
                     Projectile.ai[0] = -1;
@@ -98,7 +99,7 @@ namespace YharimEX.Content.Projectiles
                         Projectile.localAI[0] = 0;
                 }
 
-                if (YharimWorldFlags.MasochistModeReal && Main.getGoodWorld)
+                if (YharimEXWorldFlags.MasochistModeReal && Main.getGoodWorld)
                 {
                     if (!npc.HasValidTarget && npc.velocity.Y < 0)
                     {
@@ -114,7 +115,7 @@ namespace YharimEX.Content.Projectiles
             else
             {
                 sansEye = false;
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                     Projectile.Kill();
                 return;
             }
@@ -151,7 +152,7 @@ namespace YharimEX.Content.Projectiles
             Rectangle rectangle = new(0, y3, texture2D13.Width, num156);
             Vector2 origin2 = rectangle.Size() / 2f;
 
-            Texture2D aura = ModContent.Request<Texture2D>($"FargowiltasSouls/Content/Bosses/MutantBoss/MutantAura{FargoSoulsUtil.TryAprilFoolsTexture}", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Texture2D aura = ModContent.Request<Texture2D>("YharimEX/Assets/NPCS/YharimEXBoss/YharimEXAura", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             int auraFrameHeight = aura.Height / auraFrames;
             int auraY = auraFrameHeight * (int)Projectile.localAI[0];
             Rectangle auraRectangle = new(0, auraY, aura.Width, auraFrameHeight);
@@ -168,7 +169,7 @@ namespace YharimEX.Content.Projectiles
             float scale = (Main.mouseTextColor / 200f - 0.35f) * 0.4f + 0.9f;
             scale *= Projectile.scale;
 
-            Color trailColor = FargoSoulsUtil.AprilFools ? new Color(255, 255, 255, 100) : new Color(51, 255, 191, 100);
+            Color trailColor = new Color(255, 255, 255, 100);
             Color color25 = (Cake ? trailColor : new Color(255, 255, 255, 200)) * Projectile.Opacity;
 
             if (auraTrail || SHADOWMUTANTREAL > 0)
@@ -228,7 +229,7 @@ namespace YharimEX.Content.Projectiles
             {
                 Color color = Color.Red;
 
-                bool forcedMasoEye = YharimWorldFlags.MasochistModeReal && Projectile.ai[0] == -1;
+                bool forcedMasoEye = YharimEXWorldFlags.MasochistModeReal && Projectile.ai[0] == -1;
 
                 const int maxTime = 120;
                 float effectiveTime = Projectile.ai[0];

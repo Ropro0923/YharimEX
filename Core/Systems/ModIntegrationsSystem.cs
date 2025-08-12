@@ -40,7 +40,7 @@ namespace YharimEX.Core.Systems
             if (!ModLoader.TryGetMod("BossChecklist", out Mod bossChecklist) || bossChecklist.Version < new Version(1, 6))
                 return;
 
-            ChecklistAddBoss(Mod, "YharimEXBoss", 27.9f, () => YharimWorldFlags.downedYharimEX, ModContent.NPCType<YharimEXBoss>());
+            ChecklistAddBoss(Mod, "YharimEXBoss", 27.9f, () => YharimEXWorldFlags.downedYharimEX, ModContent.NPCType<YharimEXBoss>());
         }
 
         private void ChecklistAddBoss(Mod mod, string internalName, float weight, Func<bool> downed, int bossType)

@@ -1,5 +1,4 @@
-﻿using FargowiltasSouls.Assets.ExtraTextures;
-using FargowiltasSouls.Content.Buffs.Boss;
+﻿using FargowiltasSouls.Content.Buffs.Boss;
 using FargowiltasSouls.Content.Buffs.Masomode;
 using FargowiltasSouls;
 using Luminance.Core.Graphics;
@@ -112,7 +111,7 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.EternityMode)
                 {
                     target.FargoSouls().MaxLifeReduction += 100;
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);

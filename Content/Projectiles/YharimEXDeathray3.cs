@@ -1,9 +1,6 @@
-﻿using FargowiltasSouls.Assets.ExtraTextures;
-
-
+﻿using YharimEX.Assets.ExtraTextures;
 using FargowiltasSouls.Content.Buffs.Boss;
 using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Content.Projectiles.Deathrays;
 using FargowiltasSouls.Core.Systems;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
@@ -13,26 +10,28 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using YharimEX.Content.Deathrays;
+using YharimEX.Core.Globals;
+using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Core.Systems;
+using FargowiltasSouls;
 
-namespace FargowiltasSouls.Content.Bosses.MutantBoss
+namespace YharimEX.Content.Projectiles
 {
-	public class MutantDeathray3 : BaseDeathray, IPixelatedPrimitiveRenderer
+	public class YharimEXDeathray3 : BaseDeathray, IPixelatedPrimitiveRenderer
     {
 
-        public override string Texture => "FargowiltasSouls/Content/Projectiles/Deathrays/PhantasmalDeathray";
-        public MutantDeathray3() : base(270, grazeCD: 30) { }
-
+        public override string Texture => "YharimEX/Assets/Deathrays/PhantasmalDeathray";
+        public YharimEXDeathray3() : base(270, grazeCD: 30) { }
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
-
-            // DisplayName.SetDefault("Blazing Deathray");
         }
 
         public override void SetDefaults()
         {
             base.SetDefaults();
-            CooldownSlot = -1; //iframe interaction with prime lol
+            CooldownSlot = -1;
         }
 
         float displayMaxTime;
@@ -47,9 +46,9 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
 
             Projectile.position -= Projectile.velocity;
 
-            float DECELERATION = WorldSavingSystem.MasochistModeReal ? 0.9716f : 0.9712f;
+            float DECELERATION = YharimEXWorldFlags.MasochistModeReal ? 0.9716f : 0.9712f;
 
-            NPC npc = FargoSoulsUtil.NPCExists(Projectile.ai[1], ModContent.NPCType<MutantBoss>());
+            NPC npc = YharimEXGlobalUtilities.NPCExists(Projectile.ai[1], ModContent.NPCType<YharimEXBoss>());
             if (npc != null)
             {
                 //float minTime = npc.ai[3] - 60;
@@ -140,12 +139,15 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if (WorldSavingSystem.EternityMode)
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                target.FargoSouls().MaxLifeReduction += 100;
-                target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
-                target.AddBuff(BuffID.Burning, 300);
+                if (YharimEXWorldFlags.EternityMode)
+                {
+                    target.FargoSouls().MaxLifeReduction += 100;
+                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
+                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.AddBuff(BuffID.Burning, 300);
+                }
             }
             target.AddBuff(BuffID.OnFire, 300);
         }
@@ -176,7 +178,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
                 baseDrawPoints[i] = Vector2.Lerp(initialDrawPoint, laserEnd, i / (float)(baseDrawPoints.Length - 1f));
 
             // GameShaders.Misc["FargoswiltasSouls:MutantDeathray"].UseImage1(); cannot be used due to only accepting vanilla paths.
-            FargoSoulsUtil.SetTexture1(FargosTextureRegistry.MutantStreak.Value);
+            YharimEXGlobalUtilities.SetTexture1(YharimEXTextureRegistry.YharimEXStreak.Value);
             shader.TrySetParameter("mainColor", new Color(255, 255, 183, 100));
             shader.TrySetParameter("stretchAmount", 1);
             shader.TrySetParameter("scrollSpeed", 3f);

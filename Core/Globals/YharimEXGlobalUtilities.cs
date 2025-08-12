@@ -136,12 +136,12 @@ namespace YharimEX.Core.Globals
                     return false;
             }
             if (projectile.friendly)
-                {
-                    if (projectile.whoAmI == Main.player[projectile.owner].heldProj)
-                        return false;
-                    if (IsSummonDamage(projectile, false) && !clearSummonProjs)
-                        return false;
-                }
+            {
+                if (projectile.whoAmI == Main.player[projectile.owner].heldProj)
+                    return false;
+                if (IsSummonDamage(projectile, false) && !clearSummonProjs)
+                    return false;
+            }
             return true;
         }
 
@@ -1189,5 +1189,32 @@ namespace YharimEX.Core.Globals
         #region Easings
         public static float SineInOut(float value) => (0f - (MathF.Cos((value * MathF.PI)) - 1f)) / 2f;
         #endregion
+
+        public static void YharimEXIncapacitate(this Player player, bool preventDashing = true)
+        {
+            player.controlLeft = false;
+            player.controlRight = false;
+            player.controlJump = false;
+            player.controlDown = false;
+            player.controlUseItem = false;
+            player.controlUseTile = false;
+            player.controlHook = false;
+            player.releaseHook = true;
+            if (player.grapCount > 0)
+                player.RemoveAllGrapplingHooks();
+            if (player.mount.Active)
+                player.mount.Dismount(player);
+            player.FargoSouls().NoUsingItems = 2;
+            if (preventDashing)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    player.doubleTapCardinalTimer[i] = 0;
+                    player.holdDownCardinalTimer[i] = 0;
+                }
+            }
+            if (player.dashDelay < 10 && preventDashing)
+                player.dashDelay = 10;
+        }
     }
 }

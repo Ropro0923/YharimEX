@@ -96,7 +96,7 @@ namespace YharimEX.Content.NPCs.Town
 
         public override bool CanTownNPCSpawn(int numTownNPCs)
         {
-            if (YharimWorldFlags.DownedYharimEX) return true;
+            if (YharimEXWorldFlags.DownedYharimEX) return true;
             return false;
         }
 
@@ -113,7 +113,7 @@ namespace YharimEX.Content.NPCs.Town
             if (!spawned)
             {
                 spawned = true;
-                if (YharimWorldFlags.DownedYharimEX)
+                if (YharimEXWorldFlags.DownedYharimEX)
                 {
                     NPC.lifeMax = 77000;
                     NPC.life = NPC.lifeMax;

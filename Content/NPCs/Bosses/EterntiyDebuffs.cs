@@ -18,11 +18,11 @@ namespace YharimEX.Content.NPCs.Bosses
     {
         public static void ManageOnHItDebuffs(Player target)
         {
-            if (YharimWorldFlags.DeathMode || YharimWorldFlags.EternityMode)
+            if (YharimEXWorldFlags.DeathMode || YharimEXWorldFlags.EternityMode)
             {
                 target.FargoSouls().MaxLifeReduction += 100;
             }
-            if (YharimWorldFlags.EternityMode)
+            if (YharimEXWorldFlags.EternityMode)
             {
                 target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
                 target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
