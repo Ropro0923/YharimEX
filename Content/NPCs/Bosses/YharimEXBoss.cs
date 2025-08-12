@@ -27,6 +27,7 @@ using FargowiltasSouls.Content.Buffs.Masomode;
 using FargowiltasSouls.Content.Buffs.Souls;
 using YharimEX.Content.Projectiles;
 using CalamityMod;
+using YharimEX.Content.NPCs.Town;
 
 
 
@@ -177,19 +178,16 @@ namespace YharimEX.Content.NPCs.Bosses
 
         public override void OnSpawn(IEntitySource source)
         {
-            if (ModContent.TryFind("Fargowiltas", "Mutant", out ModNPC modNPC))
+            int n = NPC.FindFirstNPC(ModContent.NPCType<TheGodseeker>());
+            if (n != -1 && n != Main.maxNPCs)
             {
-                int n = NPC.FindFirstNPC(modNPC.Type);
-                if (n != -1 && n != Main.maxNPCs)
-                {
-                    NPC.Bottom = Main.npc[n].Bottom;
-                    TownNPCName = Main.npc[n].GivenName;
+                NPC.Bottom = Main.npc[n].Bottom;
+                TownNPCName = Main.npc[n].GivenName;
 
-                    Main.npc[n].life = 0;
-                    Main.npc[n].active = false;
-                    if (Main.netMode == NetmodeID.Server)
-                        NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, n);
-                }
+                Main.npc[n].life = 0;
+                Main.npc[n].active = false;
+                if (Main.netMode == NetmodeID.Server)
+                    NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, n);
             }
             AuraCenter = NPC.Center;
         }
@@ -204,6 +202,17 @@ namespace YharimEX.Content.NPCs.Bosses
                         Main.LocalPlayer.AddBuff(ModContent.BuffType<TimeFrozenBuff>(), 600);
                 }
             }
+
+            for (int i = 0; i < Main.maxPlayers; i++)
+            {
+                Player player = Main.player[i];
+                if (player.dead || !player.active || !NPC.WithinRange(player.Center, 10000f))
+                    continue;
+
+                player.wingTime = player.wingTimeMax;
+                player.Calamity().infiniteFlight = true;
+            }
+
             return base.PreAI();
         }
 
@@ -726,10 +735,10 @@ namespace YharimEX.Content.NPCs.Bosses
                         EdgyBossText(GFBQuote(36));
                         if (NPC.position.Y < 0)
                             NPC.position.Y = 0;
-                        if (YharimEXGlobalUtilities.HostCheck && ModContent.TryFind("Fargowiltas", "Mutant", out ModNPC modNPC) && !NPC.AnyNPCs(modNPC.Type))
+                        if (YharimEXGlobalUtilities.HostCheck && !NPC.AnyNPCs(ModContent.NPCType<TheGodseeker>()) && YharimWorldFlags.DownedYharimEX)
                         {
                             YharimEXGlobalUtilities.ClearHostileProjectiles(2, NPC.whoAmI);
-                            int n = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, modNPC.Type);
+                            int n = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<TheGodseeker>());
                             if (n != Main.maxNPCs)
                             {
                                 Main.npc[n].homeless = true;
@@ -3904,9 +3913,9 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.life = 0;
                 NPC.dontTakeDamage = false;
                 NPC.checkDead();
-                if (YharimEXGlobalUtilities.HostCheck && ModContent.TryFind("Fargowiltas", "Mutant", out ModNPC modNPC) && !NPC.AnyNPCs(modNPC.Type))
+                if (YharimEXGlobalUtilities.HostCheck && !NPC.AnyNPCs(ModContent.NPCType<TheGodseeker>()))
                 {
-                    int n = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, modNPC.Type);
+                    int n = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<TheGodseeker>());
                     if (n != Main.maxNPCs)
                     {
                         Main.npc[n].homeless = true;
