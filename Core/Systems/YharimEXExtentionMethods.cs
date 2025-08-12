@@ -204,15 +204,15 @@ namespace YharimEX
             return false;
         }
 
-        public static NPC GetSourceNPC(this Projectile projectile)
-        {
-            return projectile.GetGlobalProjectile<A_SourceNPCGlobalProjectile>().sourceNPC;
-        }
+    //    public static NPC GetSourceNPC(this Projectile projectile)
+    //    {
+    //        return projectile.GetGlobalProjectile<A_SourceNPCGlobalProjectile>().sourceNPC;
+    //    }
 
-        public static void SetSourceNPC(this Projectile projectile, NPC npc)
-        {
-            projectile.GetGlobalProjectile<A_SourceNPCGlobalProjectile>().sourceNPC = npc;
-        }
+    //    public static void SetSourceNPC(this Projectile projectile, NPC npc)
+    //    {
+    //        projectile.GetGlobalProjectile<A_SourceNPCGlobalProjectile>().sourceNPC = npc;
+    //    }
 
         public static float ActualClassDamage(this Player player, DamageClass damageClass)
         {
@@ -223,7 +223,7 @@ namespace YharimEX
         {
             if (item.damage <= 0 || item.pick != 0 || item.axe != 0 || item.hammer != 0)
             {
-                return item.type == 905;
+                return item.type == ItemID.CoinGun;
             }
 
             return true;
@@ -233,7 +233,7 @@ namespace YharimEX
         {
             if (item.damage <= 0 || item.DamageType == DamageClass.Default || item.pick != 0 || item.axe != 0 || item.hammer != 0)
             {
-                return item.type == 905;
+                return item.type == ItemID.CoinGun;
             }
 
             return true;
@@ -266,12 +266,10 @@ namespace YharimEX
 
         public static float ActualClassCrit(this Player player, DamageClass damageClass)
         {
-            if ((damageClass != DamageClass.Summon && damageClass != DamageClass.SummonMeleeSpeed) || player.FargoSouls().MinionCrits)
+        //    if ((damageClass != DamageClass.Summon && damageClass != DamageClass.SummonMeleeSpeed) || player.FargoSouls().MinionCrits)
             {
                 return player.GetTotalCritChance(damageClass);
             }
-
-            return 0f;
         }
 
         public static bool FeralGloveReuse(this Player player, Item item)
@@ -291,7 +289,7 @@ namespace YharimEX
 
         public static bool CannotUseItems(this Player player)
         {
-            if (!player.CCed && !player.noItems && player.FargoSouls().NoUsingItems <= 0)
+        //    if (!player.CCed && !player.noItems && player.FargoSouls().NoUsingItems <= 0)
             {
                 if (player.HeldItem != null)
                 {
@@ -305,8 +303,6 @@ namespace YharimEX
 
                 return false;
             }
-
-            return true;
         }
 
         public static void Incapacitate(this Player player, bool preventDashing = true)
@@ -329,7 +325,7 @@ namespace YharimEX
                 player.mount.Dismount(player);
             }
 
-            player.FargoSouls().NoUsingItems = 2;
+         //   player.FargoSouls().NoUsingItems = 2;
             if (preventDashing)
             {
                 for (int i = 0; i < 4; i++)

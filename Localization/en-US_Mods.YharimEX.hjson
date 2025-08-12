@@ -1,16 +1,13 @@
-NPCs: {
-	YharimEX.DisplayName: Yharim EX
-	YharimEXBoss.DisplayName: Yharim E X Boss
-}
+NPCs.YharimEXBoss.DisplayName: Yharim EX
 
 Projectiles: {
-	YharimEXSunBlast.DisplayName: Yharim E X Sun Blast
-	YharimEXBrain.DisplayName: Yharim E X Brain
+	YharimEXSunBlast.DisplayName: Yharim EX Sun Blast
+	YharimEXBrain.DisplayName: Yharim EX Brain
 }
 
 Items: {
 	YharimsRage: {
 		Tooltip: ""
-		DisplayName: Yharims Rage
+		DisplayName: Yharim's Rage
 	}
 }

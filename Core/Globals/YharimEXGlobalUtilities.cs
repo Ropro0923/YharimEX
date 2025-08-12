@@ -27,9 +27,7 @@ namespace YharimEX.Core.Globals
     {
 
         public static bool WorldIsExpertOrHarder() => Main.expertMode || (Main.GameModeInfo.IsJourneyMode && CreativePowerManager.Instance.GetPower<CreativePowers.DifficultySliderPower>().StrengthMultiplierToGiveNPCs >= 2);
-
         public static bool HostCheck => Main.netMode != NetmodeID.MultiplayerClient;
-
         public static void AddDebuffFixedDuration(Player player, int buffID, int intendedTime, bool quiet = true)
         {
             if (WorldIsExpertOrHarder() && BuffID.Sets.LongerExpertDebuff[buffID])
@@ -60,7 +58,6 @@ namespace YharimEX.Core.Globals
             float worldDamage = ProjWorldDamage;
             return (int)(modifier * npcDamage / inherentHostileProjMultiplier / Math.Max(npcDamageCalculationsOffset, worldDamage));
         }
-
         public static bool IsSummonDamage(Projectile projectile, bool includeMinionShot = true, bool includeWhips = true)
         {
             if (!includeWhips && ProjectileID.Sets.IsAWhip[projectile.type])
@@ -86,12 +83,12 @@ namespace YharimEX.Core.Globals
                     return false;
             }
             if (projectile.friendly)
-                {
-                    if (projectile.whoAmI == Main.player[projectile.owner].heldProj)
-                        return false;
-                    if (IsSummonDamage(projectile, false) && !clearSummonProjs)
-                        return false;
-                }
+            {
+                if (projectile.whoAmI == Main.player[projectile.owner].heldProj)
+                    return false;
+                if (IsSummonDamage(projectile, false) && !clearSummonProjs)
+                    return false;
+            }
             return true;
         }
 
@@ -509,6 +506,25 @@ namespace YharimEX.Core.Globals
                 if (lightColor.B < colorB) { lightColor.B = colorB; }
             }
             return lightColor;
+        }
+        public static bool BossIsAlive(ref int bossID, int bossType)
+        {
+            if (bossID != -1)
+            {
+                if (Main.npc[bossID].active && Main.npc[bossID].type == bossType)
+                {
+                    return true;
+                }
+                else
+                {
+                    bossID = -1;
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

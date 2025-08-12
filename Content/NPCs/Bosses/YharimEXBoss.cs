@@ -1,7 +1,6 @@
 using YharimEX.Assets.Sounds;
 using YharimEX.Content.Items;
 using YharimEX.Core.Globals;
-using FargowiltasSouls.Core.Systems;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,14 +19,15 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
-using FargowiltasSouls.Content.Bosses.MutantBoss;
-using FargowiltasSouls;
 using YharimEX.Assets.ExtraTextures;
 using YharimEX.Content.BossBars;
+using YharimEX.Content.Projectiles;
+using FargowiltasSouls.Core.Systems;
 using FargowiltasSouls.Content.Buffs.Boss;
 using FargowiltasSouls.Content.Buffs.Masomode;
 using FargowiltasSouls.Content.Buffs.Souls;
-using YharimEX.Content.Projectiles;
+using FargowiltasSouls.Content.Bosses.MutantBoss;
+using FargowiltasSouls;
 
 
 
@@ -70,18 +70,18 @@ namespace YharimEX.Content.NPCs.Bosses
 
             if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
             {
-                Mod fargos = YharimEXCrossmodSystem.Fargowiltas.Mod;
+                Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
                 NPC.AddDebuffImmunities(
                 [
-                    fargos.Find<ModBuff>("LethargicBuff").Type,
-                    fargos.Find<ModBuff>("ClippedWingsBuff").Type,
-                    fargos.Find<ModBuff>("MutantNibbleBuff").Type,
-                    fargos.Find<ModBuff>("OceanicMaulBuff").Type,
-                    fargos.Find<ModBuff>("LightningRodBuff").Type,
-                    fargos.Find<ModBuff>("SadismBuff").Type,
-                    fargos.Find<ModBuff>("GodEaterBuff").Type,
-                    fargos.Find<ModBuff>("TimeFrozenBuff").Type,
-                    fargos.Find<ModBuff>("LeadPoisonBuff").Type,
+                    FargoSouls.Find<ModBuff>("LethargicBuff").Type,
+                    FargoSouls.Find<ModBuff>("ClippedWingsBuff").Type,
+                    FargoSouls.Find<ModBuff>("MutantNibbleBuff").Type,
+                    FargoSouls.Find<ModBuff>("OceanicMaulBuff").Type,
+                    FargoSouls.Find<ModBuff>("LightningRodBuff").Type,
+                    FargoSouls.Find<ModBuff>("SadismBuff").Type,
+                    FargoSouls.Find<ModBuff>("GodEaterBuff").Type,
+                    FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type,
+                    FargoSouls.Find<ModBuff>("LeadPoisonBuff").Type,
                 ]);
             }
         }
