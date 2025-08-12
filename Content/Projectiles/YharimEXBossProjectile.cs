@@ -14,7 +14,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXBossProjectile : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss";
+        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBoss";
         public static string trailTexture => "YharimEX/Assets/NPCs/YharimEXSoul";
         public static int npcType => ModContent.NPCType<YharimEXBoss>();
         public bool auraTrail;

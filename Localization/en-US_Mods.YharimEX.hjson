@@ -38,7 +38,22 @@ NPCs: {
 
 Projectiles: {
 	YharimEXSunBlast.DisplayName: Sun Blast
-	YharimEXBrain.DisplayName: Brain
+	YharimEXBrain.DisplayName: Brain of Confusion attack
+	YharimEXRitual.DisplayName: Yharim E X Ritual
+	YharimEXMark2.DisplayName: Yharim E X Mark2
+	YharimEXEye.DisplayName: Yharim E X Eye
+	YharimEXDoGTail.DisplayName: Yharim E X Do G Tail
+	YharimEXDoGHead.DisplayName: Yharim E X Do G Head
+	YharimEXDoGBody.DisplayName: Yharim E X Do G Body
+	YharimEXDeathraySmall.DisplayName: Yharim E X Deathray Small
+	YharimEXDeathrayAim.DisplayName: Yharim E X Deathray Aim
+	YharimEXDeathray3.DisplayName: Yharim E X Deathray3
+	YharimEXDeathray2.DisplayName: Yharim E X Deathray2
+	YharimEXDeathray1.DisplayName: Yharim E X Deathray1
+	YharimEXCrystalLeaf.DisplayName: Yharim E X Crystal Leaf
+	YharimEXBossProjectile.DisplayName: Yharim E X Boss Projectile
+	YharimEXBombSmall.DisplayName: Yharim E X Bomb Small
+	YharimEXBomb.DisplayName: Yharim E X Bomb
 }
 
 Items: {

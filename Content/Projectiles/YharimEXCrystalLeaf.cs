@@ -13,7 +13,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXCrystalLeaf : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/MutantCrystalLeaf_April";
+        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXCrystalLeaf";
 
         public override void SetStaticDefaults()
         {
