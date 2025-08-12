@@ -1,7 +1,8 @@
 displayName = Yharim EX
 author = Akira & Ropro0923
 version = 0.0.1
-modReferences = Luminance, CalamityMod, Fargowiltas, FargowiltasSouls
+modReferences = Luminance, CalamityMod
+weakReferences = Fargowiltas, FargowiltasSouls, InfernumMode
 includePDB = true
 includeSource = true
 buildIgnore = lib\*, bin\*

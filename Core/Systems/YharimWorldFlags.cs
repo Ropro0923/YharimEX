@@ -29,7 +29,6 @@ namespace YharimEX.Core.Systems
         internal static bool downedYharimEX;
         internal static bool angryYharimEX;
         internal static int skipYharimEXP1;
-        internal static bool downedAnyBoss;
         internal static bool[] downedBoss = new bool[Enum.GetValues(typeof(Downed)).Length];
         public static int SkipYharimEXP1 { get => skipYharimEXP1; set => skipYharimEXP1 = value; }
         public static bool[] DownedBoss { get => downedBoss; set => downedBoss = value; }

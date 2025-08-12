@@ -23,6 +23,14 @@
 		<Reference Include="CalamityMod">
 	    	<HintPath>lib\CalamityMod.dll</HintPath>
 		</Reference>
+
+		<Reference Include="InfernumMode">
+	    	<HintPath>lib\InfernumMode.dll</HintPath>
+		</Reference>
+
+		<Reference Include="FargowiltasCrossmod">
+	    	<HintPath>lib\FargowiltasCrossmod.dll</HintPath>
+		</Reference>
 		
 	</ItemGroup>
 
