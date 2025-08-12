@@ -60,9 +60,11 @@ namespace YharimEX.Content.NPCs.Bosses
             NPCID.Sets.BossBestiaryPriority.Add(NPC.type);
             NPCID.Sets.MustAlwaysDraw[Type] = true;
 
-            NPC.AddDebuffImmunities(
-            [
-                BuffID.Confused,
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                NPC.AddDebuffImmunities(
+                [
+                    BuffID.Confused,
                 BuffID.Chilled,
                 BuffID.OnFire,
                 BuffID.Suffocation,
@@ -77,7 +79,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 ModContent.BuffType<LeadPoisonBuff>(),
 
             ]);
-
+            }
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -97,7 +99,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.width = Player.defaultWidth;
                 NPC.height = Player.defaultHeight;
             }
-            NPC.damage = 444+44;
+            NPC.damage = 444 + 44;
             NPC.defense = 255;
             NPC.value = Item.buyPrice(15);
             NPC.lifeMax = Main.expertMode ? 9700000 : 5100000;
@@ -153,7 +155,7 @@ namespace YharimEX.Content.NPCs.Bosses
             CooldownSlot = 1;
             if (!WorldSavingSystem.MasochistModeReal)
                 return false;
-            return NPC.Distance(FargoSoulsUtil.ClosestPointInHitbox(target, NPC.Center)) < Player.defaultHeight && AttackChoice > -1;
+            return NPC.Distance(YharimEXGlobalUtilities.ClosestPointInHitbox(target, NPC.Center)) < Player.defaultHeight && AttackChoice > -1;
         }
 
         public override bool CanHitNPC(NPC target)
@@ -396,11 +398,11 @@ namespace YharimEX.Content.NPCs.Bosses
 
             if (player.immune || player.hurtCooldowns[0] != 0 || player.hurtCooldowns[1] != 0)
                 playerInvulTriggered = true;
-                
+
             //drop summon
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (WorldSavingSystem.EternityMode && WorldSavingSystem.DownedAbom && !WorldSavingSystem.DownedMutant && FargoSoulsUtil.HostCheck && NPC.HasPlayerTarget && !droppedSummon)
+                if (WorldSavingSystem.EternityMode && WorldSavingSystem.DownedAbom && !WorldSavingSystem.DownedMutant && YharimEXGlobalUtilities.HostCheck && NPC.HasPlayerTarget && !droppedSummon)
                 {
                     Item.NewItem(NPC.GetSource_Loot(), player.Hitbox, ModContent.ItemType<YharimsRage>());
                     droppedSummon = true;
@@ -416,7 +418,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
         #region helper functions
 
-            bool spawned;
+        bool spawned;
         void ManageAurasAndPreSpawn()
         {
             if (!spawned)
@@ -431,7 +433,6 @@ namespace YharimEX.Content.NPCs.Bosses
                         NPC.lifeMax = int.MaxValue;
                 }
                 NPC.life = NPC.lifeMax;
-                // RETURN
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
                     if (player.FargoSouls().TerrariaSoul && WorldSavingSystem.MasochistModeReal)
@@ -455,12 +456,14 @@ namespace YharimEX.Content.NPCs.Bosses
                     NPC.localAI[3] = 1;
                     SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
                     EdgyBossText(GFBQuote(2));
-                    if (FargoSoulsUtil.HostCheck)
-                    {
-                        //if (FargowiltasSouls.Instance.MasomodeEXLoaded) Projectile.NewProjectile(npc.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModLoader.GetMod("MasomodeEX").ProjectileType("MutantText"), 0, 0f, Main.myPlayer, NPC.whoAmI);
 
-                        if (WorldSavingSystem.AngryMutant && WorldSavingSystem.MasochistModeReal)
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BossRush>(), 0, 0f, Main.myPlayer, NPC.whoAmI);
+                    if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        if (YharimEXGlobalUtilities.HostCheck)
+                        {
+                            if (YharimWorldFlags.AngryYharimEX && WorldSavingSystem.MasochistModeReal)
+                                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BossRush>(), 0, 0f, Main.myPlayer, NPC.whoAmI);
+                        }
                     }
                 }
             }
@@ -514,15 +517,15 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void ManageNeededProjectiles()
         {
-            if (FargoSoulsUtil.HostCheck) //checks for needed projs
+            if (YharimEXGlobalUtilities.HostCheck) //checks for needed projs
             {
-                if (WorldSavingSystem.EternityMode && AttackChoice != -7 && (AttackChoice < 0 || AttackChoice > 10) && FargoSoulsUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null)
-                    ritualProj = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 0f, NPC.whoAmI);
+                if (WorldSavingSystem.EternityMode && AttackChoice != -7 && (AttackChoice < 0 || AttackChoice > 10) && YharimEXGlobalUtilities.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null)
+                    ritualProj = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 0f, NPC.whoAmI);
 
-                if (FargoSoulsUtil.ProjectileExists(ringProj, ModContent.ProjectileType<MutantRitual5>()) == null)
+                if (YharimEXGlobalUtilities.ProjectileExists(ringProj, ModContent.ProjectileType<MutantRitual5>()) == null)
                     ringProj = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual5>(), 0, 0f, Main.myPlayer, 0f, NPC.whoAmI);
 
-                if (FargoSoulsUtil.ProjectileExists(spriteProj, ModContent.ProjectileType<MutantBossProjectile>()) == null)
+                if (YharimEXGlobalUtilities.ProjectileExists(spriteProj, ModContent.ProjectileType<MutantBossProjectile>()) == null)
                 {
                     /*if (Main.netMode == NetmodeID.Server)
                         ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral("wheres my sprite"), Color.LimeGreen);
@@ -597,7 +600,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 //become more likely to use randoms as life decreases
                 bool useRandomizer = NPC.localAI[3] >= 3 && (WorldSavingSystem.MasochistModeReal || Main.rand.NextFloat(0.8f) + 0.2f > (float)Math.Pow((float)NPC.life / NPC.lifeMax, 2));
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Queue<float> recentAttacks = new(attackHistory); //copy of attack history that i can remove elements from freely
 
@@ -637,7 +640,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
             }
 
-            if (FargoSoulsUtil.HostCheck)
+            if (YharimEXGlobalUtilities.HostCheck)
             {
                 int maxMemory = WorldSavingSystem.MasochistModeReal ? 12 : 18;
 
@@ -740,9 +743,9 @@ namespace YharimEX.Content.NPCs.Bosses
                         EdgyBossText(GFBQuote(36));
                         if (NPC.position.Y < 0)
                             NPC.position.Y = 0;
-                        if (FargoSoulsUtil.HostCheck && ModContent.TryFind("Fargowiltas", "Mutant", out ModNPC modNPC) && !NPC.AnyNPCs(modNPC.Type))
+                        if (YharimEXGlobalUtilities.HostCheck && ModContent.TryFind("Fargowiltas", "Mutant", out ModNPC modNPC) && !NPC.AnyNPCs(modNPC.Type))
                         {
-                            FargoSoulsUtil.ClearHostileProjectiles(2, NPC.whoAmI);
+                            YharimEXGlobalUtilities.ClearHostileProjectiles(2, NPC.whoAmI);
                             int n = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, modNPC.Type);
                             if (n != Main.maxNPCs)
                             {
@@ -777,14 +780,14 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             if (Main.expertMode && NPC.life < NPC.lifeMax * (2f / 3))
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     AttackChoice = 10;
                     NPC.ai[1] = 0;
                     NPC.ai[2] = 0;
                     NPC.ai[3] = 0;
                     NPC.netUpdate = true;
-                    FargoSoulsUtil.ClearHostileProjectiles(1, NPC.whoAmI);
+    // NOTE                YharimEXGlobalUtilities.ClearHostileProjectiles(1, NPC.whoAmI);
                     EdgyBossText(GFBQuote(3));
                 }
                 return true;
@@ -857,7 +860,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             if (normalAnimation)
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantBomb>(), 0, 0f, Main.myPlayer);
             }
 
@@ -873,7 +876,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     : 0.1f * -Vector2.UnitY.RotatedBy(MathHelper.TwoPi / max * i); //looks controlled during mutant p1 skip
                 float ai0 = fightIsOver ? -Main.player[NPC.target].whoAmI - 1 : NPC.whoAmI; //player -1 necessary for edge case of player 0
                 float ai1 = vel.Length() / Main.rand.Next(fightIsOver ? 90 : 150, 180); //window in which they begin homing in
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantHeal>(), heal, 0f, Main.myPlayer, ai0, ai1);
             }
         }
@@ -920,7 +923,7 @@ namespace YharimEX.Content.NPCs.Bosses
             const int max = 6;
             for (int i = 0; i < max; i++)
             {
-                int d = Dust.NewDust(NPC.Center + distance * Vector2.UnitX.RotatedBy(rotation + MathHelper.TwoPi / max * i), 0, 0, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, NPC.velocity.X * 0.3f, NPC.velocity.Y * 0.3f, newColor: Color.White);
+                int d = Dust.NewDust(NPC.Center + distance * Vector2.UnitX.RotatedBy(rotation + MathHelper.TwoPi / max * i), 0, 0, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, NPC.velocity.X * 0.3f, NPC.velocity.Y * 0.3f, newColor: Color.White);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].scale = 6f - 4f * modifier;
             }
@@ -931,7 +934,7 @@ namespace YharimEX.Content.NPCs.Bosses
             if (Main.zenithWorld) //edgy boss text
             {
                 Color color = Color.Cyan;
-                FargoSoulsUtil.PrintText(text, color);
+                YharimEXGlobalUtilities.PrintText(text, color);
                 CombatText.NewText(NPC.Hitbox, color, text, true);
                 /*
                 if (Main.netMode == NetmodeID.SinglePlayer)
@@ -988,19 +991,19 @@ namespace YharimEX.Content.NPCs.Bosses
                     P1NextAttackOrMasoOptions(AttackChoice);
                     NPC.velocity = NPC.SafeDirectionTo(player.Center) * 2f;
                 }
-                else if (FargoSoulsUtil.HostCheck)
+                else if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Vector2 vel = NPC.localAI[0].ToRotationVector2() * 25f;
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target);
                     if (WorldSavingSystem.MasochistModeReal)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
                     }
                 }
                 NPC.localAI[0] = 0;
             }
-            else if (NPC.ai[1] == 61 && NPC.ai[2] < NPC.ai[3] && FargoSoulsUtil.HostCheck)
+            else if (NPC.ai[1] == 61 && NPC.ai[2] < NPC.ai[3] && YharimEXGlobalUtilities.HostCheck)
             {
                 if (WorldSavingSystem.EternityMode && WorldSavingSystem.SkipMutantP1 >= 10 && !WorldSavingSystem.MasochistModeReal)
                 {
@@ -1012,7 +1015,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     NPC.netUpdate = true;
 
                     if (WorldSavingSystem.SkipMutantP1 == 10)
-                        FargoSoulsUtil.PrintLocalization($"Mods.{Mod.Name}.NPCs.MutantBoss.SkipP1", Color.LimeGreen);
+                        YharimEXGlobalUtilities.PrintLocalization($"Mods.{Mod.Name}.NPCs.MutantBoss.SkipP1", Color.LimeGreen);
 
                     if (WorldSavingSystem.SkipMutantP1 >= 10)
                         NPC.ai[2] = 1; //flag for different p2 transition animation
@@ -1023,23 +1026,23 @@ namespace YharimEX.Content.NPCs.Bosses
                 if (WorldSavingSystem.MasochistModeReal && NPC.ai[2] == 0) //first time only
                 {
                     SoundEngine.PlaySound(SoundID.NPCDeath13, NPC.Center);
-                    if (FargoSoulsUtil.HostCheck) //spawn worm
+                    if (YharimEXGlobalUtilities.HostCheck) //spawn worm
                     {
                         int appearance = Main.rand.Next(2);
-                        if (FargoSoulsUtil.AprilFools)
+                        if (YharimEXGlobalUtilities.AprilFools)
                             appearance = 0;
                         for (int j = 0; j < 8; j++)
                         {
                             Vector2 vel = NPC.DirectionFrom(player.Center).RotatedByRandom(MathHelper.ToRadians(120)) * 10f;
                             float ai1 = 0.8f + 0.4f * j / 5f;
-                            int current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerHead>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, ai1, appearance);
+                            int current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerHead>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, ai1, appearance);
                             //timeleft: remaining duration of this case + extra delay after + successive death
                             Main.projectile[current].timeLeft = 90 * ((int)NPC.ai[3] + 1) + 30 + j * 6;
                             int max = Main.rand.Next(8, 19);
                             for (int i = 0; i < max; i++)
-                                current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerBody>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[current].identity, 0f, appearance);
+                                current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerBody>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[current].identity, 0f, appearance);
                             int previous = current;
-                            current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerTail>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[current].identity, 0f, appearance);
+                            current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerTail>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[current].identity, 0f, appearance);
                             Main.projectile[previous].localAI[1] = Main.projectile[current].identity;
                             Main.projectile[previous].netUpdate = true;
                         }
@@ -1049,9 +1052,9 @@ namespace YharimEX.Content.NPCs.Bosses
 
 
                 Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, NPC.SafeDirectionTo(player.Center + player.velocity * 30f), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 85f, NPC.whoAmI);
-                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 3);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 3);
 
-                //Projectile.NewProjectile(npc.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
+                //Projectile.NewProjectile(npc.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
             }
         }
 
@@ -1082,8 +1085,8 @@ namespace YharimEX.Content.NPCs.Bosses
                     int max = WorldSavingSystem.MasochistModeReal ? 9 : 6;
                     float speed = WorldSavingSystem.MasochistModeReal ? 10 : 9;
                     int sign = WorldSavingSystem.MasochistModeReal ? NPC.ai[2] % 2 == 0 ? 1 : -1 : 1;
-                    SpawnSphereRing(max, speed, (int)(0.8 * FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage)), 1f * sign);
-                    SpawnSphereRing(max, speed, (int)(0.8 * FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage)), -0.5f * sign);
+                    SpawnSphereRing(max, speed, (int)(0.8 * YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage)), 1f * sign);
+                    SpawnSphereRing(max, speed, (int)(0.8 * YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage)), -0.5f * sign);
                 }
 
             }
@@ -1145,7 +1148,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
                 else if (NPC.ai[2] <= maxEyeThreshold)
                 {
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
                         int type;
                         float ratio = NPC.ai[2] / maxEyeThreshold * 3;
@@ -1156,7 +1159,7 @@ namespace YharimEX.Content.NPCs.Bosses
                         else
                             type = ModContent.ProjectileType<MutantTrueEyeR>();
 
-                        int p = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, type, FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer, NPC.target);
+                        int p = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, type, YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer, NPC.target);
                         if (p != Main.maxProjectiles) //inform them which side attack began on
                         {
                             Main.projectile[p].localAI[1] = NPC.ai[3]; //this is ok, they sync this
@@ -1184,12 +1187,12 @@ namespace YharimEX.Content.NPCs.Bosses
                 if (!AliveCheck(player))
                     return;
                 NPC.ai[3] = 1;
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 240); // 250);
-                    TelegraphSound = SoundEngine.PlaySound(YharimEXSoundRegistry.YharimEXUnpredictive with {Volume = 2f}, NPC.Center);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 240); // 250);
+                    TelegraphSound = SoundEngine.PlaySound(YharimEXSoundRegistry.YharimEXUnpredictive with { Volume = 2f }, NPC.Center);
                 }
-                    
+
 
                 EdgyBossText(GFBQuote(4));
             }
@@ -1232,14 +1235,14 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     float speed = WorldSavingSystem.MasochistModeReal ? 45f : 30f;
                     NPC.velocity = speed * NPC.SafeDirectionTo(player.Center + player.velocity);
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
 
                         if (WorldSavingSystem.MasochistModeReal)
                         {
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
                         }
                     }
 
@@ -1291,8 +1294,8 @@ namespace YharimEX.Content.NPCs.Bosses
             NPC.velocity = Vector2.Zero;
             if (--NPC.ai[1] < 0)
             {
-                if (FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new Vector2(2, 0).RotatedBy(NPC.ai[2]), ModContent.ProjectileType<MutantMark1>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                if (YharimEXGlobalUtilities.HostCheck)
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new Vector2(2, 0).RotatedBy(NPC.ai[2]), ModContent.ProjectileType<MutantMark1>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
                 NPC.ai[1] = WorldSavingSystem.MasochistModeReal ? 3 : 5; //delay between projs
                 NPC.ai[2] += NPC.ai[3];
                 if (NPC.localAI[0]++ == 20 || NPC.localAI[0] == 40)
@@ -1357,7 +1360,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     //        Vector2 target = new Vector2(NPC.localAI[0], NPC.localAI[1]);
                     //        Vector2 spawnpos = target + 600 * NPC.ai[2].ToRotationVector2();
 
-                    //        if (FargoSoulsUtil.HostCheck)
+                    //        if (YharimEXGlobalUtilities.HostCheck)
                     //        {
 
                     //        }
@@ -1373,13 +1376,13 @@ namespace YharimEX.Content.NPCs.Bosses
                                 ? (float)Math.PI / 8 / 480 * (NPC.ai[3] - 300) * NPC.localAI[0]
                                 : MathHelper.Pi / 77f;
 
-                        if (FargoSoulsUtil.HostCheck)
+                        if (YharimEXGlobalUtilities.HostCheck)
                         {
                             int max = WorldSavingSystem.MasochistModeReal ? 5 : 4;
                             for (int i = 0; i < max; i++)
                             {
                                 Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new Vector2(0f, -7f).RotatedBy(NPC.ai[2] + MathHelper.TwoPi / max * i),
-                                    ModContent.ProjectileType<MutantEye>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                                    ModContent.ProjectileType<MutantEye>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
                             }
                         }
 
@@ -1406,7 +1409,8 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void PrepareMutantSword()
         {
-            if (AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
+            
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded && AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
                 Main.LocalPlayer.AddBuff(ModContent.BuffType<PurgedBuff>(), 2);
 
             //can alternate directions
@@ -1435,13 +1439,13 @@ namespace YharimEX.Content.NPCs.Bosses
                     if (sign < 0)
                         startAngle += MathHelper.PiOver2 * -NPC.localAI[1];
 
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
                         Vector2 offset = Vector2.UnitY.RotatedBy(startAngle) * -MUTANT_SWORD_SPACING;
 
                         void MakeSword(Vector2 pos, float spacing, float rotation = 0)
                         {
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + pos, Vector2.Zero, ModContent.ProjectileType<MutantSword>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer, NPC.whoAmI, spacing);
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + pos, Vector2.Zero, ModContent.ProjectileType<MutantSword>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer, NPC.whoAmI, spacing);
                         }
 
                         for (int i = 0; i < MUTANT_SWORD_MAX; i++)
@@ -1487,7 +1491,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void MutantSword()
         {
-            if (AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded && AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
                 Main.LocalPlayer.AddBuff(ModContent.BuffType<PurgedBuff>(), 2);
 
             NPC.ai[3] += NPC.ai[2];
@@ -1522,10 +1526,10 @@ namespace YharimEX.Content.NPCs.Bosses
                     {
                         Vector2 angle = baseDirection.RotatedBy(MathHelper.TwoPi / max * i);
                         float ai1 = i <= 2 || i == max - 2 ? 48 : 24;
-                        if (FargoSoulsUtil.HostCheck)
+                        if (YharimEXGlobalUtilities.HostCheck)
                         {
                             Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos + Main.rand.NextVector2Circular(NPC.width / 2, NPC.height / 2), Vector2.Zero, ModContent.ProjectileType<YharimEXSunBlast>(),
-                                FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer, MathHelper.WrapAngle(angle.ToRotation()), ai1);
+                                YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer, MathHelper.WrapAngle(angle.ToRotation()), ai1);
                         }
                     }
                 }
@@ -1570,7 +1574,7 @@ namespace YharimEX.Content.NPCs.Bosses
             if (NPC.ai[2] == 0)
             {
                 if (NPC.ai[1] < 60 && !Main.dedServ && Main.LocalPlayer.active)
-                    FargoSoulsUtil.ScreenshakeRumble(6);
+                    YharimEXGlobalUtilities.ScreenshakeRumble(6);
             }
             else
             {
@@ -1579,26 +1583,27 @@ namespace YharimEX.Content.NPCs.Bosses
 
             if (NPC.ai[1] < 240)
             {
-                //make you stop attacking
                 if (Main.LocalPlayer.active && !Main.LocalPlayer.dead && !Main.LocalPlayer.ghost && NPC.Distance(Main.LocalPlayer.Center) < 3000)
                 {
                     Main.LocalPlayer.controlUseItem = false;
                     Main.LocalPlayer.controlUseTile = false;
-                    Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
+
+        // NOTE            Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
+                    
                 }
             }
 
             if (NPC.ai[1] == 0)
             {
-                FargoSoulsUtil.ClearAllProjectiles(2, NPC.whoAmI);
+        // NOTE        YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI);
 
                 if (WorldSavingSystem.EternityMode)
                 {
                     DramaticTransition(false, NPC.ai[2] == 0);
 
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
-                        ritualProj = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 0f, NPC.whoAmI);
+                        ritualProj = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantRitual>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 0f, NPC.whoAmI);
 
                         if (WorldSavingSystem.MasochistModeReal)
                         {
@@ -1613,7 +1618,7 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     //Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.GlowRingHollow>(), 0, 0f, Main.myPlayer, 5);
                     //Projectile.NewProjectile(npc.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -22);
@@ -1628,13 +1633,16 @@ namespace YharimEX.Content.NPCs.Bosses
 
                 for (int i = 0; i < 50; i++)
                 {
-                    int d = Dust.NewDust(Main.LocalPlayer.position, Main.LocalPlayer.width, Main.LocalPlayer.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 2.5f);
+                    int d = Dust.NewDust(Main.LocalPlayer.position, Main.LocalPlayer.width, Main.LocalPlayer.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 2.5f);
                     Main.dust[d].noGravity = true;
                     Main.dust[d].noLight = true;
                     Main.dust[d].velocity *= 9f;
                 }
-                if (player.FargoSouls().TerrariaSoul)
-                    EdgyBossText(GFBQuote(1));
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    if (player.FargoSouls().TerrariaSoul)
+                        EdgyBossText(GFBQuote(1));
+                }
             }
             else if (NPC.ai[1] > 150)
             {
@@ -1689,8 +1697,8 @@ namespace YharimEX.Content.NPCs.Bosses
             NPC.velocity = Vector2.Zero;
             if (--NPC.ai[1] < 0)
             {
-                if (FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new Vector2(2, 0).RotatedBy(NPC.ai[2]), ModContent.ProjectileType<MutantMark1>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                if (YharimEXGlobalUtilities.HostCheck)
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new Vector2(2, 0).RotatedBy(NPC.ai[2]), ModContent.ProjectileType<MutantMark1>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
                 NPC.ai[1] = 3;
                 NPC.ai[2] += NPC.ai[3];
 
@@ -1720,12 +1728,12 @@ namespace YharimEX.Content.NPCs.Bosses
                     return;
                 NPC.ai[3] = 1;
                 //NPC.velocity = NPC.DirectionFrom(player.Center) * NPC.velocity.Length();
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 180); // + 60);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 180); // + 60);
                     TelegraphSound = SoundEngine.PlaySound(YharimEXSoundRegistry.YharimEXUnpredictive with { Volume = 8f }, NPC.Center);
                 }
-                    
+
                 EdgyBossText(GFBQuote(9));
             }
 
@@ -1775,15 +1783,15 @@ namespace YharimEX.Content.NPCs.Bosses
 
                 if (NPC.ai[2] < NPC.localAI[1])
                 {
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                         Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, NPC.SafeDirectionTo(player.Center + player.velocity * 30f), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 55, NPC.whoAmI);
 
                     if (NPC.ai[2] == NPC.localAI[1] - 1)
                     {
                         SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 
-                        if (FargoSoulsUtil.HostCheck)
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 4);
+                        if (YharimEXGlobalUtilities.HostCheck)
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 4);
                     }
                 }
             }
@@ -1817,11 +1825,11 @@ namespace YharimEX.Content.NPCs.Bosses
                     if (NPC.ai[2] == NPC.localAI[1])
                         spearAi = -2f;
 
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, spearAi);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, spearAi);
                     }
 
                     EdgyBossText(GFBQuote(10));
@@ -1854,7 +1862,7 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 NPC.localAI[0] = Math.Sign(NPC.Center.X - player.Center.X);
                 //if (WorldSavingSystem.MasochistMode) NPC.ai[2] = NPC.SafeDirectionTo(player.Center).ToRotation(); //starting rotation offset to avoid hitting at close range
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
 
                 EdgyBossText(GFBQuote(11));
@@ -1869,7 +1877,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.ai[2] += (float)Math.PI / 8 / 480 * NPC.ai[3] * NPC.localAI[0];
                 if (NPC.ai[2] > (float)Math.PI)
                     NPC.ai[2] -= (float)Math.PI * 2;
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     int max = 4;
                     if (WorldSavingSystem.EternityMode)
@@ -1879,7 +1887,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     for (int i = 0; i < max; i++)
                     {
                         Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new Vector2(0f, -6f).RotatedBy(NPC.ai[2] + Math.PI * 2 / max * i),
-                            ModContent.ProjectileType<MutantEye>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                            ModContent.ProjectileType<MutantEye>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
                     }
                 }
             }
@@ -1984,18 +1992,18 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             else if (NPC.ai[1] == pillarAttackDelay)
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitY * -5,
-                        ModContent.ProjectileType<MutantPillar>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0, Main.myPlayer, 3, NPC.whoAmI);
+                        ModContent.ProjectileType<MutantPillar>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0, Main.myPlayer, 3, NPC.whoAmI);
                 }
             }
             else if (WorldSavingSystem.MasochistModeReal && NPC.ai[1] == pillarAttackDelay * 5)
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitY * -5,
-                        ModContent.ProjectileType<MutantPillar>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0, Main.myPlayer, 1, NPC.whoAmI);
+                        ModContent.ProjectileType<MutantPillar>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0, Main.myPlayer, 1, NPC.whoAmI);
                 }
             }
         }
@@ -2015,9 +2023,9 @@ namespace YharimEX.Content.NPCs.Bosses
                     NPC.ai[1] = 30;
                 }
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
-                    int p = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.UnitY, ModContent.ProjectileType<MutantEyeOfCthulhu>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, ai1);
+                    int p = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.UnitY, ModContent.ProjectileType<MutantEyeOfCthulhu>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, ai1);
                     if (WorldSavingSystem.MasochistModeReal && p != Main.maxProjectiles)
                         Main.projectile[p].timeLeft -= 30;
                 }
@@ -2075,9 +2083,9 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
                 else
                 {
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                         for (int i = 0; i < 8; i++)
-                            Projectile.NewProjectile(npc.GetSource_FromThis(), NPC.Center, Vector2.UnitX.RotatedBy(Math.PI / 4 * i) * 10f, ModContent.ProjectileType<MutantScythe1>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer, NPC.whoAmI);
+                            Projectile.NewProjectile(npc.GetSource_FromThis(), NPC.Center, Vector2.UnitX.RotatedBy(Math.PI / 4 * i) * 10f, ModContent.ProjectileType<MutantScythe1>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer, NPC.whoAmI);
                     SoundEngine.PlaySound(SoundID.ForceRoarPitched, NPC.Center);
                 }
                 NPC.netUpdate = true;
@@ -2093,12 +2101,12 @@ namespace YharimEX.Content.NPCs.Bosses
                     return;
                 NPC.ai[3] = 1;
                 //NPC.velocity = NPC.DirectionFrom(player.Center) * NPC.velocity.Length();
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 180);// + (WorldSavingSystem.MasochistMode ? 10 : 20));
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearSpin>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 180);// + (WorldSavingSystem.MasochistMode ? 10 : 20));
                     TelegraphSound = SoundEngine.PlaySound(YharimEXSoundRegistry.YharimEXUnpredictive with { Volume = 2f }, NPC.Center);
                 }
-                    
+
                 EdgyBossText(GFBQuote(14));
             }
 
@@ -2147,11 +2155,11 @@ namespace YharimEX.Content.NPCs.Bosses
                 else
                 {
                     NPC.velocity = NPC.SafeDirectionTo(player.Center) * (WorldSavingSystem.MasochistModeReal ? 60f : 45f);
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(NPC.velocity), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearDash>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
                     }
                 }
 
@@ -2224,23 +2232,23 @@ namespace YharimEX.Content.NPCs.Bosses
                 else
                 {
                     SoundEngine.PlaySound(SoundID.NPCDeath13, NPC.Center);
-                    if (FargoSoulsUtil.HostCheck) //spawn worm
+                    if (YharimEXGlobalUtilities.HostCheck) //spawn worm
                     {
                         Vector2 vel = NPC.DirectionFrom(player.Center).RotatedByRandom(MathHelper.ToRadians(120)) * 10f;
                         float ai1 = 0.8f + 0.4f * NPC.ai[2] / 5f;
                         if (WorldSavingSystem.MasochistModeReal)
                             ai1 += 0.4f;
                         float appearance = NPC.localAI[2];
-                        if (FargoSoulsUtil.AprilFools)
+                        if (YharimEXGlobalUtilities.AprilFools)
                             appearance = 0;
-                        int current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerHead>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, ai1, appearance);
+                        int current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerHead>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, ai1, appearance);
                         //timeleft: remaining duration of this case + duration of next case + extra delay after + successive death
                         Main.projectile[current].timeLeft = 30 * (cap - (int)NPC.ai[2]) + 60 * (int)NPC.localAI[1] + 30 + (int)NPC.ai[2] * 6;
                         int max = Main.rand.Next(8, 19);
                         for (int i = 0; i < max; i++)
-                            current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerBody>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[current].identity, 0f, appearance);
+                            current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerBody>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[current].identity, 0f, appearance);
                         int previous = current;
-                        current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerTail>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[current].identity, 0f, appearance);
+                        current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerTail>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[current].identity, 0f, appearance);
                         Main.projectile[previous].localAI[1] = Main.projectile[current].identity;
                         Main.projectile[previous].netUpdate = true;
                     }
@@ -2272,18 +2280,18 @@ namespace YharimEX.Content.NPCs.Bosses
                         ChooseNextAttack(11, 19, 20, 26, 26, 26, 29, 31, 33, 35, 37, 39, 42, 44/*, 47*/);
                 }
 
-                if ((shouldAttack || WorldSavingSystem.MasochistModeReal) && FargoSoulsUtil.HostCheck)
+                if ((shouldAttack || WorldSavingSystem.MasochistModeReal) && YharimEXGlobalUtilities.HostCheck)
                 {
                     Vector2 vel = NPC.SafeDirectionTo(player.Center + player.velocity * 30f) * 30f;
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, 1f);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, 1f);
                 }
             }
-            else if (NPC.ai[1] == 1 && (NPC.ai[2] < NPC.localAI[1] || WorldSavingSystem.MasochistModeReal) && FargoSoulsUtil.HostCheck)
+            else if (NPC.ai[1] == 1 && (NPC.ai[2] < NPC.localAI[1] || WorldSavingSystem.MasochistModeReal) && YharimEXGlobalUtilities.HostCheck)
             {
                 Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, NPC.SafeDirectionTo(player.Center + player.velocity * 30f), ModContent.ProjectileType<MutantDeathrayAim>(), 0, 0f, Main.myPlayer, 60f, NPC.whoAmI);
-                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 2);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 2);
             }
         }
 
@@ -2301,7 +2309,7 @@ namespace YharimEX.Content.NPCs.Bosses
             if (NPC.ai[1] == 30)
             {
                 SoundEngine.PlaySound(SoundID.ForceRoarPitched, NPC.Center); //eoc roar
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, NPCID.Retinazer);
 
                 EdgyBossText(GFBQuote(17));
@@ -2350,7 +2358,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.ai[2] = Main.rand.NextBool() ? -1 : 1; //randomly aim either up or down
             }
 
-            if (NPC.ai[3] == 0 && FargoSoulsUtil.HostCheck)
+            if (NPC.ai[3] == 0 && YharimEXGlobalUtilities.HostCheck)
             {
                 int max = 7;
                 for (int i = 0; i <= max; i++)
@@ -2365,7 +2373,7 @@ namespace YharimEX.Content.NPCs.Bosses
             if (NPC.ai[3] > (WorldSavingSystem.MasochistModeReal ? 45 : 60) && NPC.ai[3] < 60 + 180 && ++NPC.ai[1] > 10)
             {
                 NPC.ai[1] = 0;
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     float rotation = MathHelper.ToRadians(245) * NPC.ai[2] / 80f;
                     int timeBeforeAttackEnds = endTime - (int)NPC.ai[3];
@@ -2373,10 +2381,11 @@ namespace YharimEX.Content.NPCs.Bosses
                     void SpawnRay(Vector2 pos, float angleInDegrees, float turnRotation)
                     {
                         int p = Projectile.NewProjectile(NPC.GetSource_FromThis(), pos, MathHelper.ToRadians(angleInDegrees).ToRotationVector2(),
-                            ModContent.ProjectileType<MutantDeathray3>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0, Main.myPlayer, turnRotation, NPC.whoAmI);
+                            ModContent.ProjectileType<MutantDeathray3>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0, Main.myPlayer, turnRotation, NPC.whoAmI);
                         if (p != Main.maxProjectiles && Main.projectile[p].timeLeft > timeBeforeAttackEnds)
                             Main.projectile[p].timeLeft = timeBeforeAttackEnds;
-                    };
+                    }
+                    ;
 
                     SpawnRay(NPC.Center, 8 * NPC.ai[2], rotation);
                     SpawnRay(NPC.Center, -8 * NPC.ai[2] + 180, -rotation);
@@ -2394,14 +2403,14 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 SoundEngine.PlaySound(SoundID.Item21, NPC.Center);
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     float spawnOffset = (Main.rand.NextBool() ? -1 : 1) * Main.rand.NextFloat(1400, 1800);
                     float maxVariance = MathHelper.ToRadians(varianceInDegrees);
                     Vector2 aimPoint = NPC.Center - Vector2.UnitY * NPC.ai[2] * 600;
                     Vector2 spawnPos = aimPoint + spawnOffset * Vector2.UnitY.RotatedByRandom(maxVariance).RotatedBy(MathHelper.ToRadians(rotationInDegrees));
                     Vector2 vel = 32f * Vector2.Normalize(aimPoint - spawnPos);
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, vel, ModContent.ProjectileType<MutantGuardian>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, vel, ModContent.ProjectileType<MutantGuardian>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer);
                 }
             }
 
@@ -2417,8 +2426,8 @@ namespace YharimEX.Content.NPCs.Bosses
             //    for (int i = -3; i <= 3; i++)
             //    {
             //        Vector2 spawnPos = aimPoint + 200 * i * Vector2.UnitX;
-            //        if (FargoSoulsUtil.HostCheck)
-            //            Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantReticle2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+            //        if (YharimEXGlobalUtilities.HostCheck)
+            //            Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantReticle2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
             //    }
             //}
 
@@ -2478,7 +2487,7 @@ namespace YharimEX.Content.NPCs.Bosses
             int maxFishronSets = WorldSavingSystem.MasochistModeReal ? 3 : 2;
             if (NPC.ai[1] % fishronDelay == 0 && NPC.ai[1] <= fishronDelay * maxFishronSets)
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     int projType = NPC.ai[0] == 30 ? ModContent.ProjectileType<MutantFishron>() : ModContent.ProjectileType<MutantShadowHand>();
                     for (int j = -1; j <= 1; j += 2) //to both sides of player
@@ -2490,7 +2499,7 @@ namespace YharimEX.Content.NPCs.Bosses
                                 continue;
                             float spread = MathHelper.Pi / 3 / (maxFishronSets + 1);
                             Vector2 offset = NPC.ai[2] == 0 ? Vector2.UnitY.RotatedBy(spread * i) * -450f * j : Vector2.UnitX.RotatedBy(spread * i) * 475f * j;
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, projType, FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, offset.X, offset.Y);
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, projType, YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, offset.X, offset.Y);
                         }
                     }
                 }
@@ -2542,15 +2551,15 @@ namespace YharimEX.Content.NPCs.Bosses
             if (++NPC.ai[1] > 60)
             {
                 SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     float gravity = 0.2f;
                     float time = WorldSavingSystem.MasochistModeReal ? 120f : 180f;
                     Vector2 distance = player.Center - NPC.Center;
                     distance.X /= time;
                     distance.Y = distance.Y / time - 0.5f * gravity * time;
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, distance, ModContent.ProjectileType<MutantNuke>(), WorldSavingSystem.MasochistModeReal ? FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 4f / 3f) : 0, 0f, Main.myPlayer, gravity);
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantFishronRitual>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer, NPC.whoAmI);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, distance, ModContent.ProjectileType<MutantNuke>(), WorldSavingSystem.MasochistModeReal ? YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f) : 0, 0f, Main.myPlayer, gravity);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantFishronRitual>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer, NPC.whoAmI);
                 }
                 AttackChoice++;
                 NPC.ai[1] = 0;
@@ -2585,9 +2594,9 @@ namespace YharimEX.Content.NPCs.Bosses
             if (NPC.ai[1] > (WorldSavingSystem.MasochistModeReal ? 120 : 180))
             {
                 if (!Main.dedServ && Main.LocalPlayer.active)
-                    FargoSoulsUtil.ScreenshakeRumble(6);
+                    YharimEXGlobalUtilities.ScreenshakeRumble(6);
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Vector2 safeZone = NPC.Center;
                     safeZone.Y -= 100;
@@ -2601,7 +2610,7 @@ namespace YharimEX.Content.NPCs.Bosses
                             directionOut.Normalize();
                             spawnPos = safeZone + directionOut * Main.rand.NextFloat(safeRange, 1200);
                         }
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantBomb>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantBomb>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer);
                     }
                 }
             }
@@ -2620,7 +2629,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     double angle = Main.rand.NextDouble() * 2d * Math.PI;
                     offset.X += (float)(Math.Sin(angle) * 150);
                     offset.Y += (float)(Math.Cos(angle) * 150);
-                    Dust dust = Main.dust[Dust.NewDust(NPC.Center + offset - new Vector2(4, 4), 0, 0, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0, 0, 100, Color.White, 1.5f)];
+                    Dust dust = Main.dust[Dust.NewDust(NPC.Center + offset - new Vector2(4, 4), 0, 0, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0, 0, 100, Color.White, 1.5f)];
                     dust.velocity = NPC.velocity;
                     if (Main.rand.NextBool(3))
                         dust.velocity += Vector2.Normalize(offset) * 5f;
@@ -2658,8 +2667,8 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.ai[3] = 1;
                 //Main.NewText(NPC.position.Y);
                 SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
-                if (FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSlimeRain>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
+                if (YharimEXGlobalUtilities.HostCheck)
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSlimeRain>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
             }
 
             if (NPC.ai[1] == 0) //telegraphs for where slime will fall
@@ -2686,7 +2695,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 basePos.X -= 1200;
                 for (int i = -360; i <= 2760; i += 120) //spawn telegraphs
                 {
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
                         if (i + 60 == (int)NPC.localAI[0])
                             continue;
@@ -2704,15 +2713,15 @@ namespace YharimEX.Content.NPCs.Bosses
             if (NPC.ai[1] > 120 && NPC.ai[1] % 5 == 0) //rain down slime balls
             {
                 SoundEngine.PlaySound(SoundID.Item34, player.Center);
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     void Slime(Vector2 pos, float off, Vector2 vel)
                     {
                         //dont flip in maso wave 3
                         int flip = WorldSavingSystem.MasochistModeReal && NPC.ai[2] < 180 * 2 && Main.rand.NextBool() ? -1 : 1;
                         Vector2 spawnPos = pos + off * Vector2.UnitY * flip;
-                        float ai0 = FargoSoulsUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null ? 0f : NPC.Distance(Main.projectile[ritualProj].Center);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, vel * flip * 2 /* x2 to compensate for removed extraUpdates */, ModContent.ProjectileType<MutantSlimeBall>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, ai0);
+                        float ai0 = YharimEXGlobalUtilities.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null ? 0f : NPC.Distance(Main.projectile[ritualProj].Center);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, vel * flip * 2 /* x2 to compensate for removed extraUpdates */, ModContent.ProjectileType<MutantSlimeBall>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, ai0);
                     }
 
                     Vector2 basePos = NPC.Center;
@@ -2796,8 +2805,8 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.ai[3] = 1;
                 //Main.NewText(NPC.position.Y);
                 SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
-                if (FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSlimeRain>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
+                if (YharimEXGlobalUtilities.HostCheck)
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSlimeRain>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI);
             }
 
             if (NPC.ai[1] == 0) //telegraphs for where slime will fall
@@ -2812,7 +2821,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 basePos.X -= 1200;
                 for (int i = -360; i <= 2760; i += 120) //spawn telegraphs
                 {
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
                         if (i + 60 == (int)NPC.localAI[0])
                             continue;
@@ -2826,7 +2835,7 @@ namespace YharimEX.Content.NPCs.Bosses
             if (NPC.ai[1] > masoMovingRainAttackTime && NPC.ai[1] % 3 == 0) //rain down slime balls
             {
                 SoundEngine.PlaySound(SoundID.Item34, player.Center);
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     int frame = Main.rand.Next(3);
 
@@ -2834,8 +2843,8 @@ namespace YharimEX.Content.NPCs.Bosses
                     {
                         const int flip = 1;
                         Vector2 spawnPos = pos + off * Vector2.UnitY * flip;
-                        float ai0 = FargoSoulsUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null ? 0f : NPC.Distance(Main.projectile[ritualProj].Center);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, vel * flip, ModContent.ProjectileType<MutantSlimeSpike>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, ai0, ai2: frame);
+                        float ai0 = YharimEXGlobalUtilities.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null ? 0f : NPC.Distance(Main.projectile[ritualProj].Center);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, vel * flip, ModContent.ProjectileType<MutantSlimeSpike>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, ai0, ai2: frame);
                     }
 
                     Vector2 basePos = NPC.Center;
@@ -2950,8 +2959,8 @@ namespace YharimEX.Content.NPCs.Bosses
                 float rotation = MathHelper.ToRadians(60) * (NPC.ai[3] - 45) / 240 * NPC.ai[2];
                 int max = WorldSavingSystem.MasochistModeReal ? 10 : 9;
                 float speed = WorldSavingSystem.MasochistModeReal ? 11f : 10f;
-                SpawnSphereRing(max, speed, FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), -1f, rotation);
-                SpawnSphereRing(max, speed, FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 1f, rotation);
+                SpawnSphereRing(max, speed, YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), -1f, rotation);
+                SpawnSphereRing(max, speed, YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 1f, rotation);
 
 
             }
@@ -2961,7 +2970,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.ai[2] = Main.rand.NextBool() ? -1 : 1;
                 NPC.ai[3] = Main.rand.NextFloat((float)Math.PI * 2);
                 SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
 
                 EdgyBossText(GFBQuote(22));
@@ -2974,7 +2983,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -2983,12 +2992,12 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void SpawnSpearTossDirectP2Attack()
         {
-            if (FargoSoulsUtil.HostCheck)
+            if (YharimEXGlobalUtilities.HostCheck)
             {
                 Vector2 vel = NPC.SafeDirectionTo(player.Center) * 30f;
-                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
-                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
-                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, -Vector2.Normalize(vel), ModContent.ProjectileType<MutantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.8f), 0f, Main.myPlayer);
+                Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantSpearThrown>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target);
             }
 
             EdgyBossText(RandomObnoxiousQuote());
@@ -3052,13 +3061,13 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             else if (NPC.ai[1] == 151)
             {
-                if (NPC.ai[2] > 0 && (NPC.ai[2] < NPC.localAI[1] || WorldSavingSystem.MasochistModeReal) && FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 1);
+                if (NPC.ai[2] > 0 && (NPC.ai[2] < NPC.localAI[1] || WorldSavingSystem.MasochistModeReal) && YharimEXGlobalUtilities.HostCheck)
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, 1);
             }
             else if (NPC.ai[1] == 1)
             {
-                if (FargoSoulsUtil.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, -1);
+                if (YharimEXGlobalUtilities.HostCheck)
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<MutantSpearAim>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.whoAmI, -1);
             }
         }
 
@@ -3091,12 +3100,12 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 NPC.localAI[0] = NPC.DirectionFrom(player.Center).ToRotation();
 
-                if (!WorldSavingSystem.MasochistModeReal && FargoSoulsUtil.HostCheck)
+                if (!WorldSavingSystem.MasochistModeReal && YharimEXGlobalUtilities.HostCheck)
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i) * 525, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRingHollow>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 1f);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i + Math.PI / 4) * 350, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRingHollow>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 2f);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i) * 525, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRingHollow>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 1f);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i + Math.PI / 4) * 350, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRingHollow>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 2f);
                     }
                 }
             }
@@ -3105,12 +3114,12 @@ namespace YharimEX.Content.NPCs.Bosses
             int ringMax = WorldSavingSystem.MasochistModeReal ? 5 : 4;
             if (NPC.ai[3] % ringDelay == 0 && NPC.ai[3] < ringDelay * ringMax)
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     float rotationOffset = MathHelper.TwoPi / ringMax * NPC.ai[3] / ringDelay + NPC.localAI[0];
                     int baseDelay = 60;
                     float flyDelay = 120 + NPC.ai[3] / ringDelay * (WorldSavingSystem.MasochistModeReal ? 40 : 50);
-                    int p = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, 300f / baseDelay * Vector2.UnitX.RotatedBy(rotationOffset), ModContent.ProjectileType<MutantMark2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, baseDelay, baseDelay + flyDelay);
+                    int p = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, 300f / baseDelay * Vector2.UnitX.RotatedBy(rotationOffset), ModContent.ProjectileType<MutantMark2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, baseDelay, baseDelay + flyDelay);
                     if (p != Main.maxProjectiles)
                     {
                         const int max = 5;
@@ -3120,7 +3129,7 @@ namespace YharimEX.Content.NPCs.Bosses
                         {
                             float myRot = rotation * i + rotationOffset;
                             Vector2 spawnPos = NPC.Center + new Vector2(distance, 0f).RotatedBy(myRot);
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantCrystalLeaf>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[p].identity, myRot);
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, Vector2.Zero, ModContent.ProjectileType<MutantCrystalLeaf>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, Main.projectile[p].identity, myRot);
                         }
                     }
                 }
@@ -3134,7 +3143,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
                 SoundEngine.PlaySound(SoundID.Item92, NPC.Center);
 
-                if (FargoSoulsUtil.HostCheck && NPC.ai[3] < 330)
+                if (YharimEXGlobalUtilities.HostCheck && NPC.ai[3] < 330)
                 {
                     const float retiRad = 525;
                     const float spazRad = 350;
@@ -3145,8 +3154,8 @@ namespace YharimEX.Content.NPCs.Bosses
                     float rotationOffset = WorldSavingSystem.MasochistModeReal ? MathHelper.PiOver4 : 0;
                     for (int i = 0; i < 4; i++)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitX.RotatedBy(Math.PI / 2 * i + rotationOffset) * retiSpeed, ModContent.ProjectileType<MutantRetirang>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, retiAcc, 300);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitX.RotatedBy(Math.PI / 2 * i + Math.PI / 4 + rotationOffset) * spazSpeed, ModContent.ProjectileType<MutantSpazmarang>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, spazAcc, 180);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitX.RotatedBy(Math.PI / 2 * i + rotationOffset) * retiSpeed, ModContent.ProjectileType<MutantRetirang>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, retiAcc, 300);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitX.RotatedBy(Math.PI / 2 * i + Math.PI / 4 + rotationOffset) * spazSpeed, ModContent.ProjectileType<MutantSpazmarang>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, spazAcc, 180);
                     }
                 }
             }
@@ -3184,10 +3193,10 @@ namespace YharimEX.Content.NPCs.Bosses
 
             void Sword(Vector2 pos, float ai0, float ai1, Vector2 vel)
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), pos - vel * 60f, vel,
-                        ProjectileID.FairyQueenLance, FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, ai0, ai1);
+                        ProjectileID.FairyQueenLance, YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, ai0, ai1);
                 }
             }
 
@@ -3212,7 +3221,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 Vector2 focusPoint = player.Center;
 
                 //move focus point along grid closer so attack stays centered
-                Vector2 home = NPC.Center;// FargoSoulsUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null ? NPC.Center : Main.projectile[ritualProj].Center;
+                Vector2 home = NPC.Center;// YharimEXGlobalUtilities.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null ? NPC.Center : Main.projectile[ritualProj].Center;
                 for (float i = 0; i < arenaRadius; i += gap)
                 {
                     Vector2 newFocusPoint = focusPoint + gap * attackAngle.ToRotationVector2();
@@ -3319,7 +3328,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 while (NPC.ai[2] == oldOffset)
                     NPC.ai[2] = Main.rand.Next(-1, 2); //roll -1, 0, 1
 
-                Vector2 centerPoint = FargoSoulsUtil.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null ? player.Center : Main.projectile[ritualProj].Center;
+                Vector2 centerPoint = YharimEXGlobalUtilities.ProjectileExists(ritualProj, ModContent.ProjectileType<MutantRitual>()) == null ? player.Center : Main.projectile[ritualProj].Center;
                 float maxVariance = 150; //variance seems a LOT more than this, whatever
                 float maxOffsetWithinStep = maxVariance / 3 * .75f; //x.75 so player always has to move a noticeable amount
                 centerPoint.Y += maxVariance * NPC.ai[2]; //choose one of 3 base heights
@@ -3340,11 +3349,11 @@ namespace YharimEX.Content.NPCs.Bosses
                         int travelTime = 50;
                         Vector2 vel = (sansTargetPos - NPC.Center) / travelTime;
 
-                        if (FargoSoulsUtil.HostCheck)
+                        if (YharimEXGlobalUtilities.HostCheck)
                         {
                             Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel,
                                 ModContent.ProjectileType<MutantSansHead>(),
-                                FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer,
+                                YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer,
                                 travelTime, xSpeedWhenAttacking * -i, j);
                         }
                     }
@@ -3417,7 +3426,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
 
             if (NPC.ai[1] < 60 && !Main.dedServ && Main.LocalPlayer.active)
-                FargoSoulsUtil.ScreenshakeRumble(6);
+                YharimEXGlobalUtilities.ScreenshakeRumble(6);
 
             if (NPC.ai[1] == 360)
             {
@@ -3457,13 +3466,13 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     Main.LocalPlayer.controlUseItem = false;
                     Main.LocalPlayer.controlUseTile = false;
-                    Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
+                // NOTE    Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
                 }
 
                 if (--NPC.localAI[0] < 0)
                 {
                     NPC.localAI[0] = Main.rand.Next(15);
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
                         Vector2 spawnPos = NPC.position + new Vector2(Main.rand.Next(NPC.width), Main.rand.Next(NPC.height));
                         int type = ModContent.ProjectileType<MutantBombSmall>();
@@ -3474,7 +3483,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3487,10 +3496,10 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             if (--NPC.ai[1] < 0)
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     float speed = WorldSavingSystem.MasochistModeReal && NPC.localAI[0] <= 40 ? 4f : 2f;
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, speed * Vector2.UnitX.RotatedBy(NPC.ai[2]), ModContent.ProjectileType<MutantMark1>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, speed * Vector2.UnitX.RotatedBy(NPC.ai[2]), ModContent.ProjectileType<MutantMark1>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
                 }
                 NPC.ai[1] = 1;
                 NPC.ai[2] += NPC.ai[3];
@@ -3519,7 +3528,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3548,8 +3557,8 @@ namespace YharimEX.Content.NPCs.Bosses
                 float rotation = MathHelper.ToRadians(45) * (NPC.ai[3] - 60) / 240 * NPC.ai[2];
                 int max = WorldSavingSystem.MasochistModeReal ? 11 : 10;
                 float speed = WorldSavingSystem.MasochistModeReal ? 11f : 10f;
-                SpawnSphereRing(max, speed, FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), -0.75f, rotation);
-                SpawnSphereRing(max, speed, FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0.75f, rotation);
+                SpawnSphereRing(max, speed, YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), -0.75f, rotation);
+                SpawnSphereRing(max, speed, YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0.75f, rotation);
             }
 
             if (NPC.ai[3] < 30)
@@ -3573,7 +3582,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3598,13 +3607,13 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.ai[2] += (float)Math.PI / 5 / 420 * NPC.ai[3] * NPC.localAI[0] * (WorldSavingSystem.MasochistModeReal ? 2f : 1);
                 if (NPC.ai[2] > (float)Math.PI)
                     NPC.ai[2] -= (float)Math.PI * 2;
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     int max = WorldSavingSystem.MasochistModeReal ? 10 : 8;
                     for (int i = 0; i < max; i++)
                     {
                         Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, new Vector2(0f, -6f).RotatedBy(NPC.ai[2] + MathHelper.TwoPi / max * i),
-                            ModContent.ProjectileType<MutantEye>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
+                            ModContent.ProjectileType<MutantEye>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer);
                     }
                 }
             }
@@ -3635,7 +3644,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3681,7 +3690,7 @@ namespace YharimEX.Content.NPCs.Bosses
             if (--NPC.localAI[0] < 0) //just visual explosions
             {
                 NPC.localAI[0] = Main.rand.Next(30);
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Vector2 spawnPos = NPC.position + new Vector2(Main.rand.Next(NPC.width), Main.rand.Next(NPC.height));
                     int type = ModContent.ProjectileType<MutantBombSmall>();
@@ -3698,10 +3707,10 @@ namespace YharimEX.Content.NPCs.Bosses
                 EModeSpecialEffects();
                 TryMasoP3Theme();
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     int max = /*harderRings ? 11 :*/ 10;
-                    int damage = FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage);
+                    int damage = YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage);
                     SpawnSphereRing(max, 6f, damage, 0.5f);
                     SpawnSphereRing(max, 6f, damage, -.5f);
                 }
@@ -3722,10 +3731,10 @@ namespace YharimEX.Content.NPCs.Bosses
                     //bias in one direction
                     NPC.ai[3] -= MathHelper.ToRadians(20);
 
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
                         Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitX.RotatedBy(NPC.ai[3]),
-                            ModContent.ProjectileType<MutantGiantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.5f), 0f, Main.myPlayer, 0, NPC.whoAmI);
+                            ModContent.ProjectileType<MutantGiantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.5f), 0f, Main.myPlayer, 0, NPC.whoAmI);
                     }
 
                     NPC.netUpdate = true;
@@ -3734,7 +3743,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 
-                    if (FargoSoulsUtil.HostCheck)
+                    if (YharimEXGlobalUtilities.HostCheck)
                     {
                         const int max = 8;
                         for (int i = 0; i < max; i++)
@@ -3759,11 +3768,11 @@ namespace YharimEX.Content.NPCs.Bosses
                     ManagedScreenFilter filter = ShaderManager.GetFilter("FargowiltasSouls.FinalSpark");
                     filter.Activate();
 
-                //    if (SoulConfig.Instance.ForcedFilters && Main.WaveQuality == 0)
-                //        Main.WaveQuality = 1;
+                    //    if (SoulConfig.Instance.ForcedFilters && Main.WaveQuality == 0)
+                    //        Main.WaveQuality = 1;
                 }
 
-                if (NPC.ai[1] % 3 == 0 && FargoSoulsUtil.HostCheck)
+                if (NPC.ai[1] % 3 == 0 && YharimEXGlobalUtilities.HostCheck)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, 24f * Vector2.UnitX.RotatedBy(NPC.ai[3]), ModContent.ProjectileType<MutantEyeWavy>(), 0, 0f, Main.myPlayer,
                       Main.rand.NextFloat(0.5f, 1.25f) * (Main.rand.NextBool() ? -1 : 1), Main.rand.Next(10, 60));
@@ -3779,7 +3788,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 AttackChoice--;
                 NPC.ai[1] = 0;
                 NPC.ai[2] = 0;
-                FargoSoulsUtil.ClearAllProjectiles(2, NPC.whoAmI);
+            // NOTE    YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI);
             }
             else if (NPC.ai[2] == 420)
             {
@@ -3788,10 +3797,10 @@ namespace YharimEX.Content.NPCs.Bosses
                 //bias it in one direction
                 NPC.ai[3] += MathHelper.ToRadians(20) * (WorldSavingSystem.MasochistModeReal ? 1 : -1);
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitX.RotatedBy(NPC.ai[3]),
-                        ModContent.ProjectileType<MutantGiantDeathray2>(), FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.5f), 0f, Main.myPlayer, 0, NPC.whoAmI);
+                        ModContent.ProjectileType<MutantGiantDeathray2>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.5f), 0f, Main.myPlayer, 0, NPC.whoAmI);
                 }
             }
             else if (NPC.ai[2] < 300 && NPC.localAI[1] != 0) //charging up dust
@@ -3837,20 +3846,22 @@ namespace YharimEX.Content.NPCs.Bosses
                 return;
             NPC.ai[3] -= (float)Math.PI / 6f / 60f;
             NPC.velocity = Vector2.Zero;
-            //in maso, if player got timestopped at very end of final spark, fucking kill them
-            bool killPlayer = WorldSavingSystem.MasochistModeReal && Main.player[NPC.target].HasBuff(ModContent.BuffType<TimeFrozenBuff>());
-            if (killPlayer)
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (++NPC.ai[2] > 15)
+                bool killPlayer = WorldSavingSystem.MasochistModeReal && Main.player[NPC.target].HasBuff(ModContent.BuffType<TimeFrozenBuff>());
+                if (killPlayer)
                 {
-                    NPC.ai[2] -= 15;
-                    int realDefDamage = NPC.defDamage;
-                    NPC.defDamage *= 10;
-                    SpawnSpearTossDirectP2Attack();
-                    NPC.defDamage = realDefDamage;
+                    if (++NPC.ai[2] > 15)
+                    {
+                        NPC.ai[2] -= 15;
+                        int realDefDamage = NPC.defDamage;
+                        NPC.defDamage *= 10;
+                        SpawnSpearTossDirectP2Attack();
+                        NPC.defDamage = realDefDamage;
+                    }
                 }
             }
-            else if (++NPC.ai[1] > 120)
+            if (++NPC.ai[1] > 120)
             {
                 NPC.netUpdate = true;
                 AttackChoice--;
@@ -3858,9 +3869,9 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.ai[2] = 0;
                 NPC.ai[3] = (float)-Math.PI / 2;
                 NPC.netUpdate = true;
-                if (FargoSoulsUtil.HostCheck) //shoot death anim mega ray
+                if (YharimEXGlobalUtilities.HostCheck) //shoot death anim mega ray
                 {
-                    int damage = WorldSavingSystem.MasochistModeReal ? FargoSoulsUtil.ScaledProjectileDamage(NPC.defDamage, 0.5f) : 0;
+                    int damage = WorldSavingSystem.MasochistModeReal ? YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 0.5f) : 0;
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.UnitY * -1,
                         ModContent.ProjectileType<MutantGiantDeathray2>(),
                         damage, 0f, Main.myPlayer, 1, NPC.whoAmI);
@@ -3870,7 +3881,7 @@ namespace YharimEX.Content.NPCs.Bosses
             if (--NPC.localAI[0] < 0)
             {
                 NPC.localAI[0] = Main.rand.Next(15);
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Vector2 spawnPos = NPC.position + new Vector2(Main.rand.Next(NPC.width), Main.rand.Next(NPC.height));
                     int type = ModContent.ProjectileType<MutantBomb>();
@@ -3879,7 +3890,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3897,7 +3908,7 @@ namespace YharimEX.Content.NPCs.Bosses
             NPC.velocity = Vector2.Zero;
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 2.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 2.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 12f;
@@ -3905,14 +3916,14 @@ namespace YharimEX.Content.NPCs.Bosses
             if (--NPC.localAI[0] < 0)
             {
                 NPC.localAI[0] = Main.rand.Next(5);
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     Vector2 spawnPos = NPC.Center + Main.rand.NextVector2Circular(240, 240);
                     int type = ModContent.ProjectileType<MutantBomb>();
                     Projectile.NewProjectile(NPC.GetSource_FromThis(), spawnPos, Vector2.Zero, type, 0, 0f, Main.myPlayer);
                 }
             }
-            if (++NPC.ai[1] % 3 == 0 && FargoSoulsUtil.HostCheck)
+            if (++NPC.ai[1] % 3 == 0 && YharimEXGlobalUtilities.HostCheck)
             {
                 Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, 24f * Vector2.UnitX.RotatedBy(NPC.ai[3]), ModContent.ProjectileType<MutantEyeWavy>(), 0, 0f, Main.myPlayer,
                     Main.rand.NextFloat(0.75f, 1.5f) * (Main.rand.NextBool() ? -1 : 1), Main.rand.Next(10, 90));
@@ -3923,7 +3934,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.life = 0;
                 NPC.dontTakeDamage = false;
                 NPC.checkDead();
-                if (FargoSoulsUtil.HostCheck && ModContent.TryFind("Fargowiltas", "Mutant", out ModNPC modNPC) && !NPC.AnyNPCs(modNPC.Type))
+                if (YharimEXGlobalUtilities.HostCheck && ModContent.TryFind("Fargowiltas", "Mutant", out ModNPC modNPC) && !NPC.AnyNPCs(modNPC.Type))
                 {
                     int n = NPC.NewNPC(NPC.GetSource_FromAI(), (int)NPC.Center.X, (int)NPC.Center.Y, modNPC.Type);
                     if (n != Main.maxNPCs)
@@ -3960,7 +3971,7 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             for (int i = 0; i < 3; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, FargoSoulsUtil.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 3f;
@@ -3980,7 +3991,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             NPC.life = 1;
             NPC.active = true;
-            if (FargoSoulsUtil.HostCheck && AttackChoice > -1)
+            if (YharimEXGlobalUtilities.HostCheck && AttackChoice > -1)
             {
                 AttackChoice = WorldSavingSystem.EternityMode ? AttackChoice >= 10 ? -1 : 10 : -6;
                 NPC.ai[1] = 0;
@@ -3991,7 +4002,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.localAI[2] = 0;
                 NPC.dontTakeDamage = true;
                 NPC.netUpdate = true;
-                FargoSoulsUtil.ClearAllProjectiles(2, NPC.whoAmI, AttackChoice < 0);
+    // NOTE            YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI, AttackChoice < 0);
                 EdgyBossText(GFBQuote(34));
             }
             return false;
@@ -4001,21 +4012,21 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             base.OnKill();
 
-        //    if (WorldSavingSystem.MasochistModeReal || (!playerInvulTriggered && WorldSavingSystem.EternityMode))
-        //    {
-        //        Item.NewItem(NPC.GetSource_Loot(), NPC.Hitbox, ModContent.ItemType<PhantasmalEnergy>());
-        //    }
+            //    if (WorldSavingSystem.MasochistModeReal || (!playerInvulTriggered && WorldSavingSystem.EternityMode))
+            //    {
+            //        Item.NewItem(NPC.GetSource_Loot(), NPC.Hitbox, ModContent.ItemType<PhantasmalEnergy>());
+            //    }
 
-        //    if (WorldSavingSystem.EternityMode)
-        //    {
-        //        if (Main.LocalPlayer.active)
-        //        {
-        //            if (!Main.LocalPlayer.FargoSouls().Toggler.CanPlayMaso && Main.netMode != NetmodeID.Server)
-        //              Main.NewText(Language.GetTextValue($"Mods.{Mod.Name}.Message.MasochistModeUnlocked"), new Color(51, 255, 191, 0));
-        //            Main.LocalPlayer.FargoSouls().Toggler.CanPlayMaso = true;
-        //        }
-        //        WorldSavingSystem.CanPlayMaso = true;
-        //    }
+            //    if (WorldSavingSystem.EternityMode)
+            //    {
+            //        if (Main.LocalPlayer.active)
+            //        {
+            //            if (!Main.LocalPlayer.FargoSouls().Toggler.CanPlayMaso && Main.netMode != NetmodeID.Server)
+            //              Main.NewText(Language.GetTextValue($"Mods.{Mod.Name}.Message.MasochistModeUnlocked"), new Color(51, 255, 191, 0));
+            //            Main.LocalPlayer.FargoSouls().Toggler.CanPlayMaso = true;
+            //        }
+            //        WorldSavingSystem.CanPlayMaso = true;
+            //    }
 
             YharimWorldFlags.SkipYharimEXP1 = 0;
 
@@ -4026,21 +4037,21 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             base.ModifyNPCLoot(npcLoot);
 
-        //    npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<MutantBag>()));
-        //    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MutantTrophy>(), 10));
+            //    npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<MutantBag>()));
+            //    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<MutantTrophy>(), 10));
 
-        //    npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<MutantRelic>()));
-        //    npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<SpawnSack>(), 4));
+            //    npcLoot.Add(ItemDropRule.MasterModeCommonDrop(ModContent.ItemType<MutantRelic>()));
+            //    npcLoot.Add(ItemDropRule.MasterModeDropOnAllPlayers(ModContent.ItemType<SpawnSack>(), 4));
 
-        //    LeadingConditionRule emodeRule = new(new EModeDropCondition());
-        //    emodeRule.OnSuccess(FargoSoulsUtil.BossBagDropCustom(ModContent.ItemType<Items.Accessories.Masomode.MutantEye>()));
-        //    npcLoot.Add(emodeRule);
+            //    LeadingConditionRule emodeRule = new(new EModeDropCondition());
+            //    emodeRule.OnSuccess(YharimEXGlobalUtilities.BossBagDropCustom(ModContent.ItemType<Items.Accessories.Masomode.MutantEye>()));
+            //    npcLoot.Add(emodeRule);
         }
 
-    //  public override void BossLoot(ref string name, ref int potionType)
-    //  {
-    //    potionType = ItemID.SuperHealingPotion;
-    //  }
+        //  public override void BossLoot(ref string name, ref int potionType)
+        //  {
+        //    potionType = ItemID.SuperHealingPotion;
+        //  }
 
         public override void FindFrame(int frameHeight)
         {
@@ -4077,7 +4088,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             return false;
         }
-    
+
         public void DrawAura(SpriteBatch spriteBatch, Vector2 position, float auraScale)
         {
             Color outerColor = Color.DarkRed;
@@ -4098,7 +4109,7 @@ namespace YharimEX.Content.NPCs.Bosses
             ManagedShader borderShader = ShaderManager.GetShader("YharimEX.YharimEXP1Aura");
             borderShader.TrySetParameter("colorMult", 7.35f);
             borderShader.TrySetParameter("time", Main.GlobalTimeWrappedHourly);
-            borderShader.TrySetParameter("radius", radius); 
+            borderShader.TrySetParameter("radius", radius);
             borderShader.TrySetParameter("anchorPoint", auraPos);
             borderShader.TrySetParameter("screenPosition", Main.screenPosition);
             borderShader.TrySetParameter("screenSize", Main.ScreenSize.ToVector2());
@@ -4119,7 +4130,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             //spriteBatch.Draw(FargosTextureRegistry.SoftEdgeRing.Value, position, null, outerColor * 0.7f, 0f, FargosTextureRegistry.SoftEdgeRing.Value.Size() * 0.5f, 9.2f * auraScale, SpriteEffects.None, 0f);
         }
-    
+
         public static void ArenaAura(Vector2 center, float distance, bool reverse = false, int dustid = -1, Color color = default, params int[] buffs)
         {
             Player p = Main.LocalPlayer;
@@ -4134,7 +4145,7 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 foreach (int buff in buffs)
                 {
-                    FargoSoulsUtil.AddDebuffFixedDuration(p, buff, 2);
+                    YharimEXGlobalUtilities.AddDebuffFixedDuration(p, buff, 2);
                 }
             }
         }
