@@ -24,7 +24,7 @@ namespace YharimEX.Core.Systems
         }
         public static class FargowiltasCrossmod
         {
-            public const string Name = "FargowiltasCrossmod";
+            public const string Name = "FargowiltasCrossmod ";
             public static bool Loaded => ModLoader.HasMod(Name);
             public static Mod Mod => ModLoader.GetMod(Name);
         }

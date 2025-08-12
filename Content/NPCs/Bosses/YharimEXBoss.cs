@@ -923,7 +923,7 @@ namespace YharimEX.Content.NPCs.Bosses
             const int max = 6;
             for (int i = 0; i < max; i++)
             {
-                int d = Dust.NewDust(NPC.Center + distance * Vector2.UnitX.RotatedBy(rotation + MathHelper.TwoPi / max * i), 0, 0, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, NPC.velocity.X * 0.3f, NPC.velocity.Y * 0.3f, newColor: Color.White);
+                int d = Dust.NewDust(NPC.Center + distance * Vector2.UnitX.RotatedBy(rotation + MathHelper.TwoPi / max * i), 0, 0, DustID.SolarFlare, NPC.velocity.X * 0.3f, NPC.velocity.Y * 0.3f, newColor: Color.White);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].scale = 6f - 4f * modifier;
             }
@@ -1029,8 +1029,8 @@ namespace YharimEX.Content.NPCs.Bosses
                     if (YharimEXGlobalUtilities.HostCheck) //spawn worm
                     {
                         int appearance = Main.rand.Next(2);
-                        if (YharimEXGlobalUtilities.AprilFools)
-                            appearance = 0;
+                // RETURN        if (YharimEXGlobalUtilities.AprilFools)
+                //           appearance = 0;
                         for (int j = 0; j < 8; j++)
                         {
                             Vector2 vel = NPC.DirectionFrom(player.Center).RotatedByRandom(MathHelper.ToRadians(120)) * 10f;
@@ -1633,7 +1633,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
                 for (int i = 0; i < 50; i++)
                 {
-                    int d = Dust.NewDust(Main.LocalPlayer.position, Main.LocalPlayer.width, Main.LocalPlayer.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 2.5f);
+                    int d = Dust.NewDust(Main.LocalPlayer.position, Main.LocalPlayer.width, Main.LocalPlayer.height, DustID.SolarFlare, 0f, 0f, 0, default, 2.5f);
                     Main.dust[d].noGravity = true;
                     Main.dust[d].noLight = true;
                     Main.dust[d].velocity *= 9f;
@@ -2239,8 +2239,8 @@ namespace YharimEX.Content.NPCs.Bosses
                         if (WorldSavingSystem.MasochistModeReal)
                             ai1 += 0.4f;
                         float appearance = NPC.localAI[2];
-                        if (YharimEXGlobalUtilities.AprilFools)
-                            appearance = 0;
+                //        if (YharimEXGlobalUtilities.AprilFools)
+                //            appearance = 0;
                         int current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<MutantDestroyerHead>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, ai1, appearance);
                         //timeleft: remaining duration of this case + duration of next case + extra delay after + successive death
                         Main.projectile[current].timeLeft = 30 * (cap - (int)NPC.ai[2]) + 60 * (int)NPC.localAI[1] + 30 + (int)NPC.ai[2] * 6;
@@ -2629,7 +2629,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     double angle = Main.rand.NextDouble() * 2d * Math.PI;
                     offset.X += (float)(Math.Sin(angle) * 150);
                     offset.Y += (float)(Math.Cos(angle) * 150);
-                    Dust dust = Main.dust[Dust.NewDust(NPC.Center + offset - new Vector2(4, 4), 0, 0, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0, 0, 100, Color.White, 1.5f)];
+                    Dust dust = Main.dust[Dust.NewDust(NPC.Center + offset - new Vector2(4, 4), 0, 0, DustID.SolarFlare, 0, 0, 100, Color.White, 1.5f)];
                     dust.velocity = NPC.velocity;
                     if (Main.rand.NextBool(3))
                         dust.velocity += Vector2.Normalize(offset) * 5f;
@@ -2983,7 +2983,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SolarFlare, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3483,7 +3483,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SolarFlare, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3528,7 +3528,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SolarFlare, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3582,7 +3582,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SolarFlare, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3644,7 +3644,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SolarFlare, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3890,7 +3890,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SolarFlare, 0f, 0f, 0, default, 1.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 4f;
@@ -3908,7 +3908,7 @@ namespace YharimEX.Content.NPCs.Bosses
             NPC.velocity = Vector2.Zero;
             for (int i = 0; i < 5; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 2.5f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SolarFlare, 0f, 0f, 0, default, 2.5f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 12f;
@@ -3971,7 +3971,7 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             for (int i = 0; i < 3; i++)
             {
-                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, YharimEXGlobalUtilities.AprilFools ? DustID.SolarFlare : DustID.Vortex, 0f, 0f, 0, default, 1f);
+                int d = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.SolarFlare, 0f, 0f, 0, default, 1f);
                 Main.dust[d].noGravity = true;
                 Main.dust[d].noLight = true;
                 Main.dust[d].velocity *= 3f;
