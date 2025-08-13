@@ -16,7 +16,7 @@ using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.Projectiles
 {
-	public class MutantYharimEXHealHeal : ModProjectile, IPixelatedPrimitiveRenderer
+	public class YharimEXHeal : ModProjectile, IPixelatedPrimitiveRenderer
     {
         public override string Texture => "YharimEX/Assets/Projectiles/YharimEXHeal";
         public override void SetStaticDefaults()

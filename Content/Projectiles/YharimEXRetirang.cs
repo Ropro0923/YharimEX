@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 using CalamityMod.Items.Weapons.Melee;
 using YharimEX.Core.Systems;
 
-namespace FargowiltasSouls.Content.Bosses.MutantBoss
+namespace YharimEX.Content.Projectiles
 {
     public class YharimEXRetirang : ModProjectile
     {

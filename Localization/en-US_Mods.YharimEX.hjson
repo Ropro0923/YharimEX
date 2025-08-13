@@ -66,7 +66,7 @@ Projectiles: {
 	YharimEXGlowRing.DisplayName: Yharim EX Glow Ring
 	YharimEXGlowything.DisplayName: Yharim EX Glowything
 	YharimEXGuardian.DisplayName: Yharim EX Guardian
-	MutantYharimEXHealHeal.DisplayName: Mutant Yharim EX Heal Heal
+	YharimEXHeal.DisplayName: Mutant Yharim EX Heal Heal
 	YharimEXMark1.DisplayName: Yharim EX Mark1
 	YharimEXNuke.DisplayName: Yharim EX Nuke
 	YharimEXPhantasmalBlast.DisplayName: Yharim EX Phantasmal Blast
@@ -81,6 +81,17 @@ Projectiles: {
 	YharimEXRitual5.DisplayName: Yharim EX Ritual5
 	YharimEXSansBeam.DisplayName: Yharim EX Sans Beam
 	YharimEXSansHead.DisplayName: Yharim EX Sans Head
+	YharimEXIronParry.DisplayName: Yharim EX Iron Parry
+	YharimEXScythe1.DisplayName: Yharim EX Scythe1
+	YharimEXScythe2.DisplayName: Yharim EX Scythe2
+	YharimEXShadowHand.DisplayName: Yharim EX Shadow Hand
+	YharimEXSlimeBall.DisplayName: Yharim EX Slime Ball
+	YharimEXSlimeRain.DisplayName: Yharim EX Slime Rain
+	YharimEXSlimeSpike.DisplayName: Yharim EX Slime Spike
+	YharimEXSpazmarang.DisplayName: Yharim EX Spazmarang
+	YharimEXSpearAim.DisplayName: Yharim E X Spear Aim
+	YharimEXSpearDash.DisplayName: Yharim E X Spear Dash
+	YharimEXSphereSmall.DisplayName: Yharim E X Sphere Small
 }
 
 Items: {
