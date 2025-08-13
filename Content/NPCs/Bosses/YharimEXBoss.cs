@@ -7,6 +7,7 @@ using YharimEX.Assets.ExtraTextures;
 using YharimEX.Content.BossBars;
 using YharimEX.Content.NPCs.Town;
 using YharimEX.Core.Systems;
+using YharimEX.Content.Buffs;
 
 // IMPORTANT
 using CalamityMod;
@@ -30,9 +31,8 @@ using Terraria.ModLoader;
 
 // FARGOS
 using FargowiltasSouls.Content.Bosses.MutantBoss;
-using FargowiltasSouls.Content.Buffs.Boss;   // NO LONGER DEPENDENT
 using FargowiltasSouls.Content.Buffs.Masomode;  // NO LONGER DEPENDENT
-using FargowiltasSouls.Content.Buffs.Souls;  // NO LONGER DEPENDENT
+using FargowiltasSouls.Content.Buffs.Souls; // NO LONGER DEPENDENT
 
 
 namespace YharimEX.Content.NPCs.Bosses
@@ -442,11 +442,8 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.life = NPC.lifeMax;
             }
 
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && Main.LocalPlayer.active && !Main.LocalPlayer.dead && !Main.LocalPlayer.ghost)
-                    Main.LocalPlayer.AddBuff(ModContent.BuffType<MutantPresenceBuff>(), 2);
-            }
+            if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && Main.LocalPlayer.active && !Main.LocalPlayer.dead && !Main.LocalPlayer.ghost)
+                Main.LocalPlayer.AddBuff(ModContent.BuffType<TyrantPresenceBuff>(), 2);
 
             if (NPC.localAI[3] == 0)
             {
@@ -469,11 +466,11 @@ namespace YharimEX.Content.NPCs.Bosses
                 // -1 means no dust is drawn, as it looks ugly.
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    ArenaAura(AuraCenter, 2000f * AuraScale, true, -1, default, ModContent.BuffType<GodEaterBuff>(), ModContent.BuffType<MutantFangBuff>());
+                    ArenaAura(AuraCenter, 2000f * AuraScale, true, -1, default, YharimEXCrossmodSystem.Fargowiltas.Mod.Find<ModBuff>("GodEaterBuff").Type, ModContent.BuffType<TyrantPresenceBuff>());
                 }
                 else
                 {
-                    ArenaAura(AuraCenter, 2000f * AuraScale, true, -1, default);
+                    ArenaAura(AuraCenter, 2000f * AuraScale, true, -1, default, ModContent.BuffType<TyrantPresenceBuff>());
                 }
             }
             else
@@ -482,23 +479,26 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     if (Main.expertMode)
                     {
+                        Main.LocalPlayer.AddBuff(ModContent.BuffType<TyrantPresenceBuff>(), 2);
                         if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                         {
-                            Main.LocalPlayer.AddBuff(ModContent.BuffType<MutantPresenceBuff>(), 2);
                             if (Main.getGoodWorld)
-                                Main.LocalPlayer.AddBuff(ModContent.BuffType<GoldenStasisCDBuff>(), 2);
+                                Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.Fargowiltas.Mod.Find<ModBuff>("GoldenStasisCDBuff").Type, 2);
                         }
                     }
 
-                    if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    if ((YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode) && AttackChoice < 0 && AttackChoice > -6)
                     {
-                        if ((YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode) && AttackChoice < 0 && AttackChoice > -6)
+                        if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                         {
-                            Main.LocalPlayer.AddBuff(ModContent.BuffType<GoldenStasisCDBuff>(), 2);
-                            if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
+                            Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.Fargowiltas.Mod.Find<ModBuff>("GoldenStasisCDBuff").Type, 2);
+                        }
+                        if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
+                        {
+                            Main.LocalPlayer.AddBuff(ModContent.BuffType<TyrantDesperationBuff>(), 2);
+                            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                             {
-                                Main.LocalPlayer.AddBuff(ModContent.BuffType<TimeStopCDBuff>(), 2);
-                                Main.LocalPlayer.AddBuff(ModContent.BuffType<MutantDesperationBuff>(), 2);
+                                Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.Fargowiltas.Mod.Find<ModBuff>("TimeStopCDBuff").Type, 2);
                             }
                         }
                     }
@@ -848,8 +848,8 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    Main.player[NPC.target].ClearBuff(ModContent.BuffType<MutantFangBuff>());
-                    Main.player[NPC.target].ClearBuff(ModContent.BuffType<AbomRebirthBuff>());
+                    Main.player[NPC.target].ClearBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("MutantFangBuff").Type);
+                    Main.player[NPC.target].ClearBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("AbomRebirthBuff").Type);
                 }
             }
             SoundEngine.PlaySound(SoundID.Item27 with { Volume = 1.5f }, NPC.Center);
