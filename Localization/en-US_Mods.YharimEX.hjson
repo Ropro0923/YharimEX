@@ -42,7 +42,7 @@ Projectiles: {
 	YharimEXSunBlast.DisplayName: Sun Blast
 	YharimEXBrain.DisplayName: Brain of Confusion attack
 	YharimEXRitual.DisplayName: Yharim EX Ritual
-	YharimEXMark2.DisplayName: Yharim EX Mark2
+	YharimEXMark2.DisplayName: Yharim EX Mark 2
 	YharimEXEye.DisplayName: Yharim EX Eye
 	YharimEXDoGTail.DisplayName: Yharim EX Dog Tail
 	YharimEXDoGHead.DisplayName: Yharim EX Dog Head
@@ -71,27 +71,33 @@ Projectiles: {
 	YharimEXNuke.DisplayName: Yharim EX Nuke
 	YharimEXPhantasmalBlast.DisplayName: Yharim EX Phantasmal Blast
 	YharimEXPillar.DisplayName: Yharim EX Pillar
-	MutantReticle2.DisplayName: Mutant Reticle2
 	YharimEXReticle.DisplayName: Yharim EX Reticle
 	YharimEXRetirang.DisplayName: Yharim EX Retirang
-	YharimEXReticle2.DisplayName: Yharim EX Reticle2
-	YharimEXRitual2.DisplayName: Yharim EX Ritual2
-	YharimEXRitual3.DisplayName: Yharim EX Ritual3
-	YharimEXRitual4.DisplayName: Yharim EX Ritual4
-	YharimEXRitual5.DisplayName: Yharim EX Ritual5
+	YharimEXReticle2.DisplayName: Yharim EX Reticle 2
+	YharimEXRitual2.DisplayName: Yharim EX Ritual 2
+	YharimEXRitual3.DisplayName: Yharim EX Ritual 3
+	YharimEXRitual4.DisplayName: Yharim EX Ritual 4
+	YharimEXRitual5.DisplayName: Yharim EX Ritual 5
 	YharimEXSansBeam.DisplayName: Yharim EX Sans Beam
 	YharimEXSansHead.DisplayName: Yharim EX Sans Head
 	YharimEXIronParry.DisplayName: Yharim EX Iron Parry
-	YharimEXScythe1.DisplayName: Yharim EX Scythe1
-	YharimEXScythe2.DisplayName: Yharim EX Scythe2
+	YharimEXScythe1.DisplayName: Yharim EX Scythe 1
+	YharimEXScythe2.DisplayName: Yharim EX Scythe 2
 	YharimEXShadowHand.DisplayName: Yharim EX Shadow Hand
 	YharimEXSlimeBall.DisplayName: Yharim EX Slime Ball
 	YharimEXSlimeRain.DisplayName: Yharim EX Slime Rain
 	YharimEXSlimeSpike.DisplayName: Yharim EX Slime Spike
 	YharimEXSpazmarang.DisplayName: Yharim EX Spazmarang
-	YharimEXSpearAim.DisplayName: Yharim E X Spear Aim
-	YharimEXSpearDash.DisplayName: Yharim E X Spear Dash
-	YharimEXSphereSmall.DisplayName: Yharim E X Sphere Small
+	YharimEXSpearAim.DisplayName: Yharim EX Spear Aim
+	YharimEXSpearDash.DisplayName: Yharim EX Spear Dash
+	YharimEXSphereSmall.DisplayName: Yharim EX Sphere Small
+	YharimEXPenetratorDeathray.DisplayName: Yharim E X Penetrator Deathray
+	YharimEXPenetratorThrown.DisplayName: Yharim E X Penetrator Thrown
+	YharimEXPhantasmalSphere.DisplayName: Yharim E X Phantasmal Sphere
+	YharimEXSpearMagical.DisplayName: Yharim E X Spear Magical
+	YharimEXSpearSpin.DisplayName: Yharim E X Spear Spin
+	YharimEXSpearThrown.DisplayName: Yharim E X Spear Thrown
+	YharimEXSpearThrownFriendly.DisplayName: Yharim E X Spear Thrown Friendly
 }
 
 Items: {

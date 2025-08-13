@@ -203,7 +203,7 @@ namespace YharimEX.Content.Projectiles
 
             if (Projectile.ai[1] != 5)
             {
-                Texture2D glow = ModContent.Request<Texture2D>("YharimEX/Assets/Projectiles/YharimEXSpearAim", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                Texture2D glow = ModContent.Request<Texture2D>("YharimEX/Assets/Projectiles/YharimEXSpearAimGlow", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
                 float modifier = Projectile.timeLeft / (60f - Projectile.localAI[1]);
                 Color glowColor = new Color(255, 191, 51, 210);
                 if (Projectile.ai[1] > 1)

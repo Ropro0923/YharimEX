@@ -633,5 +633,43 @@ namespace YharimEX.Core.Globals
                 return false;
             }
         }
+        public static int FindClosestHostileNPC(Vector2 location, float detectionRange, bool lineCheck = false, bool prioritizeBoss = false)
+        {
+            NPC closestNpc = null;
+
+            void FindClosest(IEnumerable<NPC> npcs)
+            {
+                float range = detectionRange;
+                foreach (NPC n in npcs)
+                {
+                    if (n.CanBeChasedBy() && n.Distance(location) < range
+                        && (!lineCheck || Collision.CanHitLine(location, 0, 0, n.Center, 0, 0)))
+                    {
+                        range = n.Distance(location);
+                        closestNpc = n;
+                    }
+                }
+            }
+
+            if (prioritizeBoss)
+                FindClosest(Main.npc.Where(n => n.boss));
+            if (closestNpc == null)
+                FindClosest(Main.npc);
+
+            return closestNpc == null ? -1 : closestNpc.whoAmI;
+        }
+        public static int FindClosestHostileNPCPrioritizingMinionFocus(Projectile projectile, float detectionRange, bool lineCheck = false, Vector2 center = default, bool prioritizeBoss = false)
+        {
+            if (center == default)
+                center = projectile.Center;
+
+            NPC minionAttackTargetNpc = projectile.OwnerMinionAttackTargetNPC;
+            if (minionAttackTargetNpc != null && minionAttackTargetNpc.CanBeChasedBy() && minionAttackTargetNpc.Distance(center) < detectionRange
+                && (!lineCheck || Collision.CanHitLine(center, 0, 0, minionAttackTargetNpc.Center, 0, 0)))
+            {
+                return minionAttackTargetNpc.whoAmI;
+            }
+            return FindClosestHostileNPC(center, detectionRange, lineCheck, prioritizeBoss);
+        }
     }
 }
