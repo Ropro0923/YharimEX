@@ -105,7 +105,7 @@ namespace YharimEX.Content.Projectiles
                 {
                     ai0 -= 1;
 
-                    if (WorldSavingSystem.MasochistModeReal)
+                    if (YharimEXWorldFlags.MasochistModeReal)
                     {
                         Projectile.Kill();
                         return;

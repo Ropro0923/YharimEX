@@ -98,13 +98,16 @@ Projectiles: {
 	YharimEXSpearSpin.DisplayName: Yharim EX Spear Spin
 	YharimEXSpearThrown.DisplayName: Yharim EX Spear Thrown
 	YharimEXSpearThrownFriendly.DisplayName: Yharim EX Spear Thrown Friendly
-	YharimEXSphereRing.DisplayName: Yharim E X Sphere Ring
-	YharimEXSword.DisplayName: Yharim E X Sword
-	YharimEXTrueEyeDeathray.DisplayName: Yharim E X True Eye Deathray
-	YharimEXTrueEyeL.DisplayName: Yharim E X True Eye L
-	YharimEXTrueEyeR.DisplayName: Yharim E X True Eye R
-	YharimEXTrueEyeS.DisplayName: Yharim E X True Eye S
-	YharimEXTrueEyeSphere.DisplayName: Yharim E X True Eye Sphere
+	YharimEXSphereRing.DisplayName: Yharim EX Sphere Ring
+	YharimEXSword.DisplayName: Yharim EX Sword
+	YharimEXTrueEyeDeathray.DisplayName: Yharim EX True Eye Deathray
+	YharimEXTrueEyeL.DisplayName: Yharim EX True Eye L
+	YharimEXTrueEyeR.DisplayName: Yharim EX True Eye R
+	YharimEXTrueEyeS.DisplayName: Yharim EX True Eye S
+	YharimEXTrueEyeSphere.DisplayName: Yharim EX True Eye Sphere
+	YharimEXEyeOfCthulhu.DisplayName: Yharim EX Eye Of Cthulhu
+	YharimEXTyphoon.DisplayName: Yharim EX Typhoon
+	YharimEXBossRush.DisplayName: Yharim E X Boss Rush
 }
 
 Items: {
