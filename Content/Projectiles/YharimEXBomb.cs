@@ -122,7 +122,7 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (WorldSavingSystem.EternityMode)
+                if (YharimEXWorldFlags.EternityMode)
                 {
                     target.FargoSouls().MaxLifeReduction += 100;
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);

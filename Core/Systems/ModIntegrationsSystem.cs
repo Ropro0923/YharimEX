@@ -117,7 +117,7 @@ namespace YharimEX.Core.Systems
                     {
                         Action<SpriteBatch, Rectangle, Color> action = (Action<SpriteBatch, Rectangle, Color>)((sb, rect, color) =>
                         {
-                            Texture2D texture2D = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBossChecklist", (AssetRequestMode)2).Value;
+                            Texture2D texture2D = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/YharimEXBossChecklist", (AssetRequestMode)2).Value;
                             Vector2 vector2;
                             // ISSUE: explicit constructor call
                             vector2 = new Vector2(
@@ -128,7 +128,7 @@ namespace YharimEX.Core.Systems
                         });
                         dictionary.Add("customPortrait", action);
                         dictionary.Add("displayName", Language.GetText("Mods.YharimEX.NPCs.YharimEXBoss.DisplayName"));
-                        dictionary.Add("overrideHeadTextures", "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBoss_Head");
+                        dictionary.Add("overrideHeadTextures", "YharimEX/Assets/NPCs/YharimEXBoss_Head");
                     }
                 }
             }

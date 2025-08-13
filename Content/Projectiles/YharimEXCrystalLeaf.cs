@@ -69,7 +69,7 @@ namespace YharimEX.Content.Projectiles
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(BuffID.Poisoned, Main.rand.Next(60, 300));
-            if (WorldSavingSystem.EternityMode)
+            if (YharimEXWorldFlags.EternityMode)
             {
                 target.AddBuff(ModContent.BuffType<InfestedBuff>(), Main.rand.Next(60, 300));
                 target.AddBuff(ModContent.BuffType<IvyVenomBuff>(), Main.rand.Next(60, 300));

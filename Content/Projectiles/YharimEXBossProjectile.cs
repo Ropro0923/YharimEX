@@ -14,7 +14,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXBossProjectile : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBoss";
+        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss";
         public static string trailTexture => "YharimEX/Assets/NPCs/YharimEXSoul";
         public static int npcType => ModContent.NPCType<YharimEXBoss>();
         public bool auraTrail;
@@ -152,7 +152,7 @@ namespace YharimEX.Content.Projectiles
             Rectangle rectangle = new(0, y3, texture2D13.Width, num156);
             Vector2 origin2 = rectangle.Size() / 2f;
 
-            Texture2D aura = ModContent.Request<Texture2D>("YharimEX/Assets/NPCS/YharimEXBoss/YharimEXAura", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Texture2D aura = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/YharimEXAura", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             int auraFrameHeight = aura.Height / auraFrames;
             int auraY = auraFrameHeight * (int)Projectile.localAI[0];
             Rectangle auraRectangle = new(0, auraY, aura.Width, auraFrameHeight);
@@ -210,7 +210,7 @@ namespace YharimEX.Content.Projectiles
 
             color26 = Color.Lerp(color26, Color.Black, SHADOWMUTANTREAL);
 
-            //if (WorldSavingSystem.MasochistModeReal)
+            //if (YharimEXWorldFlags.MasochistModeReal)
             //{
             //    Main.spriteBatch.End();
             //    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);
@@ -219,7 +219,7 @@ namespace YharimEX.Content.Projectiles
             //    GameShaders.Misc["WCWingShader"].Apply(new DrawData?());
             //}
             Main.spriteBatch.Draw(texture2D13, Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(rectangle), color26, Projectile.rotation, origin2, Projectile.scale, effects, 0);
-            //if (auraTrail && WorldSavingSystem.MasochistModeReal)
+            //if (auraTrail && YharimEXWorldFlags.MasochistModeReal)
             //{
             //    Main.spriteBatch.End();
             //    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Main.GameViewMatrix.ZoomMatrix);

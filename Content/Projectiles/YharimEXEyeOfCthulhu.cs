@@ -8,12 +8,13 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using YharimEX.Content.Projectiles;
+using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
+using FargowiltasSouls;
 
-namespace FargowiltasSouls.Content.Bosses.MutantBoss
+namespace YharimEX.Content.Projectiles
 {
-    public class MutantEyeOfCthulhu : ModProjectile
+    public class YharimEXEyeOfCthulhu : ModProjectile
     {
         public override string Texture => "YharimEX/Assets/Projectiles/YharimEXEyeOfCthulhu";
         public override void SetStaticDefaults()
@@ -74,7 +75,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
 
         public override void AI()
         {
-            Player player = FargoSoulsUtil.PlayerExists(Projectile.ai[0]);
+            Player player = YharimEXGlobalUtilities.PlayerExists(Projectile.ai[0]);
             if (player == null)
             {
                 Projectile.Kill();
@@ -90,7 +91,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
 
                 float angle = Projectile.SafeDirectionTo(target).ToRotation();
 
-                int p = Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), position, Vector2.Zero, ModContent.ProjectileType<MutantScythe1>(), Projectile.damage, 0, Main.myPlayer, accel, angle);
+                int p = Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), position, Vector2.Zero, ModContent.ProjectileType<YharimEXScythe1>(), Projectile.damage, 0, Main.myPlayer, accel, angle);
                 if (p != Main.maxProjectiles)
                 {
                     Main.projectile[p].timeLeft = Projectile.timeLeft + 180 + 30 + 150; //+ 60 + 240;
@@ -105,7 +106,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
 
                 SoundEngine.PlaySound(SoundID.ForceRoarPitched, Projectile.Center);
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                     Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRing>(), 0, 0f, Main.myPlayer, -1, NPCID.EyeofCthulhu);
             }
 
@@ -168,26 +169,26 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
             }
             else if (Projectile.ai[1] == 121) //make the golden sickles
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     SpawnProjectile(Projectile.Center - Projectile.velocity / 2);
 
                     float accel = 0.025f;
                     Vector2 target = new(Projectile.localAI[0], Projectile.localAI[1]); //+ 150f * Vector2.UnitX.RotatedBy(goldScytheAngleOffset);
                     float angle = Projectile.SafeDirectionTo(target).ToRotation();
-                    int p = Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<MutantScythe2>(), Projectile.damage, 0, Main.myPlayer, accel, angle);
+                    int p = Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXScythe2>(), Projectile.damage, 0, Main.myPlayer, accel, angle);
                     if (p != Main.maxProjectiles)
                         Main.projectile[p].timeLeft = Projectile.timeLeft + 180 + 30;
 
                     if (YharimEXWorldFlags.MasochistModeReal)
                     {
-                        p = Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<MutantScythe2>(), Projectile.damage, 0, Main.myPlayer, accel, angle);
+                        p = Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXScythe2>(), Projectile.damage, 0, Main.myPlayer, accel, angle);
                         if (p != Main.maxProjectiles)
                             Main.projectile[p].timeLeft = Projectile.timeLeft + 180 + 30 + 150;
                     }
                 }
 
-                /*if (FargoSoulsUtil.HostCheck)
+                /*if (YharimEXGlobalUtilities.HostCheck)
                 {
                     SpawnProjectile(Projectile.Center);
                     SpawnProjectile(Projectile.Center - Projectile.velocity / 2);
@@ -201,7 +202,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
             {
                 Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     SpawnProjectile(Projectile.Center);
                     SpawnProjectile(Projectile.Center - Projectile.velocity / 2);
@@ -209,7 +210,7 @@ namespace FargowiltasSouls.Content.Bosses.MutantBoss
             }
             else
             {
-                if (FargoSoulsUtil.HostCheck)
+                if (YharimEXGlobalUtilities.HostCheck)
                 {
                     SpawnProjectile(Projectile.Center);
                     SpawnProjectile(Projectile.Center - Projectile.velocity / 2);

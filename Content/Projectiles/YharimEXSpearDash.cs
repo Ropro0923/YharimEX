@@ -29,7 +29,7 @@ namespace YharimEX.Content.Projectiles
 
         protected void TryLifeSteal(Vector2 pos, int playerWhoAmI)
         {
-            if (WorldSavingSystem.MasochistModeReal && npc is NPC)
+            if (YharimEXWorldFlags.MasochistModeReal && npc is NPC)
             {
                 int totalHealPerHit = npc.lifeMax / 100 * 5;
 
@@ -146,7 +146,7 @@ namespace YharimEX.Content.Projectiles
                 Projectile.position -= Projectile.velocity;
                 Projectile.rotation = mutant.velocity.ToRotation() + MathHelper.ToRadians(135f);
                 Projectile.Center = mutant.Center + mutant.velocity;
-                if ((Projectile.ai[1] <= 0f || WorldSavingSystem.MasochistModeReal) && --Projectile.localAI[0] < 0)
+                if ((Projectile.ai[1] <= 0f || YharimEXWorldFlags.MasochistModeReal) && --Projectile.localAI[0] < 0)
                 {
                     if (Projectile.ai[1] == -2)
                     {
@@ -163,7 +163,7 @@ namespace YharimEX.Content.Projectiles
                             }
                         }
                     }
-                    else if (WorldSavingSystem.MasochistModeReal)
+                    else if (YharimEXWorldFlags.MasochistModeReal)
                     {
                         Projectile.localAI[0] = 2;
 

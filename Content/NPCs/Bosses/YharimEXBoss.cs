@@ -198,12 +198,13 @@ namespace YharimEX.Content.NPCs.Bosses
 
         public override bool PreAI()
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && !Main.dedServ)
                 {
                     if (!Main.LocalPlayer.ItemTimeIsZero && (Main.LocalPlayer.HeldItem.type == ItemID.RodofDiscord || Main.LocalPlayer.HeldItem.type == ItemID.RodOfHarmony))
-                         Main.LocalPlayer.AddBuff(ModContent.BuffType<TimeFrozenBuff>(), 600);
+                        Main.LocalPlayer.AddBuff(FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type, 600);
                 }
             }
 
@@ -223,7 +224,7 @@ namespace YharimEX.Content.NPCs.Bosses
         public override void AI()
         {
             YharimEXGlobalNPC.yharimEXBoss = NPC.whoAmI;
-
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             NPC.dontTakeDamage = AttackChoice < 0; //invul in p3
 
             // Set this to false by default.
@@ -428,6 +429,7 @@ namespace YharimEX.Content.NPCs.Bosses
         bool spawned;
         void ManageAurasAndPreSpawn()
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             if (!spawned)
             {
                 spawned = true;
@@ -457,7 +459,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     EdgyBossText(GFBQuote(2));
 
                     if (YharimEXWorldFlags.AngryYharimEX && (YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<BossRush>(), 0, 0f, Main.myPlayer, NPC.whoAmI);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXBossRush>(), 0, 0f, Main.myPlayer, NPC.whoAmI);
                 }
             }
             else if (NPC.localAI[3] == 1)

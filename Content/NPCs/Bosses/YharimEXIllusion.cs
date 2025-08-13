@@ -11,8 +11,8 @@ namespace YharimEX.Content.NPCs.Bosses
 {
     public class YharimEXIllusion : ModNPC
     {
-        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBoss";
-        public override string HeadTexture => "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXIllusion_Head_Boss";
+        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss";
+        public override string HeadTexture => "YharimEX/Assets/NPCs/YharimEXIllusion_Head_Boss";
 
         public override void SetStaticDefaults()
         {
