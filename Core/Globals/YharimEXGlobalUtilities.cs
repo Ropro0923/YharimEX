@@ -25,6 +25,7 @@ namespace YharimEX.Core.Globals
 {
     public static class YharimEXGlobalUtilities
     {
+        public static void SetTexture1(this Texture2D texture) => Main.instance.GraphicsDevice.Textures[1] = texture;
 
         public static bool WorldIsExpertOrHarder() => Main.expertMode || (Main.GameModeInfo.IsJourneyMode && CreativePowerManager.Instance.GetPower<CreativePowers.DifficultySliderPower>().StrengthMultiplierToGiveNPCs >= 2);
         public static bool HostCheck => Main.netMode != NetmodeID.MultiplayerClient;
@@ -113,6 +114,41 @@ namespace YharimEX.Core.Globals
                 }
             }
             return false;
+        }
+        public static NPC NPCExists(int whoAmI, params int[] types)
+        {
+            return whoAmI > -1 && whoAmI < Main.maxNPCs && Main.npc[whoAmI].active && (types.Length == 0 || types.Contains(Main.npc[whoAmI].type)) ? Main.npc[whoAmI] : null;
+        }
+
+        public static NPC NPCExists(float whoAmI, params int[] types)
+        {
+            return NPCExists((int)whoAmI, types);
+        }
+        public static int GetProjectileByIdentity(int player, float projectileIdentity, params int[] projectileType)
+        {
+            return GetProjectileByIdentity(player, (int)projectileIdentity, projectileType);
+        }
+
+        public static int GetProjectileByIdentity(int player, int projectileIdentity, params int[] projectileType)
+        {
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                if (Main.projectile[i].active && Main.projectile[i].identity == projectileIdentity && Main.projectile[i].owner == player
+                    && (projectileType.Length == 0 || projectileType.Contains(Main.projectile[i].type)))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public static Player PlayerExists(int whoAmI)
+        {
+            return whoAmI > -1 && whoAmI < Main.maxPlayers && Main.player[whoAmI].active && !Main.player[whoAmI].dead && !Main.player[whoAmI].ghost ? Main.player[whoAmI] : null;
+        }
+
+        public static Player PlayerExists(float whoAmI)
+        {
+            return PlayerExists((int)whoAmI);
         }
 
         public static void ClearFriendlyProjectiles(int deletionRank = 0, int bossNpc = -1, bool clearSummonProjs = false)
@@ -506,6 +542,77 @@ namespace YharimEX.Core.Globals
                 if (lightColor.B < colorB) { lightColor.B = colorB; }
             }
             return lightColor;
+        }
+
+        #region Easings
+        public static float SineInOut(float value) => (0f - (MathF.Cos((value * MathF.PI)) - 1f)) / 2f;
+        #endregion
+
+        public static void YharimEXIncapacitate(this Player player, bool preventDashing = true)
+        {
+            player.controlLeft = false;
+            player.controlRight = false;
+            player.controlJump = false;
+            player.controlDown = false;
+            player.controlUseItem = false;
+            player.controlUseTile = false;
+            player.controlHook = false;
+            player.releaseHook = true;
+            if (player.grapCount > 0)
+                player.RemoveAllGrapplingHooks();
+            if (player.mount.Active)
+                player.mount.Dismount(player);
+            player.FargoSouls().NoUsingItems = 2;
+            if (preventDashing)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    player.doubleTapCardinalTimer[i] = 0;
+                    player.holdDownCardinalTimer[i] = 0;
+                }
+            }
+            if (player.dashDelay < 10 && preventDashing)
+                player.dashDelay = 10;
+        }
+        public static Vector2 SmartAccel(Vector2 position, Vector2 destination, Vector2 velocity, float accel, float decel)
+        {
+            Vector2 dif = destination - position;
+
+            if (dif == Vector2.Zero)
+                return Vector2.Zero;
+            if (velocity == Vector2.Zero)
+                velocity = Vector2.UnitX * 0.1f;
+            Vector2 a = velocity;
+            Vector2 b = dif.SafeNormalize(Vector2.Zero);
+            float scalarProj = Vector2.Dot(a, b);
+            Vector2 vProj = b * scalarProj;
+            Vector2 vOrth = velocity - vProj;
+            Vector2 vProjN = vProj.SafeNormalize(Vector2.Zero);
+            if (scalarProj > 0)
+                velocity += vProjN * (float)SmartAccel1D(dif.Length(), vProj.Length(), accel, decel);
+            else
+                velocity -= vProjN * decel;
+            velocity -= Math.Min(decel, vOrth.Length()) * vOrth.SafeNormalize(Vector2.Zero);
+
+            return velocity;
+        }
+
+        public static double SmartAccel1D(double s, double v, double a, double d)
+        {
+            s = Math.Abs(s);
+            a = Math.Abs(a);
+            d = -Math.Abs(d);
+            double root = Math.Abs(v * v / (d * d)) + 2 * s / d;
+            if (root >= 0)
+                return d;
+            double root2 = -2 * s / d;
+            if (root2 <= 0)
+                return a;
+            double accelFraction = (Math.Sqrt(root2) * -d - v) / a;
+            if (accelFraction > 0 && accelFraction < 1)
+                return accelFraction * a;
+            return a;
+
         }
         public static bool BossIsAlive(ref int bossID, int bossType)
         {

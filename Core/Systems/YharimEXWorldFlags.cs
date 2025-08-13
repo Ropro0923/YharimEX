@@ -8,7 +8,7 @@ using Terraria.ModLoader.IO;
 
 namespace YharimEX.Core.Systems
 {
-    public class YharimWorldFlags : ModSystem
+    public class YharimEXWorldFlags : ModSystem
     {
         /* pretty sure we don't need this enum anymore
         public enum Downed

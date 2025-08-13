@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Globals;
 using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.Items
 {
@@ -13,9 +14,9 @@ namespace YharimEX.Content.Items
         public override string Texture => "YharimEX/Assets/Items/YharimsRage";
         public override void SetStaticDefaults()
         {
-            Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(3, 11));
-            ItemID.Sets.AnimatesAsSoul[Item.type] = true;
-            ItemID.Sets.ItemNoGravity[Item.type] = true;
+            //Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(3, 11));
+            //ItemID.Sets.AnimatesAsSoul[Item.type] = true;
+            ItemID.Sets.ItemNoGravity[Item.type] = false;
             ItemID.Sets.SortingPriorityBossSpawns[Type] = 12;
             Terraria.GameContent.Creative.CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 3;
         }
@@ -28,11 +29,23 @@ namespace YharimEX.Content.Items
             Item.useAnimation = 30;
             Item.useTime = 30;
             Item.useStyle = ItemUseStyleID.HoldUp;
-            Item.consumable = true;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                Item.consumable = true;
+            }
+            else
+            {
+                Item.consumable = false;
+            }
             Item.value = Item.buyPrice(1);
         }
 
-        public override bool CanUseItem(Player player) => player.Center.Y / 16 < Main.worldSurface;
+        public override bool CanUseItem(Player player) 
+        {
+            if (!YharimEXCrossmodSystem.FargowiltasSouls.Loaded && NPC.AnyNPCs(ModContent.NPCType<YharimEXBoss>()))
+                return false;
+            return player.Center.Y / 16 < Main.worldSurface;
+        }
 
         public override bool? UseItem(Player player)
         {
@@ -40,6 +53,6 @@ namespace YharimEX.Content.Items
             return true;
         }
 
-        public override Color? GetAlpha(Color lightColor) => Color.White;
+        //public override Color? GetAlpha(Color lightColor) => Color.White;
     }
 }

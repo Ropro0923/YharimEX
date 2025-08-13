@@ -1,5 +1,5 @@
 displayName = Yharim EX
-author = Akira & Ropro0923
+author = Ropro0923 & Akira
 version = 0.0.1
 modReferences = Luminance, CalamityMod
 weakReferences = Fargowiltas, FargowiltasSouls, InfernumMode

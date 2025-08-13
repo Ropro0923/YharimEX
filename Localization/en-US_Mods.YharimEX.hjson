@@ -1,8 +1,86 @@
-NPCs.YharimEXBoss.DisplayName: Yharim EX
+Beastiary.TheGodseeker: Yharim was an oppressive, ruler of Terraria. He lead a massive army, which he rules over with an iron fist, and his influence was felt by almost everyone throughout the planet.
+
+NPCs: {
+	YharimEXBoss.DisplayName: Yharim, the God Seeker
+
+	TheGodseeker: {
+		DisplayName: The Godseeker
+		Census.SpawnCondition: Defeat the Tyrant in combat
+
+		TownNPCMood: {
+			Princess_LovesNPC: Sometimes {NPCName} tells me stories of his adventures.
+			LikeNPC_Princess: I respect {NPCName}. Despite being young she can rule a kingdom.
+			HateCrowded: Disappointing.
+			DislikeCrowded: There are too many of your allies here.
+			LoveSpace: This reminds me of a great grass plain.
+			FarFromHome: I am scouting for evil. Care to join?
+			NoHome: If we are going to work together now, I need a place to stay.
+			Content: This will suffice.
+		}
+
+		NPCDialog: {
+			Default1: Have you seen that fellow Ninja person? I'd like to give my sincere apologies for... partake of a him; the taste was awful.
+			Default2: Semi-friendly reminder, that touching living slimes will dissolve your flesh. Better watch your feet!
+			Default3: Remember to feed your slime mount! It's not that hard, really, just jump on some bunny along your way and that should be a nice snack.
+			Default4: Ugh, asphalt, what a horrible way to die. I gave you Soldifier, so please, just use frozen slime blocks, it's so much more humane.
+			Default5: Whatever rumor you heard that all slimes originate from one source is wrong.
+			Default6: You better tell me torches in this house are made of charcoal, or I shall find another place to stay.
+			Default7: Don't be too harsh on those underground black slimes, they just want a little bit of attention, since no one can see them properly. Including me.
+			Default8: Spiked slimes were a really great addition to my army. This idea was so much better than "let's eat bombs and then blow up" one.
+			Night: I see, it's dark at night, but could you use lanterns instead of torches around here? It's almost an assassination attempt, you know?
+			Rare: Gel may be 'tasty', but don't get any ideas!
+		}
+
+		// This will show up regardless of difficulty. Just naming it the same as fargos for easy use.
+		Chat.EternityDefeat: TEST
+	}
+
+	YharimEXIllusion.DisplayName: Yharim EX Illusion
+}
 
 Projectiles: {
-	YharimEXSunBlast.DisplayName: Yharim EX Sun Blast
-	YharimEXBrain.DisplayName: Yharim EX Brain
+	YharimEXSunBlast.DisplayName: Sun Blast
+	YharimEXBrain.DisplayName: Brain of Confusion attack
+	YharimEXRitual.DisplayName: Yharim EX Ritual
+	YharimEXMark2.DisplayName: Yharim EX Mark2
+	YharimEXEye.DisplayName: Yharim EX Eye
+	YharimEXDoGTail.DisplayName: Yharim EX Dog Tail
+	YharimEXDoGHead.DisplayName: Yharim EX Dog Head
+	YharimEXDoGBody.DisplayName: Yharim EX Dog Body
+	YharimEXDeathraySmall.DisplayName: Yharim EX Deathray Small
+	YharimEXDeathrayAim.DisplayName: Yharim EX Deathray Aim
+	YharimEXDeathray3.DisplayName: Yharim EX Deathray 3
+	YharimEXDeathray2.DisplayName: Yharim EX Deathray 2
+	YharimEXDeathray1.DisplayName: Yharim EX Deathray 1
+	YharimEXCrystalLeaf.DisplayName: Yharim EX Crystal Leaf
+	YharimEXBossProjectile.DisplayName: Yharim EX Boss Projectile
+	YharimEXBombSmall.DisplayName: Yharim EX Bomb Small
+	YharimEXBomb.DisplayName: Yharim EX Bomb
+	MutantEyeOfCthulhu.DisplayName: Mutant Eye Of Cthulhu
+	YharimEXEyeHoming.DisplayName: Yharim EX Eye Homing
+	YharimEXEyeWavy.DisplayName: Yharim EX Eye Wavy
+	YharimEXFishron.DisplayName: Yharim EX Fishron
+	YharimEXFishronRitual.DisplayName: Yharim EX Fishron Ritual
+	YharimEXFragment.DisplayName: Yharim EX Fragment
+	YharimEXGiantDeathray2.DisplayName: Yharim EX Giant Deathray 2
+	YharimEXGlowRing.DisplayName: Yharim EX Glow Ring
+	YharimEXGlowything.DisplayName: Yharim EX Glowything
+	YharimEXGuardian.DisplayName: Yharim EX Guardian
+	MutantYharimEXHealHeal.DisplayName: Mutant Yharim EX Heal Heal
+	YharimEXMark1.DisplayName: Yharim EX Mark1
+	YharimEXNuke.DisplayName: Yharim EX Nuke
+	YharimEXPhantasmalBlast.DisplayName: Yharim EX Phantasmal Blast
+	YharimEXPillar.DisplayName: Yharim EX Pillar
+	MutantReticle2.DisplayName: Mutant Reticle2
+	YharimEXReticle.DisplayName: Yharim EX Reticle
+	YharimEXRetirang.DisplayName: Yharim EX Retirang
+	YharimEXReticle2.DisplayName: Yharim EX Reticle2
+	YharimEXRitual2.DisplayName: Yharim EX Ritual2
+	YharimEXRitual3.DisplayName: Yharim EX Ritual3
+	YharimEXRitual4.DisplayName: Yharim EX Ritual4
+	YharimEXRitual5.DisplayName: Yharim EX Ritual5
+	YharimEXSansBeam.DisplayName: Yharim EX Sans Beam
+	YharimEXSansHead.DisplayName: Yharim EX Sans Head
 }
 
 Items: {
@@ -10,4 +88,17 @@ Items: {
 		Tooltip: ""
 		DisplayName: Yharim's Rage
 	}
+
+	YharimsJournal: {
+		DisplayName: Yharims Journal
+		Tooltip: Yharim's personal journal, containing details of every major foe you have faced.
+	}
 }
+
+LifeUp: +5 max life
+InfernumIntegration.YharimMutant:
+	'''
+	The God Seeker
+	Yharim
+	'''
+SpawnInfo.YharimEXBoss: Use [i/YharimEX/YharimsRage] on the surface.
