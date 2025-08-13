@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.BigProgressBar;
 using Terraria.ModLoader;
 
@@ -10,17 +10,20 @@ namespace YharimEX.Content.BossBars
 {
     public class YharimEXBossBar : ModBossBar
     {
-        private int bossHeadIndex = -1;
-        public override Asset<Texture2D> GetIconTexture(ref Microsoft.Xna.Framework.Rectangle? iconFrame)
-        {   
-           if (bossHeadIndex != -1)
-           {
-              return TextureAssets.NpcHeadBoss[bossHeadIndex];
-           }
-           return null;
-        } 
+        private Asset<Texture2D> forcedHead;
+
+        public override void Load()
+        {
+            forcedHead = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/YharimEXIllusion_Head_Boss");
+        }
+
+        public override Asset<Texture2D> GetIconTexture(ref Rectangle? iconFrame)
+        {
+            return forcedHead;
+        }
+
         public override bool PreDraw(SpriteBatch spriteBatch, NPC npc, ref BossBarDrawParams drawParams)
-        {   
+        {
             if (npc.ai[0] <= -1 && npc.ai[0] >= -7)
             {
                 drawParams.ShowText = false;
@@ -37,9 +40,6 @@ namespace YharimEX.Content.BossBars
 
             life = npc.life;
             lifeMax = npc.lifeMax;
-                    
-
-            bossHeadIndex = npc.GetBossHeadTextureIndex();
             return true;
         }
     }

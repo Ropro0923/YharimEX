@@ -109,7 +109,7 @@ namespace YharimEX.Content.Projectiles
             {
                 Asset<Texture2D> line = TextureAssets.Extra[178];
                 float opacity = 1f;
-                Main.EntitySpriteDraw(line.Value, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, Color.Cyan * opacity, Projectile.velocity.ToRotation(), new Vector2(0, line.Height() * 0.5f), 
+                Main.EntitySpriteDraw(line.Value, Projectile.Center - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), null, Color.Red * opacity, Projectile.velocity.ToRotation(), new Vector2(0, line.Height() * 0.5f), 
                     new Vector2(0.3f, Projectile.scale * 7), SpriteEffects.None);
             }
 

@@ -1,23 +1,17 @@
-using FargowiltasSouls.Common.Graphics.Particles;
-using FargowiltasSouls.Core.ItemDropRules.Conditions;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Chat;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
-using Terraria.GameContent.ItemDropRules;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.Graphics.Capture;
 using FargowiltasSouls;
 using YharimEX.Core.Systems;
 

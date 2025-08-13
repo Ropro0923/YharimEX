@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-//using FargowiltasSouls.Content.Items.Misc;
-//using FargowiltasSouls.Content.Projectiles;
-//using FargowiltasSouls.Core.AccessoryEffectSystem;
-//using FargowiltasSouls.Core.Globals;
-//using FargowiltasSouls.Core.ModPlayers;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria;
