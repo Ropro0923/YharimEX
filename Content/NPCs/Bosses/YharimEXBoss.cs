@@ -490,7 +490,7 @@ namespace YharimEX.Content.NPCs.Bosses
                         if ((YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode) && AttackChoice < 0 && AttackChoice > -6)
                         {
                             Main.LocalPlayer.AddBuff(FargoSouls.Find<ModBuff>("GoldenStasisCDBuff").Type, 2);
-                            if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
+                            if (YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode)
                             {
                                 Main.LocalPlayer.AddBuff(FargoSouls.Find<ModBuff>("TimeStopCDBuff").Type, 2);
                                 Main.LocalPlayer.AddBuff(FargoSouls.Find<ModBuff>("MutantDesperationBuff").Type, 2);
