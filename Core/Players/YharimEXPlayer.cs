@@ -8,6 +8,8 @@ using Terraria.Localization;
 using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using YharimEX.Content.Buffs;
+using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace YharimEX.Core.Players
 {
@@ -16,10 +18,31 @@ namespace YharimEX.Core.Players
         public int MaxLifeReduction;
         int LifeReductionUpdateTimer;
         public int CurrentLifeReduction;
+        public bool noDodge;
+        public bool YharimPresence;
+        public bool YharimPresenceBuffer;
+        public int PresenseTogglerTimer;
+        public bool HadYharimPresence;
+        public bool YharimDesperation;
+        public bool YharimFang;
         public override void UpdateDead()
         {
             MaxLifeReduction = 0;
             CurrentLifeReduction = 0;
+        }
+
+        public override void ResetEffects()
+        {
+            noDodge = false;
+            if (!YharimPresenceBuffer)
+            {
+                if (YharimPresence == false) PresenseTogglerTimer = 0;
+                YharimPresence = YharimPresence && Player.HasBuff(ModContent.BuffType<TyrantPresenceBuff>());
+            }
+            YharimPresenceBuffer = false;
+            HadYharimPresence = YharimPresence;
+            YharimDesperation = false;
+            YharimFang = false;
         }
 
         public void ManageLifeReduction()
@@ -44,6 +67,58 @@ namespace YharimEX.Core.Players
                     CurrentLifeReduction = Player.statLifeMax2 - 100;
                 Player.statLifeMax2 -= CurrentLifeReduction;
             }
+        }
+
+        public override void PostUpdateEquips()
+        {
+            if (noDodge)
+            {
+                Player.onHitDodge = false;
+                Player.shadowDodge = false;
+                Player.blackBelt = false;
+                Player.brainOfConfusionItem = null;
+            }
+        }
+
+        public int GetHealMultiplier(int heal)
+        {
+            float multiplier = 1f;
+            if (YharimPresence)
+                multiplier *= 0.5f;
+
+            heal = (int)(heal * multiplier);
+
+            return heal;
+        }
+
+        public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
+        {
+            healValue = GetHealMultiplier(healValue);
+        }
+
+        public override void UpdateBadLifeRegen()
+        {
+            if (YharimPresence)
+            {
+                if (Player.lifeRegen > 5)
+                    Player.lifeRegen = 5;
+            }
+        }
+
+        public override void PostUpdateMiscEffects()
+        {
+            if (YharimPresence)
+            {
+                Player.statDefense /= 2;
+                Player.endurance /= 2;
+                Player.shinyStone = false;
+            }
+        }
+
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
+        {
+            if (YharimDesperation)
+                modifiers.SourceDamage *= 2f;
         }
     }
 }

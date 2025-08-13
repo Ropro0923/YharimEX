@@ -129,3 +129,15 @@ InfernumIntegration.YharimMutant:
 	Yharim
 	'''
 SpawnInfo.YharimEXBoss: Use [i/YharimEX/YharimsRage] on the surface.
+
+Buffs: {
+	TyrantDesperationBuff: {
+		DisplayName: Godseeker's Fury
+		Description: The Tyrant's final stand. You take double damage!
+	}
+
+	TyrantPresenceBuff: {
+		DisplayName: Tyrant Presence
+		Description: Defense, damage reduction, and healing reduced; some accessory effects disabled
+	}
+}
