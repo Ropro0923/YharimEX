@@ -91,13 +91,20 @@ Projectiles: {
 	YharimEXSpearAim.DisplayName: Yharim EX Spear Aim
 	YharimEXSpearDash.DisplayName: Yharim EX Spear Dash
 	YharimEXSphereSmall.DisplayName: Yharim EX Sphere Small
-	YharimEXPenetratorDeathray.DisplayName: Yharim E X Penetrator Deathray
-	YharimEXPenetratorThrown.DisplayName: Yharim E X Penetrator Thrown
-	YharimEXPhantasmalSphere.DisplayName: Yharim E X Phantasmal Sphere
-	YharimEXSpearMagical.DisplayName: Yharim E X Spear Magical
-	YharimEXSpearSpin.DisplayName: Yharim E X Spear Spin
-	YharimEXSpearThrown.DisplayName: Yharim E X Spear Thrown
-	YharimEXSpearThrownFriendly.DisplayName: Yharim E X Spear Thrown Friendly
+	YharimEXPenetratorDeathray.DisplayName: Yharim EX Penetrator Deathray
+	YharimEXPenetratorThrown.DisplayName: Yharim EX Penetrator Thrown
+	YharimEXPhantasmalSphere.DisplayName: Yharim EX Phantasmal Sphere
+	YharimEXSpearMagical.DisplayName: Yharim EX Spear Magical
+	YharimEXSpearSpin.DisplayName: Yharim EX Spear Spin
+	YharimEXSpearThrown.DisplayName: Yharim EX Spear Thrown
+	YharimEXSpearThrownFriendly.DisplayName: Yharim EX Spear Thrown Friendly
+	YharimEXSphereRing.DisplayName: Yharim E X Sphere Ring
+	YharimEXSword.DisplayName: Yharim E X Sword
+	YharimEXTrueEyeDeathray.DisplayName: Yharim E X True Eye Deathray
+	YharimEXTrueEyeL.DisplayName: Yharim E X True Eye L
+	YharimEXTrueEyeR.DisplayName: Yharim E X True Eye R
+	YharimEXTrueEyeS.DisplayName: Yharim E X True Eye S
+	YharimEXTrueEyeSphere.DisplayName: Yharim E X True Eye Sphere
 }
 
 Items: {

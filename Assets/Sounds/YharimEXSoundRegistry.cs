@@ -14,6 +14,7 @@ namespace YharimEX.Assets.Sounds
         public static readonly SoundStyle YharimEXNukeFishronExplosion = new(SoundsPath + "YharimEXNukeFishronExplosion");
         public static readonly SoundStyle YharimEXPenetratorExplosion = new(SoundsPath + "YharimEXPenetratorExplosion");
         public static readonly SoundStyle YharimEXPenetratorThrow = new(SoundsPath + "YharimEXPenetratorThrow");
+        public static readonly SoundStyle YharimEXSword = new(SoundsPath + "YharimEXSword");
 
     }
 }
