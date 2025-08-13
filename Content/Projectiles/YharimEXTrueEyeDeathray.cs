@@ -41,7 +41,7 @@ namespace YharimEX.Content.Projectiles
                 Projectile.velocity = -Vector2.UnitY;
             }
             /*int ai1 = (int)Projectile.ai[1];
-            if (Main.projectile[ai1].active && Main.projectile[ai1].type == ModContent.ProjectileType<MutantTrueEyeL>())
+            if (Main.projectile[ai1].active && Main.projectile[ai1].type == ModContent.ProjectileType<YharimEXTrueEyeL>())
             {
                 Projectile.Center = Main.projectile[ai1].Center - Vector2.UnitY * 6f;
             }

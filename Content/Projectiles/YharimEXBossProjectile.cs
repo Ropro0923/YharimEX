@@ -62,10 +62,10 @@ namespace YharimEX.Content.Projectiles
                 auraTrail = npc.localAI[3] >= 3;
 
         // RETURN        Projectile.hide =
-        //            Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<MutantSpearAim>()] > 0
-        //            || Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<MutantSpearDash>()] > 0
-        //            || Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<MutantSpearSpin>()] > 0
-        //            || Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<MutantSlimeRain>()] > 0;
+        //            Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<YharimEXSpearAim>()] > 0
+        //            || Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<YharimEXSpearDash>()] > 0
+        //            || Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<YharimEXSpearSpin>()] > 0
+        //            || Main.player[Projectile.owner].ownedProjectileCounts[ModContent.ProjectileType<YharimEXSlimeRain>()] > 0;
 
                 sansEye =
                     npc.ai[0] == 10 && npc.ai[1] > 150
