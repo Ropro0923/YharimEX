@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CalamityMod.Buffs.DamageOverTime;
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Core.Systems;
 using Terraria.ModLoader;
 using Terraria;
 using YharimEX.Core.Systems;

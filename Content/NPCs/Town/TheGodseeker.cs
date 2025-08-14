@@ -107,8 +107,8 @@ namespace YharimEX.Content.NPCs.Town
             NPC.breath = 200;
             if (defeatQuoteTimer > 0)
                 defeatQuoteTimer--;
-            else
-                canSayDefeatQuote = false;
+            // else
+            //    canSayDefeatQuote = false;
 
             if (!spawned)
             {

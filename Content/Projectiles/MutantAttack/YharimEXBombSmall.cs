@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Audio;
-using Terraria.ID;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -19,7 +17,8 @@ namespace YharimEX.Content.Projectiles
             Projectile.scale = 0.75f;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = false;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.TimeFreezeImmune = false;
             }
         }
 
@@ -29,7 +28,7 @@ namespace YharimEX.Content.Projectiles
             {
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    Projectile.FargoSouls().GrazeCD = 1;
+                    SetupFargoProjectile.SetGrazeCD(Projectile);
                     return false;
                 }
             }

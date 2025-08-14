@@ -1,5 +1,3 @@
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,7 +8,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
+using YharimEX.Content.NPCs.Bosses;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -37,7 +36,11 @@ namespace YharimEX.Content.Projectiles
 
             Projectile.timeLeft = 216;
 
-            Projectile.FargoSouls().DeletionImmuneRank = 2;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletionImmuneRank = 2;
+            }
 
             Projectile.alpha = 255;
         }
@@ -232,16 +235,22 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
                 {
                     target.AddBuff(BuffID.Obstructed, 15);
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 120);
-                    target.AddBuff(ModContent.BuffType<BerserkedBuff>(), 120);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("Berserked").Type, 15);
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
                 }
             }
         }

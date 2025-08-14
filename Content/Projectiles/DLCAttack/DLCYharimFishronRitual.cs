@@ -42,7 +42,7 @@ namespace YharimEX.Content.Projectiles.DLCAttack
                 setupFargoProjectile.safeRange = safeRange;
                 setupFargoProjectile.canDamage = CanDamage();
                 setupFargoProjectile.TimeFreezeImmune = true;
-                setupFargoProjectile.DeletiionImmuneRank = 2;
+                setupFargoProjectile.DeletionImmuneRank = 2;
             }
         }
 

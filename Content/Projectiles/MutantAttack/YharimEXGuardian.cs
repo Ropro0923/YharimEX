@@ -1,14 +1,12 @@
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using FargowiltasSouls;
 using YharimEX.Core.Systems;
 using YharimEX.Content.Projectiles.FargoProjectile;
+using YharimEX.Content.NPCs.Bosses;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -42,7 +40,7 @@ namespace YharimEX.Content.Projectiles
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 1;
+                SetupFargoProjectile.DeletionImmuneRank = 1;
             }
         }
 
@@ -73,21 +71,31 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
+                }
                 if (YharimEXWorldFlags.EternityMode)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    if (YharimEXWorldFlags.MasochistModeReal)
+                    target.AddBuff(FargoSouls.Find<ModBuff>("OceanicMaulBuff").Type, 5400);
+                    if (YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode)
                     {
-                        target.AddBuff(ModContent.BuffType<GodEaterBuff>(), 420);
+                        target.AddBuff(FargoSouls.Find<ModBuff>("GodEaterBuff").Type, 420);
                     }
-                    target.AddBuff(ModContent.BuffType<FlamesoftheUniverseBuff>(), 420);
-                    target.AddBuff(ModContent.BuffType<MarkedforDeathBuff>(), 420);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("FlamesoftheUniverseBuff").Type, 420);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("MarkedForDeathBuff").Type, 420);
                 }
-                target.AddBuff(ModContent.BuffType<DefenselessBuff>(), 480);
+                target.AddBuff(FargoSouls.Find<ModBuff>("DefenselessBuff").Type, 480);
             }
         }
 

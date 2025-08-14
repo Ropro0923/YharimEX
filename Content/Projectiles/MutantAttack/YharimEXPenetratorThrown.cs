@@ -1,5 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Masomode;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -7,7 +6,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -38,8 +37,9 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().noInteractionWithNPCImmunityFrames = true;
-                Projectile.FargoSouls().DeletionImmuneRank = 2;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletionImmuneRank = 2;
+                SetupFargoProjectile.noInteractionWithNPCImmunityFrames = false;
             }
         }
 
@@ -123,7 +123,6 @@ namespace YharimEX.Content.Projectiles
                 if (p != Main.maxProjectiles)
                     Main.projectile[p].DamageType = Projectile.DamageType;
             }
-            target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
         }
 
         public override Color? GetAlpha(Color lightColor)

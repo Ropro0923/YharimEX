@@ -15,9 +15,6 @@ namespace YharimEX.Content.Projectiles
     public class YharimEXTrueEyeS : ModProjectile
     {
         public override string Texture => "Terraria/Images/Projectile_650"; //i like the moon lord eyes better ngl
-        private float localAI0;
-        private float localAI1;
-
         public override void SetStaticDefaults()
         {
             Main.projFrames[Projectile.type] = 42;
@@ -38,7 +35,7 @@ namespace YharimEX.Content.Projectiles
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 1;
+                SetupFargoProjectile.DeletionImmuneRank = 1;
             }
         }
 

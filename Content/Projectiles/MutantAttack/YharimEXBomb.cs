@@ -1,7 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Core.Systems;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -9,7 +6,8 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
+using YharimEX.Content.NPCs.Bosses;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -37,9 +35,9 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
-                Projectile.FargoSouls().DeletionImmuneRank = 2;
-                Projectile.FargoSouls().GrazeCheck = projectile => { return false; };
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.TimeFreezeImmune = false;
+                SetupFargoProjectile.DeletionImmuneRank = 2;
             }
         }
 
@@ -122,16 +120,18 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+
+                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.YharimPlayer().MaxLifeReduction += 100;
                 }
-                target.AddBuff(ModContent.BuffType<MutantNibbleBuff>(), 900);
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 900);
+                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    EternityDebuffs.ManageOnHitDebuffs(target);
+                }
             }
         }
+        
 
         public override Color? GetAlpha(Color lightColor)
         {

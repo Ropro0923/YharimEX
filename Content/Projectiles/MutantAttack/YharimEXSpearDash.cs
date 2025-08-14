@@ -75,7 +75,7 @@ namespace YharimEX.Content.Projectiles
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
                 SetupFargoProjectile.TimeFreezeImmune = true;
-                SetupFargoProjectile.DeletiionImmuneRank = 2;
+                SetupFargoProjectile.DeletionImmuneRank = 2;
             }
         }
 

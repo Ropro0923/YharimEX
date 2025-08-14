@@ -1,5 +1,3 @@
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -7,9 +5,10 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
+using YharimEX.Core.Players;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -85,15 +84,18 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (target.FargoSouls().BetsyDashing)
+                YharimEXFargoPlayer YharimEXFargoPlayer = target.GetModPlayer<YharimEXFargoPlayer>();
+                if (YharimEXFargoPlayer.YharimEXBetsyDashing)
                     return;
-                if (YharimEXWorldFlags.EternityMode)
+
+                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.YharimPlayer().MaxLifeReduction += 100;
                 }
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 360);
+                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    EternityDebuffs.ManageOnHitDebuffs(target);
+                }
             }
             Projectile.timeLeft = 0;
         }
@@ -154,8 +156,8 @@ namespace YharimEX.Content.Projectiles
                 Main.EntitySpriteDraw(glow, drawCenter2 - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(glowrectangle),
                     glowcolor, Projectile.velocity.ToRotation() + MathHelper.PiOver2, gloworigin2, scale, SpriteEffects.None, 0);
             }
-            
-            
+
+
             for (float i = Projectile.localAI[0] - 1; i > 0; i -= Projectile.localAI[0] / ProjectileID.Sets.TrailCacheLength[Projectile.type]) //trail grows in length as projectile travels
             {
 
@@ -174,7 +176,7 @@ namespace YharimEX.Content.Projectiles
                 Main.EntitySpriteDraw(glow, value4 + Projectile.Size / 2f - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(glowrectangle), color27,
                     Projectile.velocity.ToRotation() + MathHelper.PiOver2, gloworigin2, scale * 0.8f, SpriteEffects.None, 0);
             }
-            
+
             return false;
         }
 

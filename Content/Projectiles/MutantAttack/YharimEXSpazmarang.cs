@@ -1,5 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;

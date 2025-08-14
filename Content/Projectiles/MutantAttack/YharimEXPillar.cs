@@ -42,7 +42,7 @@ namespace YharimEX.Content.Projectiles
             if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 1;
+                SetupFargoProjectile.DeletionImmuneRank = 1;
                 SetupFargoProjectile.TimeFreezeImmune = true;
             }
         }

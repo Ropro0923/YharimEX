@@ -1,7 +1,7 @@
 Beastiary.TheGodseeker: Yharim was an oppressive, ruler of Terraria. He lead a massive army, which he rules over with an iron fist, and his influence was felt by almost everyone throughout the planet.
 
 NPCs: {
-	YharimEXBoss.DisplayName: Yharim, the God Seeker
+	YharimEXBoss.DisplayName: Yharim, the Godseeker
 
 	TheGodseeker: {
 		DisplayName: The Godseeker
@@ -67,7 +67,7 @@ Projectiles: {
 	YharimEXGlowything.DisplayName: Glowything
 	YharimEXGuardian.DisplayName: Ares
 	YharimEXHeal.DisplayName: Mutant Yharim EX Heal Heal
-	YharimEXMark1.DisplayName: Yharim EX Mark1
+	YharimEXMark1.DisplayName: Yharim EX Mark 1
 	YharimEXNuke.DisplayName: Nuke
 	YharimEXPhantasmalBlast.DisplayName: Phantasmal Blast
 	YharimEXPillar.DisplayName: Astrageldon
@@ -128,6 +128,7 @@ Projectiles: {
 	YharimEXDestroyerBody.DisplayName: The Destroyer
 	YharimEXDestroyerHead.DisplayName: The Destroyer
 	YharimEXDestroyerTail.DisplayName: The Destroyer
+	YharimEXGlowLine.DisplayName: Yharim E X Glow Line
 }
 
 Items: {

@@ -775,7 +775,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     NPC.ai[2] = 0;
                     NPC.ai[3] = 0;
                     NPC.netUpdate = true;
-    // NOTE                YharimEXGlobalUtilities.ClearHostileProjectiles(1, NPC.whoAmI);
+                    // NOTE                YharimEXGlobalUtilities.ClearHostileProjectiles(1, NPC.whoAmI);
                     EdgyBossText(GFBQuote(3));
                 }
                 return true;
@@ -1009,8 +1009,8 @@ namespace YharimEX.Content.NPCs.Bosses
                     if (YharimEXGlobalUtilities.HostCheck) //spawn worm
                     {
                         int appearance = Main.rand.Next(2);
-                // RETURN        if (YharimEXGlobalUtilities.AprilFools)
-                //           appearance = 0;
+                        // RETURN        if (YharimEXGlobalUtilities.AprilFools)
+                        //           appearance = 0;
                         for (int j = 0; j < 8; j++)
                         {
                             Vector2 vel = NPC.DirectionFrom(player.Center).RotatedByRandom(MathHelper.ToRadians(120)) * 10f;
@@ -1569,14 +1569,14 @@ namespace YharimEX.Content.NPCs.Bosses
                     Main.LocalPlayer.controlUseItem = false;
                     Main.LocalPlayer.controlUseTile = false;
 
-        // NOTE            Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
-                    
+                    // NOTE            Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
+
                 }
             }
 
             if (NPC.ai[1] == 0)
             {
-        // NOTE        YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI);
+                // NOTE        YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI);
 
                 if ((YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode))
                 {
@@ -2215,8 +2215,8 @@ namespace YharimEX.Content.NPCs.Bosses
                         if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
                             ai1 += 0.4f;
                         float appearance = NPC.localAI[2];
-                //        if (YharimEXGlobalUtilities.AprilFools)
-                //            appearance = 0;
+                        //        if (YharimEXGlobalUtilities.AprilFools)
+                        //            appearance = 0;
                         int current = Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, vel, ModContent.ProjectileType<YharimEXDestroyerHead>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, NPC.target, ai1, appearance);
                         //timeleft: remaining duration of this case + duration of next case + extra delay after + successive death
                         Main.projectile[current].timeLeft = 30 * (cap - (int)NPC.ai[2]) + 60 * (int)NPC.localAI[1] + 30 + (int)NPC.ai[2] * 6;
@@ -3442,7 +3442,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     Main.LocalPlayer.controlUseItem = false;
                     Main.LocalPlayer.controlUseTile = false;
-                // NOTE    Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
+                    // NOTE    Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
                 }
 
                 if (--NPC.localAI[0] < 0)
@@ -3764,7 +3764,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 AttackChoice--;
                 NPC.ai[1] = 0;
                 NPC.ai[2] = 0;
-            // NOTE    YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI);
+                // NOTE    YharimEXGlobalUtilities.ClearAllProjectiles(2, NPC.whoAmI);
             }
             else if (NPC.ai[2] == 420)
             {
@@ -3832,16 +3832,16 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
             }
             if (killPlayer)
+            {
+                if (++NPC.ai[2] > 15)
                 {
-                    if (++NPC.ai[2] > 15)
-                    {
-                        NPC.ai[2] -= 15;
-                        int realDefDamage = NPC.defDamage;
-                        NPC.defDamage *= 10;
-                        SpawnSpearTossDirectP2Attack();
-                        NPC.defDamage = realDefDamage;
-                    }
+                    NPC.ai[2] -= 15;
+                    int realDefDamage = NPC.defDamage;
+                    NPC.defDamage *= 10;
+                    SpawnSpearTossDirectP2Attack();
+                    NPC.defDamage = realDefDamage;
                 }
+            }
             if (++NPC.ai[1] > 120)
             {
                 NPC.netUpdate = true;
@@ -3932,7 +3932,7 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-               target.YharimPlayer().MaxLifeReduction += 100;
+                target.YharimPlayer().MaxLifeReduction += 100;
             }
             else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
@@ -3984,10 +3984,10 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             base.OnKill();
 
-        //    if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) || (!playerInvulTriggered && (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)))
-        //    {
-        //        Item.NewItem(NPC.GetSource_Loot(), NPC.Hitbox, ModContent.ItemType<PhantasmalEnergy>());
-        //    }
+            //    if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) || (!playerInvulTriggered && (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)))
+            //    {
+            //        Item.NewItem(NPC.GetSource_Loot(), NPC.Hitbox, ModContent.ItemType<PhantasmalEnergy>());
+            //    }
 
             YharimEXWorldFlags.SkipYharimEXP1 = 0;
 

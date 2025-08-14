@@ -1,7 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls;
-using FargowiltasSouls.Core.Systems;
-using Luminance.Core.Graphics;
+﻿using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,6 +10,7 @@ using Terraria.ModLoader;
 using YharimEX.Assets.ExtraTextures;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -38,7 +36,8 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.TimeFreezeImmune = true;
             }
         }
 
@@ -61,6 +60,8 @@ namespace YharimEX.Content.Projectiles
 
         public override void AI()
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+
             if (Projectile.localAI[0] == 0)
             {
                 if (Projectile.localAI[1] == 0)
@@ -128,7 +129,7 @@ namespace YharimEX.Content.Projectiles
                         {
                             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                             {
-                                Main.player[ai0].ClearBuff(ModContent.BuffType<MutantFangBuff>());
+                                Main.player[ai0].ClearBuff(FargoSouls.Find<ModBuff>("InfestedBuff").Type);
                             }
                             Main.player[ai0].statLife += Projectile.damage;
                             Main.player[ai0].HealEffect(Projectile.damage);

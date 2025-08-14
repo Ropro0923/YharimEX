@@ -1,4 +1,3 @@
-using FargowiltasSouls.Content.Buffs.Masomode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -35,7 +34,7 @@ namespace YharimEX.Content.Projectiles
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
                 SetupFargoProjectile.canSplit = false;
-                SetupFargoProjectile.DeletiionImmuneRank = 2;
+                SetupFargoProjectile.DeletionImmuneRank = 2;
             }
         }
 
@@ -75,15 +74,6 @@ namespace YharimEX.Content.Projectiles
         public override bool? CanDamage()
         {
             return Projectile.frame < 4;
-        }
-
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
-            }
-            target.immune[Projectile.owner] = 1;
         }
 
         public override void OnKill(int timeLeft)

@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -27,10 +27,10 @@ namespace YharimEX.Content.Projectiles
             CooldownSlot = 0;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.TimeFreezeImmune = true;
             }
         }
-
         private float Amplitude => Projectile.ai[0];
         private float Period => Projectile.ai[1];
         private float Counter => Projectile.localAI[1] * 4;

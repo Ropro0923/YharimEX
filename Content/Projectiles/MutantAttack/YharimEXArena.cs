@@ -5,8 +5,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Globals;
+using YharimEX.Content.Projectiles.FargoProjectile;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -51,17 +51,12 @@ namespace YharimEX.Content.Projectiles
             Projectile.hide = true;
             Projectile.netImportant = true;
             CooldownSlot = 0;
-
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().GrazeCheck =
-                    projectile =>
-                    {
-                        return CanDamage() == true && targetPlayer == Main.myPlayer && Math.Abs((Main.LocalPlayer.Center - Projectile.Center).Length() - threshold) < Projectile.width / 2 * Projectile.scale + Player.defaultHeight + Main.LocalPlayer.FargoSouls().GrazeRadius;
-                    };
-
-                Projectile.FargoSouls().DeletionImmuneRank = 3;
-                Projectile.FargoSouls().TimeFreezeImmune = true;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.TimeFreezeImmune = true;
+                SetupFargoProjectile.DeletionImmuneRank = 3;
+                SetupFargoProjectile.GrazeCheck = true;
             }
         }
 

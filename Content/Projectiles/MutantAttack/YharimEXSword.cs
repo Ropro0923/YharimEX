@@ -36,7 +36,7 @@ namespace YharimEX.Content.Projectiles
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 2;
+                SetupFargoProjectile.DeletionImmuneRank = 2;
                 SetupFargoProjectile.TimeFreezeImmune = true;
             }
         }

@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -30,7 +30,8 @@ namespace YharimEX.Content.Projectiles
             Projectile.hide = true;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.TimeFreezeImmune = true;
             }
         }
 

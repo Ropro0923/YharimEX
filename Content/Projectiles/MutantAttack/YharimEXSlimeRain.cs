@@ -30,10 +30,11 @@ namespace YharimEX.Content.Projectiles
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
             CooldownSlot = 1;
-                        if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 2;
+                SetupFargoProjectile.DeletionImmuneRank = 2;
             }
         }
 

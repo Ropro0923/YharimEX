@@ -39,7 +39,7 @@ namespace YharimEX.Content.Projectiles
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 1;
+                SetupFargoProjectile.DeletionImmuneRank = 1;
             }
         }
         public override void OnSpawn(IEntitySource source)

@@ -1,6 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -10,8 +8,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 using YharimEX.Content.Projectiles.FargoProjectile;
+using YharimEX.Content.NPCs.Bosses;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -42,7 +40,7 @@ namespace YharimEX.Content.Projectiles
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 1;
+                SetupFargoProjectile.DeletionImmuneRank = 1;
             }
         }
 
@@ -72,16 +70,16 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.YharimPlayer().MaxLifeReduction += 100;
                 }
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 360);
+                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    EternityDebuffs.ManageOnHitDebuffs(target);
+                }
             }
         }
-
         public override void OnKill(int timeleft)
         {
             SoundEngine.PlaySound(SoundID.NPCDeath6, Projectile.Center);

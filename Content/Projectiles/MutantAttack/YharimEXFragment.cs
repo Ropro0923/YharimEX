@@ -1,5 +1,3 @@
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -94,18 +92,20 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                target.AddBuff(ModContent.BuffType<HexedBuff>(), 120);
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 360);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("HexedBuff").Type, 120);
+                target.AddBuff(FargoSouls.Find<ModBuff>("CurseoftheMoonBuff").Type, 360);
                 if (YharimEXWorldFlags.EternityMode)
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("MutantFangBuff").Type, 180);
                 switch ((int)Projectile.ai[0])
                 {
-                    case 0: target.AddBuff(ModContent.BuffType<ReverseManaFlowBuff>(), 180); break; //nebula
-                    case 1: target.AddBuff(ModContent.BuffType<AtrophiedBuff>(), 180); break; //solar
-                    case 2: target.AddBuff(ModContent.BuffType<JammedBuff>(), 180); break; //vortex
-                    default: target.AddBuff(ModContent.BuffType<AntisocialBuff>(), 180); break; //stardust
+                    case 0: target.AddBuff(FargoSouls.Find<ModBuff>("ReverseManaFlowBuff").Type, 180); break; //nebula
+                    case 1: target.AddBuff(FargoSouls.Find<ModBuff>("AtrophiedBuff").Type, 180); break; //solar
+                    case 2: target.AddBuff(FargoSouls.Find<ModBuff>("JammedBuff").Type, 180); break; //vortex
+                    default: target.AddBuff(FargoSouls.Find<ModBuff>("AntisocialBuff").Type, 180); break; //stardust
                 }
             }
         }

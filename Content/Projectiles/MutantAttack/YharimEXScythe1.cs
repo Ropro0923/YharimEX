@@ -1,6 +1,5 @@
 ﻿using CalamityMod.NPCs.SupremeCalamitas;
 using CalamityMod.NPCs;
-using FargowiltasSouls.Content.Buffs.Boss;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

@@ -1,13 +1,11 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -31,14 +29,10 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().GrazeCheck =
-                    projectile =>
-                    {
-                        return CanDamage() == true && Math.Abs((Main.LocalPlayer.Center - Projectile.Center).Length() - safeRange) < Player.defaultHeight + Main.LocalPlayer.FargoSouls().GrazeRadius;
-                    };
-
-                Projectile.FargoSouls().TimeFreezeImmune = true;
-                Projectile.FargoSouls().DeletionImmuneRank = 2;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletionImmuneRank = 2;
+                SetupFargoProjectile.TimeFreezeImmune = true;
+                SetupFargoProjectile.GrazeCheck = true;
             }
         }
 
@@ -95,8 +89,7 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (Projectile.FargoSouls().GrazeCD > 10)
-                    Projectile.FargoSouls().GrazeCD = 10;
+                SetupFargoProjectile.SetGrazeCD(Projectile);
             }
         }
 
@@ -104,14 +97,14 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.YharimPlayer().MaxLifeReduction += 100;
                 }
-                target.AddBuff(ModContent.BuffType<MutantNibbleBuff>(), 900);
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 900);
+                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    EternityDebuffs.ManageOnHitDebuffs(target);
+                }
             }
         }
         public override Color? GetAlpha(Color lightColor)

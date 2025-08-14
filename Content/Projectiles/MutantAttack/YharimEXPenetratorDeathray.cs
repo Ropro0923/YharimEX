@@ -1,12 +1,11 @@
-﻿using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -29,11 +28,10 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().CanSplit = false;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.canSplit = true;
             }
-            //Projectile.FargoSouls().TimeFreezeImmune = true;
-
-                Projectile.hide = true;
+            Projectile.hide = true;
         }
 
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
@@ -97,9 +95,10 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
+                target.AddBuff(FargoSouls.Find<ModBuff>("CurseOFTheMoonBuff").Type, 600);
             }
             target.immune[Projectile.owner] = 1;
         }

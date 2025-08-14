@@ -1,7 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Content.Buffs.Souls;
-using Luminance.Core.Graphics;
+﻿using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -14,7 +11,8 @@ using YharimEX.Assets.ExtraTextures;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
+using YharimEX.Core.Players;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -43,9 +41,9 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
-                Projectile.FargoSouls().DeletionImmuneRank = 2;
-
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletionImmuneRank = 2;
+                SetupFargoProjectile.TimeFreezeImmune = true;
                 if (YharimEXWorldFlags.MasochistModeReal)
                     maxTime += 180;
             }
@@ -73,6 +71,8 @@ namespace YharimEX.Content.Projectiles
 
         public override void AI()
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+
             base.AI();
 
             if (!Main.dedServ && Main.LocalPlayer.active)
@@ -97,7 +97,7 @@ namespace YharimEX.Content.Projectiles
                 {
                     if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                     {
-                        if (npc.HasValidTarget && Main.player[npc.target].HasBuff<TimeFrozenBuff>())
+                        if (npc.HasValidTarget && Main.player[npc.target].HasBuff(FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type))
                             stall = true;
                     }
 
@@ -192,7 +192,7 @@ namespace YharimEX.Content.Projectiles
                 Main.LocalPlayer.hurtCooldowns[0] = 0;
                 Main.LocalPlayer.hurtCooldowns[1] = 0;
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                Main.LocalPlayer.ClearBuff(ModContent.BuffType<GoldenStasisBuff>());
+                    Main.LocalPlayer.ClearBuff(FargoSouls.Find<ModBuff>("GoldenStasisBuff").Type);
             }
         }
 
@@ -239,15 +239,15 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.YharimPlayer().MaxLifeReduction += 100;
                 }
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
-                target.FargoSouls().NoUsingItems = 2;
-
+                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    EternityDebuffs.ManageOnHitDebuffs(target);
+                }
+                target.GetModPlayer<YharimEXPlayer>().YharimEXNoUsingItems = 2;
             }
 
             target.immune = false;

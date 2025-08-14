@@ -1,7 +1,4 @@
 ﻿using YharimEX.Assets.ExtraTextures;
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Core.Systems;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,11 +11,10 @@ using YharimEX.Content.Deathrays;
 using YharimEX.Core.Globals;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 
 namespace YharimEX.Content.Projectiles
 {
-	public class YharimEXDeathray3 : BaseDeathray, IPixelatedPrimitiveRenderer
+    public class YharimEXDeathray3 : BaseDeathray, IPixelatedPrimitiveRenderer
     {
 
         public override string Texture => "YharimEX/Assets/Projectiles/PhantasmalDeathray";
@@ -141,12 +137,13 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
-                    target.AddBuff(BuffID.Burning, 300);
+                    target.YharimPlayer().MaxLifeReduction += 100;
+                }
+                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    EternityDebuffs.ManageOnHitDebuffs(target);
                 }
             }
             target.AddBuff(BuffID.OnFire, 300);

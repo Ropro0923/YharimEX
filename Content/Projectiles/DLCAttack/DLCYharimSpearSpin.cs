@@ -42,7 +42,7 @@ namespace YharimEX.Content.Projectiles.DLCAttack
             {
                 SetupFargoProjectile setupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
                 setupFargoProjectile.TimeFreezeImmune = true;
-                setupFargoProjectile.DeletiionImmuneRank = 2;
+                setupFargoProjectile.DeletionImmuneRank = 2;
             }
         }
 

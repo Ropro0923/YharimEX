@@ -1,6 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
@@ -8,6 +6,7 @@ using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
 
@@ -142,9 +141,18 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            target.AddBuff(Projectile.ai[2] == 0 ? ModContent.BuffType<LightningRodBuff>() : BuffID.Weak, Main.rand.Next(300, 1200));
-            if (YharimEXWorldFlags.EternityMode)
-                target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+
+            target.AddBuff(Projectile.ai[2] == 0 ? FargoSouls.Find<ModBuff>("LightningRodBuff").Type : BuffID.Weak, Main.rand.Next(300, 1200));
+
+            if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                target.YharimPlayer().MaxLifeReduction += 100;
+            }
+            else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                EternityDebuffs.ManageOnHitDebuffs(target);
+            }
         }
     }
 }

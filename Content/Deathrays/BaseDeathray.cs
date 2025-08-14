@@ -5,8 +5,8 @@ using Terraria;
 using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
-using FargowiltasSouls;
 using YharimEX.Core.Systems;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Deathrays
 {
@@ -54,40 +54,24 @@ namespace YharimEX.Content.Deathrays
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-
-                Projectile.FargoSouls().GrazeCheck =
-                    Projectile =>
-                    {
-                        float num6 = 0f;
-                        if (CanDamage() != false && Collision.CheckAABBvLineCollision(Main.LocalPlayer.Hitbox.TopLeft(), Main.LocalPlayer.Hitbox.Size(), Projectile.Center,
-                            Projectile.Center + Projectile.velocity * Projectile.localAI[1], 22f * Projectile.scale + Main.LocalPlayer.FargoSouls().GrazeRadius * 2f + Player.defaultHeight, ref num6))
-                        {
-                            return true;
-                        }
-                        return false;
-                    };
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 1;
+                SetupFargoProjectile.DeletionImmuneRank = 1;
+                SetupFargoProjectile.GrazeCheck = true;
             }
         }
 
         public override void PostAI()
         {
+            SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
             if (Projectile.hide)
             {
                 Projectile.hide = false;
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-
                     if (Projectile.friendly)
-                        Projectile.FargoSouls().DeletionImmuneRank = 2;
+                        SetupFargoProjectile.DeletionImmuneRank = 2;
                 }
-            }
-
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                if (Projectile.FargoSouls().GrazeCD > grazeCD)
-                    Projectile.FargoSouls().GrazeCD = grazeCD;
+                SetupFargoProjectile.SetGrazeCD(Projectile);
             }
         }
 

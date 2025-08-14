@@ -1,14 +1,10 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Core.Systems;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
@@ -32,7 +28,7 @@ namespace YharimEX.Content.Projectiles
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
-                SetupFargoProjectile.DeletiionImmuneRank = 1;
+                SetupFargoProjectile.DeletionImmuneRank = 1;
             }
         }
 
@@ -65,14 +61,15 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             target.AddBuff(BuffID.Poisoned, Main.rand.Next(60, 300));
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 if (YharimEXWorldFlags.EternityMode)
                 {
-                    target.AddBuff(ModContent.BuffType<InfestedBuff>(), Main.rand.Next(60, 300));
-                    target.AddBuff(ModContent.BuffType<IvyVenomBuff>(), Main.rand.Next(60, 300));
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("InfestedBuff").Type, Main.rand.Next(60, 300));
+                    target.AddBuff(FargoSouls.Find<ModBuff>("IvyVenomBuff").Type, Main.rand.Next(60, 300));
+                    target.AddBuff(FargoSouls.Find<ModBuff>("MutantFangBuff").Type, 180);
                 }
             }
         }

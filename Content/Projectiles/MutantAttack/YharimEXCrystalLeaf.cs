@@ -1,6 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -68,12 +66,13 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             target.AddBuff(BuffID.Poisoned, Main.rand.Next(60, 300));
             if (YharimEXWorldFlags.EternityMode)
             {
-                target.AddBuff(ModContent.BuffType<InfestedBuff>(), Main.rand.Next(60, 300));
-                target.AddBuff(ModContent.BuffType<IvyVenomBuff>(), Main.rand.Next(60, 300));
-                target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                target.AddBuff(FargoSouls.Find<ModBuff>("InfestedBuff").Type, Main.rand.Next(60, 300));
+                target.AddBuff(FargoSouls.Find<ModBuff>("IvyVenomBuff").Type, Main.rand.Next(60, 300));
+                target.AddBuff(FargoSouls.Find<ModBuff>("MutantFangBuff").Type, 180);
             }
         }
 

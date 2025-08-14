@@ -1,6 +1,3 @@
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +11,7 @@ using YharimEX.Assets.Sounds.Attacks;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -42,8 +40,9 @@ namespace YharimEX.Content.Projectiles
             CooldownSlot = 1;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
-                Projectile.FargoSouls().DeletionImmuneRank = 2;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.TimeFreezeImmune = true;
+                SetupFargoProjectile.DeletionImmuneRank = 2;
             }
         }
 
@@ -119,14 +118,17 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
                 }
-                target.AddBuff(ModContent.BuffType<MutantNibbleBuff>(), 900);
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 900);
             }
         }
 
