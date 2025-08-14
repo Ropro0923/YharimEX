@@ -36,6 +36,117 @@ NPCs: {
 	}
 
 	YharimEXIllusion.DisplayName: Yharim, the Godseeker
+	SkipPhase1: Yharim is getting tired.
+
+	GFBText: {
+		Random0: Hah, foolish choice
+		Random1: How do you feel now?
+		Random2: I will strike you down
+		Random3: I shall end you.
+		Random4: You truly are an idiot
+		Random5: You will be rent apart.
+		Random6: I am Yharim, Godseeker.
+		Random7: You will wish to go back.
+		Random8: You can not rival me.
+		Random9: None may rival my power.
+		Random10: The Penetrator shivers...
+		Random11: You cannot rival an Auric Soul!
+		Random12: I am the most powerful being in the realm.
+		Random13: Witness a catastrophe.
+		Random14: I will never fall, this world will end before I do
+		Random15: IThe fighting hasn't even started
+		Random16: Don't even try to dodge.
+		Random17: For centuries I have trained for a fight like this.
+		Random18: Die.
+		Random19: It isn't possible to beat me.
+		Random20: Just give up, there is no point.
+		Random21: You are so, so small.
+		Random22: What can you do to me!
+		Random23: Hello everyone my name is Markiplier!
+		Random24: This isn't even my final form!
+		Random25: Power? Hah, I see none.
+		Random26: You don't begin to match me.
+		Random27: Bold choice, fighting me
+		Random28: I cannot lose.
+		Random29: This world will not live as long as me
+		Random30: Is this fight going the way you thought it would?
+		Random31: YOU WILL NOT SURVIVE!
+		Random32: You will fall. Why? Because I said so
+		Random33: You will cease to exist after this!
+		Random34: You expect to beat me? What makes you think you stand a chance?
+		Random35: The Auric soul empowers me.
+		Random36: Your bones will shatter!
+		Random37: Break.
+		Random38: Why are you still trying.
+		Random39: YOI WILL CEASE TO EXIST!
+		Random40: YOU. FIGHT ME!
+		Random41: I WILL STRIKE YOU DOWN!
+		Random42: You have lived too long.
+		Random43: You are a bug to me
+		Random44: You are weak. I am a god.
+		Random45: I will crush you under my foot!
+		Random46: You have grown, but not enough.
+		Random47: You bested Calamitas, that takes strength. NOT ENOUGH TO BEAT ME!
+		Random48: My victory is nigh
+		Random49: You thought you were powerful?!
+		Random50: Your body will squelch.
+		Random51: This truly is a calamitous situation!
+		Random52: Cry some more!
+		Random53: I bet you felt that!
+		Random54: I feel nothing!
+		Random55: CRUSH!
+		Random56: Burn.
+		Random57: RUN WHILE YOU CAN!
+		Random58: You are a baby.
+		Random59: You don't stand a chance.
+		Random60: How many times have you died to me already?
+		Random61: Calamitas and Permafrost are of no more use to me.
+		Random62: You? Divine? Hah.
+		Random63: Cry.
+		Random64: Despar.
+		Random65: Suffer the agony.
+		Random66: YOUR LIFE WILL END.
+		Random67: You life serves zero purpose, you should-
+		Random68: You are worthless.
+		Random69: You wont live for much longer!
+		Random70: This world. It belongs to me. I am no tyrant, I am a god. I am the ruler of this world, and I deem you unfit to live in it.
+		Quote1: You don't get these anymore.
+		Quote2: You haven't felt anything yet.
+		Quote3: Have fun losing.
+		Quote4: Face my sword!
+		Quote5: Agh.
+		Quote6: BEAM ATTACK!
+		Quote7: My power grows.
+		Quote8: My sword will split you in two.
+		Quote9: Feel my wrath!
+		Quote10: AGH!
+		Quote11: Feel the pain.
+		Quote12: The world doesn't belong to you.
+		Quote13: Nothing stands a chance to me.
+		Quote14: I will rend you!
+		Quote15: DIE.
+		Quote16: Xeroc himself fears me
+		Quote17: Machine.
+		Quote18: Here be dragons!
+		Quote19: Have fun dodging This.
+		Quote20: Why am I using this?
+		Quote21: You can't keep up?
+		Quote22: I am ruler of all!
+		Quote23: Anarchy will reign.
+		Quote24: The Empress' Excel Assault!
+		Quote25: You think I'm done?
+		Quote26: YOU ARE NOTHING
+		Quote27: DIE MORTAL
+		Quote28: I CONTROL ALL. I AM THE ONE WITH THE AURIC SOUL
+		Quote29: I HAVE TAKEN THE AURIC SOUL! I AM ONE WITH POWER UNIMAGINABLE! I AM IMMORTAL! I AM A GOD!
+		Quote30: YOU. WILL. FALL. YOU. WILL. DIE. I. WILL. STRIKE. YOU. DOOOOOOOWN.
+		Quote31: RAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+		Quote32: How was I bested!
+		Quote33: Oh, yeah...
+		Quote34: You're not bad...
+		Quote35: RED
+		Quote36: I am Yharim, the Tyrant Godseeker.
+	}
 }
 
 Projectiles: {
@@ -129,6 +240,10 @@ Projectiles: {
 	YharimEXDestroyerHead.DisplayName: The Destroyer
 	YharimEXDestroyerTail.DisplayName: The Destroyer
 	YharimEXGlowLine.DisplayName: Yharim E X Glow Line
+	YharimEXCelestialFragment.DisplayName: Yharim E X Celestial Fragment
+	YharimEXCosmosVortex.DisplayName: Yharim E X Cosmos Vortex
+	YharimEXGlowRingHollow.DisplayName: Yharim E X Glow Ring Hollow
+	YharimEXMoonLordVortex.DisplayName: Yharim E X Moon Lord Vortex
 }
 
 Items: {
@@ -162,3 +277,5 @@ Buffs: {
 		Description: Defense, damage reduction, and healing reduced; some accessory effects disabled
 	}
 }
+
+Bestiary.YharimEXBoss: Being the owner of an Auric soul, he has near limitless power. His underlings mean nothing to him now.

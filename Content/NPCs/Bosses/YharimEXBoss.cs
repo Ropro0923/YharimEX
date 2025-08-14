@@ -28,6 +28,7 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using YharimEX.Content.Projectiles.MutantAttack;
 
 namespace YharimEX.Content.NPCs.Bosses
 {
@@ -88,9 +89,10 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             bestiaryEntry.Info.AddRange([
                 BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Sky,
-                new FlavorTextBestiaryInfoElement($"Mods.FargowiltasSouls.Bestiary.{Name}")
+                new FlavorTextBestiaryInfoElement("Mods.YharimEX.Bestiary.YharimEXBoss")
             ]);
         }
+
 
         public override void SetDefaults()
         {
@@ -321,8 +323,8 @@ namespace YharimEX.Content.NPCs.Bosses
 
                 case 44: EmpressSwordWave(); break;
 
-                case 45: PrepareMutantSword(); break;
-                case 46: MutantSword(); break;
+                case 45: PrepareYharimEXSword(); break;
+                case 46: YharimEXSword(); break;
 
                 //case 47: goto case 35;
                 //case 48: QueenSlimeRain(); break;
@@ -861,7 +863,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 int heal = (int)(Main.rand.NextFloat(0.9f, 1.1f) * totalAmountToHeal / max);
                 Vector2 vel = normalAnimation
                     ? Main.rand.NextFloat(2f, 18f) * -Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) //looks messier normally
-                    : 0.1f * -Vector2.UnitY.RotatedBy(MathHelper.TwoPi / max * i); //looks controlled during mutant p1 skip
+                    : 0.1f * -Vector2.UnitY.RotatedBy(MathHelper.TwoPi / max * i);
                 float ai0 = fightIsOver ? -Main.player[NPC.target].whoAmI - 1 : NPC.whoAmI; //player -1 necessary for edge case of player 0
                 float ai1 = vel.Length() / Main.rand.Next(fightIsOver ? 90 : 150, 180); //window in which they begin homing in
                 if (YharimEXGlobalUtilities.HostCheck)
@@ -877,8 +879,8 @@ namespace YharimEX.Content.NPCs.Bosses
                 if (Main.GameModeInfo.IsJourneyMode && CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled)
                     CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().SetPowerInfo(false);
 
-                if (!SkyManager.Instance["FargowiltasSouls:MutantBoss"].IsActive())
-                    SkyManager.Instance.Activate("FargowiltasSouls:MutantBoss");
+                if (!SkyManager.Instance["YharimEX:YharimEXBoss"].IsActive())
+                    SkyManager.Instance.Activate("YharimEX:YharimEXBoss");
 
                 Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/Storia");
             }
@@ -925,7 +927,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
         }
         const int ObnoxiousQuoteCount = 71;
-        const string GFBLocPath = $"Mods.FargowiltasSouls.NPCs.MutantBoss.GFBText.";
+        const string GFBLocPath = $"Mods.YharimEX.NPCs.GFBText.";
         private string RandomObnoxiousQuote() => Language.GetTextValue($"{GFBLocPath}Random{Main.rand.Next(ObnoxiousQuoteCount)}");
         private string GFBQuote(int num) => Language.GetTextValue($"{GFBLocPath}Quote{num}");
 
@@ -995,7 +997,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     NPC.netUpdate = true;
 
                     if (YharimEXWorldFlags.SkipYharimEXP1 == 10)
-                        YharimEXGlobalUtilities.PrintLocalization($"Mods.{Mod.Name}.NPCs.MutantBoss.SkipP1", Color.LimeGreen);
+                        YharimEXGlobalUtilities.PrintLocalization($"Mods.{Mod.Name}.NPCs.SkipPhase1", Color.OrangeRed);
 
                     if (YharimEXWorldFlags.SkipYharimEXP1 >= 10)
                         NPC.ai[2] = 1; //flag for different p2 transition animation
@@ -1292,8 +1294,8 @@ namespace YharimEX.Content.NPCs.Bosses
             }
         }
 
-        const int MUTANT_SWORD_SPACING = 80;
-        const int MUTANT_SWORD_MAX = 12;
+        const int YHARIMEX_SWORD_SPACING = 80;
+        const int YHARIMEX_SWORD_MAX = 12;
 
         void BoundaryBulletHellAndSwordP1()
         {
@@ -1375,11 +1377,11 @@ namespace YharimEX.Content.NPCs.Bosses
                     break;
 
                 case 1:
-                    PrepareMutantSword();
+                    PrepareYharimEXSword();
                     break;
 
                 case 2:
-                    MutantSword();
+                    YharimEXSword();
                     break;
 
                 default:
@@ -1387,7 +1389,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
         }
 
-        void PrepareMutantSword()
+        void PrepareYharimEXSword()
         {
             Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded && AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
@@ -1421,16 +1423,16 @@ namespace YharimEX.Content.NPCs.Bosses
 
                     if (YharimEXGlobalUtilities.HostCheck)
                     {
-                        Vector2 offset = Vector2.UnitY.RotatedBy(startAngle) * -MUTANT_SWORD_SPACING;
+                        Vector2 offset = Vector2.UnitY.RotatedBy(startAngle) * -YHARIMEX_SWORD_SPACING;
 
                         void MakeSword(Vector2 pos, float spacing, float rotation = 0)
                         {
                             Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + pos, Vector2.Zero, ModContent.ProjectileType<YharimEXSword>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage, 4f / 3f), 0f, Main.myPlayer, NPC.whoAmI, spacing);
                         }
 
-                        for (int i = 0; i < MUTANT_SWORD_MAX; i++)
+                        for (int i = 0; i < YHARIMEX_SWORD_MAX; i++)
                         {
-                            MakeSword(offset * i, MUTANT_SWORD_SPACING * i);
+                            MakeSword(offset * i, YHARIMEX_SWORD_SPACING * i);
                         }
 
                         for (int i = -1; i <= 1; i += 2)
@@ -1469,7 +1471,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
         }
 
-        void MutantSword()
+        void YharimEXSword()
         {
             Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded && AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
@@ -1498,7 +1500,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     float arcSign = Math.Sign(NPC.ai[2]);
                     Vector2 offset = lookSign * Vector2.UnitX.RotatedBy(MathHelper.PiOver4 * arcSign);
 
-                    const float length = MUTANT_SWORD_SPACING * MUTANT_SWORD_MAX / 2f;
+                    const float length = YHARIMEX_SWORD_SPACING * YHARIMEX_SWORD_MAX / 2f;
                     Vector2 spawnPos = NPC.Center + length * offset;
                     Vector2 baseDirection = player.DirectionFrom(spawnPos);
 
@@ -1839,11 +1841,11 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.localAI[0] = Math.Sign(NPC.Center.X - player.Center.X);
                 //if (WorldSavingSystem.MasochistMode) NPC.ai[2] = NPC.SafeDirectionTo(player.Center).ToRotation(); //starting rotation offset to avoid hitting at close range
                 if (YharimEXGlobalUtilities.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
 
                 EdgyBossText(GFBQuote(11));
 
-                if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
+                if (YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode)
                     NPC.ai[2] = Main.rand.NextFloat(MathHelper.Pi);
             }
             if (NPC.ai[3] > 60 && ++NPC.ai[1] > 2)
@@ -2286,7 +2288,7 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 SoundEngine.PlaySound(SoundID.ForceRoarPitched, NPC.Center); //eoc roar
                 if (YharimEXGlobalUtilities.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, NPCID.Retinazer);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, NPCID.Retinazer);
 
                 EdgyBossText(GFBQuote(17));
             }
@@ -2947,7 +2949,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.ai[3] = Main.rand.NextFloat((float)Math.PI * 2);
                 SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
                 if (YharimEXGlobalUtilities.HostCheck)
-                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
+                    Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRing>(), 0, 0f, Main.myPlayer, NPC.whoAmI, -2);
 
                 EdgyBossText(GFBQuote(22));
             }
@@ -3080,8 +3082,8 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i) * 525, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRingHollow>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 1f);
-                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i + Math.PI / 4) * 350, Vector2.Zero, ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowRingHollow>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 2f);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i) * 525, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRingHollow>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 1f);
+                        Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center + Vector2.UnitX.RotatedBy(Math.PI / 2 * i + Math.PI / 4) * 350, Vector2.Zero, ModContent.ProjectileType<YharimEXGlowRingHollow>(), YharimEXGlobalUtilities.ScaledProjectileDamage(NPC.defDamage), 0f, Main.myPlayer, 2f);
                     }
                 }
             }
@@ -3725,7 +3727,7 @@ namespace YharimEX.Content.NPCs.Bosses
                         for (int i = 0; i < max; i++)
                         {
                             float offset = i - 0.5f;
-                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, (NPC.ai[3] + MathHelper.TwoPi / max * offset).ToRotationVector2(), ModContent.ProjectileType<FargowiltasSouls.Content.Projectiles.GlowLine>(), 0, 0f, Main.myPlayer, 13f, NPC.whoAmI);
+                            Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Center, (NPC.ai[3] + MathHelper.TwoPi / max * offset).ToRotationVector2(), ModContent.ProjectileType<YharimEXGlowLine>(), 0, 0f, Main.myPlayer, 13f, NPC.whoAmI);
                         }
                     }
                 }
@@ -3741,7 +3743,7 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 if (!Main.dedServ)
                 {
-                    ManagedScreenFilter filter = ShaderManager.GetFilter("FargowiltasSouls.FinalSpark");
+                    ManagedScreenFilter filter = ShaderManager.GetFilter("YharimEX.FinalSpark");
                     filter.Activate();
 
                     //    if (SoulConfig.Instance.ForcedFilters && Main.WaveQuality == 0)

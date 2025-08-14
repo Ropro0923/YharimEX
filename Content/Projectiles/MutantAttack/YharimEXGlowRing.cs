@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
 using YharimEX.Content.Particles;
-using FargowiltasSouls;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -36,8 +36,10 @@ namespace YharimEX.Content.Projectiles
             //Projectile.timeLeft = 1200;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
-                Projectile.FargoSouls().DeletionImmuneRank = 2;
+
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletionImmuneRank = 2;
+                SetupFargoProjectile.TimeFreezeImmune = true;
             }
         }
 
