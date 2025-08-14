@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FargowiltasSouls.Content.Items.BossBags;
-using Terraria.Localization;
+﻿using Terraria.Localization;
 using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using YharimEX.Content.Buffs;
-using static Terraria.ModLoader.PlayerDrawLayer;
 
 namespace YharimEX.Core.Players
 {

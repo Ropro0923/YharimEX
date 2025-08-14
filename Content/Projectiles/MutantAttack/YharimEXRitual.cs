@@ -129,7 +129,7 @@ namespace YharimEX.Content.Projectiles
                     if (YharimEXWorldFlags.MasochistModeReal && Main.npc[EModeGlobalNPC.mutantBoss].ai[0] == -5)
                     {
                         if (!target.HasBuff(ModContent.BuffType<TimeFrozenBuff>()))
-                            SoundEngine.PlaySound(new SoundStyle("FargowiltasSouls/Assets/Sounds/Accessories/ZaWarudo"), target.Center);
+                            SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/ZaWarudo"), target.Center);
                         target.AddBuff(ModContent.BuffType<TimeFrozenBuff>(), 300);
                     }
                 }
@@ -165,7 +165,7 @@ namespace YharimEX.Content.Projectiles
             var maxOpacity = Projectile.Opacity;
             float scale = Projectile.scale * 0.5f;
 
-            ManagedShader borderShader = ShaderManager.GetShader("FargowiltasSouls.MutantP2Aura");
+            ManagedShader borderShader = ShaderManager.GetShader("YharimEX.YharimEXYharimEXP2Aura");
             borderShader.TrySetParameter("colorMult", 7.35f);
             borderShader.TrySetParameter("time", Main.GlobalTimeWrappedHourly);
             borderShader.TrySetParameter("radius", radius * scale);

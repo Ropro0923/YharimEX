@@ -61,7 +61,7 @@ namespace YharimEX.Content.Projectiles
         {
             Texture2D texture2D13 = Projectile.ai[2] == 0
                 ? Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value
-                : ModContent.Request<Texture2D>("FargowiltasSouls/Assets/ExtraTextures/Resprites/NPC_14", AssetRequestMode.ImmediateLoad).Value;
+                : ModContent.Request<Texture2D>("YharimEX/Assets/Projectiles/YharimEXEoWBody", AssetRequestMode.ImmediateLoad).Value;
             int num214 = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value.Height / Main.projFrames[Projectile.type];
             int y6 = num214 * Projectile.frame;
             Main.EntitySpriteDraw(texture2D13, Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), new Rectangle(0, y6, texture2D13.Width, num214),
@@ -132,12 +132,12 @@ namespace YharimEX.Content.Projectiles
                     -Projectile.velocity.Y * 0.2f, 100);
                 Main.dust[dust].velocity *= 2f;
             }
-            if (!Main.dedServ)
-            {
-                int g = Gore.NewGore(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.velocity / 2,
-                    Projectile.ai[2] == 0 ? 156 : 25, Projectile.scale);
-                Main.gore[g].timeLeft = 20;
-            }
+        //    if (!Main.dedServ)
+        //    {
+        //        int g = Gore.NewGore(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.velocity / 2,
+        //            Projectile.ai[2] == 0 ? 156 : 25, Projectile.scale);
+        //        Main.gore[g].timeLeft = 20;
+        //    }
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)

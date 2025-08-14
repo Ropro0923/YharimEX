@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using CalamityMod.NPCs.TownNPCs;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;

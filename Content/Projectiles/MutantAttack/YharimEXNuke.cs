@@ -143,7 +143,7 @@ namespace YharimEX.Content.Projectiles
 
         public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            ManagedShader shader = ShaderManager.GetShader("YharimEX.BlobTrail");
+            ManagedShader shader = ShaderManager.GetShader("YharimEX.YharimEXBlobTrail");
             YharimEXGlobalUtilities.SetTexture1(YharimEXTextureRegistry.ColorNoiseMap.Value);
             PrimitiveRenderer.RenderTrail(Projectile.oldPos, new(WidthFunction, ColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: shader), 25);
         }

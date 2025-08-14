@@ -129,7 +129,7 @@ namespace YharimEX.Content.Projectiles
             if (Projectile.hide)
                 return;
 
-            ManagedShader shader = ShaderManager.GetShader("FargowiltasSouls.GenericDeathray");
+            ManagedShader shader = ShaderManager.GetShader("YharimEX.YharimEXGenericDeathray");
             Vector2 laserEnd = Projectile.Center + Projectile.velocity.SafeNormalize(Vector2.UnitY) * drawDistance * 1.1f;
             Vector2 initialDrawPoint = Projectile.Center - Projectile.velocity * 85f;
             Vector2[] baseDrawPoints = new Vector2[8];
