@@ -19,17 +19,7 @@ namespace YharimEX.Content.Projectiles
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(BuffID.CursedInferno, 120);
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                {
-                    target.YharimPlayer().MaxLifeReduction += 100;
-                }
-                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                {
-                    EternityDebuffs.ManageOnHitDebuffs(target);
-                }
-            }
+            if (YharimEXWorldFlags.EternityMode && YharimEXCrossmodSystem.FargowiltasSouls.Loaded) target.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("MutantFangBuff").Type, 180);
         }
     }
 }

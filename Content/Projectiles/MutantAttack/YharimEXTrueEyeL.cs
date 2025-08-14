@@ -168,14 +168,8 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                {
-                    target.YharimPlayer().MaxLifeReduction += 100;
-                }
-                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                {
-                    EternityDebuffs.ManageOnHitDebuffs(target);
-                }
+                target.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("MutantFangBuff").Type, 180);
+                if (YharimEXWorldFlags.EternityMode && YharimEXCrossmodSystem.FargowiltasSouls.Loaded) target.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("CurseoftheMoonBuff").Type, 360);
             }
         }
 
