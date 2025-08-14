@@ -121,7 +121,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 NPC.damage *= 17;
                 NPC.defense *= 10;
             }
-            Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/TheRealityoftheProphecy");
+            Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/TheRealityoftheProphecy");
             SceneEffectPriority = SceneEffectPriority.BossHigh;
         }
 
@@ -880,7 +880,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 if (!SkyManager.Instance["FargowiltasSouls:MutantBoss"].IsActive())
                     SkyManager.Instance.Activate("FargowiltasSouls:MutantBoss");
 
-                Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Storia");
+                Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/Storia");
             }
         }
 
@@ -888,7 +888,7 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
             {
-                Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/StoriaShort");
+                Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/StoriaShort");
             }
         }
 

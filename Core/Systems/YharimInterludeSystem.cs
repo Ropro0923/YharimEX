@@ -19,7 +19,7 @@ namespace YharimEX.Core.Systems
     //This system was created by Nycro for the main Calamity Mod
     //If your a Calamity Developer and don't approve of this refactoring, I will remove it.
     public record class MusicEventEntry(string Id, int Song, TimeSpan Length, TimeSpan IntroSilence, TimeSpan OutroSilence, Func<bool> ShouldPlay, Func<bool> Enabled);
-    public class YhariimInterludeSystem : ModSystem
+    public class YharimInterludeSystem : ModSystem
     {
         #region Statics
 
@@ -56,7 +56,7 @@ namespace YharimEX.Core.Systems
             }
 
             // Interlude 5 - Yharim's Interlude
-            AddEntry("Interlude5", "YharimEX/Assets/Sounds/Music/LegendsAboutTheGodseeker", TimeSpan.FromSeconds(190.224), () => YharimEXWorldFlags.downedYharimEX, () => true);
+            AddEntry("Interlude5", "YharimEX/Assets/Music/LegendsAboutTheGodseeker", TimeSpan.FromSeconds(190.224), () => YharimEXWorldFlags.downedYharimEX, () => true);
         }
 
         public override void Unload() => EventCollection.Clear();

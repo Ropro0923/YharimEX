@@ -30,10 +30,10 @@ namespace YharimEX.Core.Systems
             ModLoader.TryGetMod("MusicDisplay", out Mod musicDisplay);
             if (musicDisplay is null) return;
 
-            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/TheRealityoftheProphecy"), "The Reality of the Prophecy", "theforge129", "YharimEX");
-            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Storia"), "Storia", "Xi Vs Sakuzyo", "YharimEX");
-            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/StoriaShort"), "Storia (Desperation)", "Xi Vs Sakuzyo", "YharimEX");
-            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/LegendsAboutTheGodseeker"), "Legends About The Godseeker", "TheTrester", "YharimEX");
+            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/TheRealityoftheProphecy"), "The Reality of the Prophecy", "theforge129", "YharimEX");
+            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/Storia"), "Storia", "Xi Vs Sakuzyo", "YharimEX");
+            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/StoriaShort"), "Storia (Desperation)", "Xi Vs Sakuzyo", "YharimEX");
+            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/LegendsAboutTheGodseeker"), "Legends About The Godseeker", "TheTrester", "YharimEX");
         }
 
         private void BossChecklistSetup()
