@@ -12,8 +12,7 @@ using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using FargowiltasSouls;
-using YharimEX.Core.Systems;
+using YharimEX.Core.Players;
 
 namespace YharimEX.Core.Globals
 {
@@ -72,11 +71,11 @@ namespace YharimEX.Core.Globals
                 return false;
             if (projectile.damage <= 0)
                 return false;
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                if (projectile.FargoSouls().DeletionImmuneRank > deletionRank)
-                    return false;
-            }
+    //        if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+    //        {
+    //            if (projectile.FargoSouls().DeletionImmuneRank > deletionRank)
+    //                return false;
+    //        }
             if (projectile.friendly)
             {
                 if (projectile.whoAmI == Main.player[projectile.owner].heldProj)
@@ -556,7 +555,7 @@ namespace YharimEX.Core.Globals
                 player.RemoveAllGrapplingHooks();
             if (player.mount.Active)
                 player.mount.Dismount(player);
-            player.FargoSouls().NoUsingItems = 2;
+            player.GetModPlayer<YharimEXPlayer>().YharimEXNoUsingItems = 2;
             if (preventDashing)
             {
                 for (int i = 0; i < 4; i++)

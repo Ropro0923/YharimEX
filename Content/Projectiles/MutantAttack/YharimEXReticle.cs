@@ -65,7 +65,7 @@ namespace YharimEX.Content.Projectiles
                     Projectile.alpha = 0;
 
                 if (Projectile.timeLeft % 15 == 0 && !Main.dedServ)
-                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/YharimEXReticleBeep"), Projectile.Center);
+                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/YharimEXReticleBeep"), Projectile.Center);
             }
         }
 

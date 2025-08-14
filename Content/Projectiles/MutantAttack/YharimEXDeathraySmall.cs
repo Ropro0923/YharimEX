@@ -14,7 +14,7 @@ namespace YharimEX.Content.Projectiles
 	public class YharimEXDeathraySmall : BaseDeathray, IPixelatedPrimitiveRenderer
     {
 
-        public override string Texture => "YharimEX/Assets/Deathrays/PhantasmalDeathrayML";
+        public override string Texture => "YharimEX/Assets/Projectiles/PhantasmalDeathrayML";
         public YharimEXDeathraySmall() : base(30) { }
 
         public override void SetStaticDefaults()

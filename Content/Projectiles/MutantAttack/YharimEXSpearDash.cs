@@ -11,7 +11,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using YharimEX.Assets.Sounds;
+using YharimEX.Assets.Sounds.Attacks;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;

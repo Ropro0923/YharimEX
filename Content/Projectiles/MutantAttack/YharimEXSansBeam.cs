@@ -16,7 +16,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXSansBeam : BaseDeathray
     {
-        public override string Texture => "YharimEX/Assets/Deathrays/YharimEXGolemBeam";
+        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXGolemBeam";
         public YharimEXSansBeam() : base(420) { }
 
         public override bool CanHitPlayer(Player target)
@@ -52,7 +52,7 @@ namespace YharimEX.Content.Projectiles
             if (Projectile.localAI[0] == 0f)
             {
                 if (!Main.dedServ)
-                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/YharimEXGolemBeam"), Projectile.Center);
+                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/YharimEXGolemBeam"), Projectile.Center);
             }
             float num801 = 1.3f;
             Projectile.localAI[0] += 1f;

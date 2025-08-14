@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FargowiltasSouls.Content.Buffs.Boss;
+﻿using FargowiltasSouls.Content.Buffs.Boss;
 using FargowiltasSouls.Content.Buffs.Masomode;
 using FargowiltasSouls;
 using Terraria;
@@ -16,7 +11,7 @@ namespace YharimEX.Content.NPCs.Bosses
     [JITWhenModsEnabled(YharimEXCrossmodSystem.FargowiltasSouls.Name)]
     public class EternityDebuffs
     {
-        public static void ManageOnHItDebuffs(Player target, int type = 0)
+        public static void ManageOnHitDebuffs(Player target)
         {
             if (type == 1)
             {

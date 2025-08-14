@@ -15,7 +15,7 @@ namespace YharimEX.Content.Projectiles
 {
 	public class YharimEXDeathrayAim : BaseDeathray, IPixelatedPrimitiveRenderer
     {
-        public override string Texture => "YharimEX/Assets/Deathrays/PhantasmalDeathrayML";
+        public override string Texture => "YharimEX/Assets/Projectiles/PhantasmalDeathrayML";
         public YharimEXDeathrayAim() : base(60) { }
 
         public override void SetStaticDefaults()

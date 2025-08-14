@@ -1,10 +1,10 @@
 ﻿using Terraria.Audio;
 
-namespace YharimEX.Assets.Sounds
+namespace YharimEX.Assets.Sounds.Attacks
 {
     public static class YharimEXSoundRegistry
     {
-        public const string SoundsPath = "YharimEX/Assets/Sounds/";
+        public const string SoundsPath = "YharimEX/Assets/Sounds/Attacks/";
         public static readonly SoundStyle YharimEXUnpredictive = new(SoundsPath + "YharimEXUnpredictive");
         public static readonly SoundStyle YharimEXPredictive = new(SoundsPath + "YharimEXPredictive");
         public static readonly SoundStyle YharimEXSwordThrow = new(SoundsPath + "YharimEXSwordThrow");
