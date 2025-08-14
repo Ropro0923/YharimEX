@@ -51,13 +51,13 @@ namespace YharimEX.Content.Projectiles
             if (Projectile.timeLeft % 15 == 0)
             {
                 if (!Main.dedServ)
-                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/YharimEXReticleBeep"), Projectile.Center);
+                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/YharimEXReticleBeep"), Projectile.Center);
             }
 
             if (Projectile.timeLeft == 10)
             {
                 if (!Main.dedServ)
-                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/YharimEXReticleLockOn"), Projectile.Center);
+                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/YharimEXReticleLockOn"), Projectile.Center);
             }
 
             if (Projectile.timeLeft < 10)

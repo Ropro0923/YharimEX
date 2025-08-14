@@ -6,7 +6,7 @@ namespace YharimEX.Content.Deathrays
     public abstract class YharimEXSpecialDeathray : BaseDeathray
     {
 
-        public override string Texture => "YharimEX/Assets/Deathrays/YharimEXSpecialDeathray";
+        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXSpecialDeathray";
         public YharimEXSpecialDeathray(int maxTime) : base(maxTime, sheeting: TextureSheeting.Horizontal) { }
         public YharimEXSpecialDeathray(int maxTime, float hitboxModifier) : base(maxTime, hitboxModifier: hitboxModifier, sheeting: TextureSheeting.Horizontal) { }
 

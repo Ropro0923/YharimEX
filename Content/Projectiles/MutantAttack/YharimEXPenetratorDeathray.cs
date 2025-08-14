@@ -57,7 +57,7 @@ namespace YharimEX.Content.Projectiles
             if (Projectile.localAI[0] == 0f)
             {
                 if (!Main.dedServ)
-                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/YharimEXZombie") { Volume = 0.6f }, Projectile.Center);
+                    SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/YharimEXZombie") { Volume = 0.6f }, Projectile.Center);
             }
             float num801 = .5f;
             Projectile.localAI[0] += 1f;

@@ -129,7 +129,7 @@ namespace YharimEX.Content.Projectiles
                     if (YharimEXWorldFlags.MasochistModeReal && Main.npc[EModeGlobalNPC.mutantBoss].ai[0] == -5)
                     {
                         if (!target.HasBuff(ModContent.BuffType<TimeFrozenBuff>()))
-                            SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/ZaWarudo"), target.Center);
+                            SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/ZaWarudo"), target.Center);
                         target.AddBuff(ModContent.BuffType<TimeFrozenBuff>(), 300);
                     }
                 }
