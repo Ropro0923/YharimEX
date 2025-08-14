@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using YharimEX.Content.Buffs;
+using System;
 
 namespace YharimEX.Core.Players
 {
@@ -118,6 +119,17 @@ namespace YharimEX.Core.Players
         {
             if (YharimDesperation)
                 modifiers.SourceDamage *= 2f;
+        }
+        public Rectangle GetPrecisionHurtbox()
+        {
+            Rectangle hurtbox = Player.Hitbox;
+            hurtbox.X += hurtbox.Width / 2;
+            hurtbox.Y += hurtbox.Height / 2;
+            hurtbox.Width = Math.Min(hurtbox.Width, hurtbox.Height);
+            hurtbox.Height = Math.Min(hurtbox.Width, hurtbox.Height);
+            hurtbox.X -= hurtbox.Width / 2;
+            hurtbox.Y -= hurtbox.Height / 2;
+            return hurtbox;
         }
     }
 }

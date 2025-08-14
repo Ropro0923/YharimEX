@@ -22,6 +22,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
                 if (YharimEXWorldFlags.EternityMode)
                 {
+                    target.AddBuff(ModContent.BuffType<DefenselessBuff>(), 300);
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
                     target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
                 }
@@ -36,11 +37,16 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
                 if (YharimEXWorldFlags.EternityMode)
                 {
+                    target.AddBuff(ModContent.BuffType<DefenselessBuff>(), 300);
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
                     target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
                 }
                 target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
             }
+        }
+        public static void ApplyHypothermia(Player target)
+        {
+            target.AddBuff(ModContent.BuffType<HypothermiaBuff>(), 900);
         }
     }
 }

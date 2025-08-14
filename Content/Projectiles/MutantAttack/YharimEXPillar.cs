@@ -1,5 +1,3 @@
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,9 +9,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Assets.Sounds.Attacks;
 using YharimEX.Content.NPCs.Bosses;
-using FargowiltasSouls;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -43,8 +41,9 @@ namespace YharimEX.Content.Projectiles
             CooldownSlot = 1;
             if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
-                Projectile.FargoSouls().DeletionImmuneRank = 1;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletiionImmuneRank = 1;
+                SetupFargoProjectile.TimeFreezeImmune = true;
             }
         }
 
@@ -151,6 +150,7 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
             if (target.mount.Active)
                 target.mount.Dismount(target);
             target.velocity.X = Projectile.velocity.X < 0 ? -15f : 15f;
@@ -158,22 +158,31 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
             {
-                target.AddBuff(ModContent.BuffType<StunnedBuff>(), 60);
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
+                target.AddBuff(FargoSouls.Find<ModBuff>("StunnedBuff").Type, 240);
 
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
                 {
-                    target.AddBuff(ModContent.BuffType<MarkedforDeathBuff>(), 240);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("MarkedforDeathBuff").Type, 240);
                 }
-                switch ((int)Projectile.ai[0])
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    case 0: target.AddBuff(ModContent.BuffType<ReverseManaFlowBuff>(), 360); break; //nebula
-                    case 1: target.AddBuff(ModContent.BuffType<AtrophiedBuff>(), 360); break; //solar
-                    case 2: target.AddBuff(ModContent.BuffType<JammedBuff>(), 360); break; //vortex
-                    default: target.AddBuff(ModContent.BuffType<AntisocialBuff>(), 360); break; //stardust
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
+                    switch ((int)Projectile.ai[0])
+                    {
+                        case 0: target.AddBuff(FargoSouls.Find<ModBuff>("ReverseManaFlowerBuff").Type, 360); break; //nebula
+                        case 1: target.AddBuff(FargoSouls.Find<ModBuff>("AtrophiedBuff").Type, 360); break; //solar
+                        case 2: target.AddBuff(FargoSouls.Find<ModBuff>("JammedBuff").Type, 360); break; //vortex
+                        default: target.AddBuff(FargoSouls.Find<ModBuff>("AntisocialBuff").Type, 360); break; //stardust
+                    }
+                    Projectile.timeLeft = 0;
                 }
-                Projectile.timeLeft = 0;
             }
         }
 

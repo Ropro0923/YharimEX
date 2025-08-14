@@ -1,8 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Content.Buffs.Souls;
-using FargowiltasSouls;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -10,8 +6,10 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Content.Projectiles.FargoProjectile;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
+using YharimEX.Core.Players;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -42,17 +40,13 @@ namespace YharimEX.Content.Projectiles
             if (Projectile.type == ModContent.ProjectileType<YharimEXSphereRing>())
             {
                 DieOutsideArena = true;
-
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    Projectile.FargoSouls().TimeFreezeImmune =
-                        YharimEXWorldFlags.MasochistModeReal
-                        && YharimEXGlobalUtilities.BossIsAlive(ref YharimEXGlobalNPC.yharimEXBoss, ModContent.NPCType<YharimEXBoss>())
-                        && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] == -5;
+                    SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                    SetupFargoProjectile.TimeFreezeImmune = (YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && YharimEXGlobalUtilities.BossIsAlive(ref YharimEXGlobalNPC.yharimEXBoss, ModContent.NPCType<YharimEXBoss>()) && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] == -5;
                 }
             }
         }
-
         public override bool CanHitPlayer(Player target)
         {
             return target.hurtCooldowns[1] == 0 || YharimEXWorldFlags.MasochistModeReal;
@@ -114,6 +108,8 @@ namespace YharimEX.Content.Projectiles
 
         void TryTimeStop()
         {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
             if (!Main.getGoodWorld)
                 return;
             if (Projectile.hostile && !Projectile.friendly
@@ -124,30 +120,28 @@ namespace YharimEX.Content.Projectiles
 
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    if (YharimEXWorldFlags.MasochistModeReal && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] == -5
-                            && Projectile.Colliding(Projectile.Hitbox, Main.LocalPlayer.FargoSouls().GetPrecisionHurtbox()))
-                    {
-                        if (!Main.LocalPlayer.HasBuff(ModContent.BuffType<TimeFrozenBuff>()))
-                            SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/ZaWarudo"), Main.LocalPlayer.Center);
-                        Main.LocalPlayer.AddBuff(ModContent.BuffType<TimeFrozenBuff>(), 300);
-
-                    }
+                    if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] == -5)
+                {
+                    if (!Main.LocalPlayer.HasBuff(FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type))
+                        SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/ZaWarudo"), Main.LocalPlayer.Center);
+                    Main.LocalPlayer.AddBuff(FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type, 300);
+                }
                 }
             }
-
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if (YharimEXGlobalUtilities.BossIsAlive(ref YharimEXGlobalNPC.yharimEXBoss, ModContent.NPCType<YharimEXBoss>()))
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    target.YharimPlayer().MaxLifeReduction += 100;
                 }
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 360);
+                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    EternityDebuffs.ManageOnHitDebuffs(target);
+                }
                 TryTimeStop();
             }
         }

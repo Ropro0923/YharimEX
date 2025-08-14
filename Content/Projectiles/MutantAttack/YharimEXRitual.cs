@@ -1,10 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls.Content.Buffs.Souls;
-// using FargowiltasSouls.Content.Projectiles;
-using FargowiltasSouls.Core.Globals;
-using FargowiltasSouls.Core.Systems;
-using Luminance.Core.Graphics;
+﻿using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -13,7 +7,6 @@ using Terraria.GameContent;
 using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 using YharimEX.Assets.ExtraTextures;
 using YharimEX.Core.Globals;
 
@@ -119,22 +112,24 @@ namespace YharimEX.Content.Projectiles
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             base.OnHitPlayer(target, info);
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
-
-                    if (YharimEXWorldFlags.MasochistModeReal && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] == -5)
-                    {
-                        if (!target.HasBuff(ModContent.BuffType<TimeFrozenBuff>()))
-                            SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/ZaWarudo"), target.Center);
-                        target.AddBuff(ModContent.BuffType<TimeFrozenBuff>(), 300);
-                    }
+                    target.YharimPlayer().MaxLifeReduction += 100;
                 }
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
+                else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    EternityDebuffs.ManageOnHitDebuffs(target);
+                }
+                if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] == -5)
+                {
+                    if (!target.HasBuff(FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type))
+                        SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/ZaWarudo"), target.Center);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type, 300);
+                }
             }
         }
 

@@ -1,5 +1,4 @@
-﻿// using FargowiltasSouls.Content.Projectiles.Souls;
-using CalamityMod.NPCs.SupremeCalamitas;
+﻿using CalamityMod.NPCs.SupremeCalamitas;
 using CalamityMod.NPCs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

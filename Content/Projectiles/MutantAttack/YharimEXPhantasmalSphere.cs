@@ -1,11 +1,10 @@
-using FargowiltasSouls.Content.Buffs.Masomode;
-using FargowiltasSouls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using YharimEX.Content.Projectiles.FargoProjectile;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
 
@@ -36,11 +35,13 @@ namespace YharimEX.Content.Projectiles
             Projectile.alpha = 200;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().CanSplit = false;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.canSplit = true;
             }
             Projectile.penetrate = 2;
             Projectile.hide = true;
         }
+        
 
         public override void AI()
         {
@@ -92,10 +93,6 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
-            }
             target.immune[Projectile.owner] = 1;
             Projectile.timeLeft = 0;
         }

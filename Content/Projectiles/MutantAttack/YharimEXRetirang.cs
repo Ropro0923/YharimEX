@@ -1,11 +1,10 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using CalamityMod.Items.Weapons.Melee;
+using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.Projectiles
@@ -53,11 +52,19 @@ namespace YharimEX.Content.Projectiles
             target.AddBuff(BuffID.Ichor, 120);
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
+                }
             }
         }
-
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture2D13 = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
