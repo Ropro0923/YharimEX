@@ -16,18 +16,35 @@ namespace YharimEX.Content.NPCs.Bosses
     [JITWhenModsEnabled(YharimEXCrossmodSystem.FargowiltasSouls.Name)]
     public class EternityDebuffs
     {
-        public static void ManageOnHItDebuffs(Player target)
+        public static void ManageOnHItDebuffs(Player target, int type = 0)
         {
-            if (YharimEXWorldFlags.DeathMode || YharimEXWorldFlags.EternityMode)
+            if (type == 1)
             {
-                target.FargoSouls().MaxLifeReduction += 100;
+                if (YharimEXWorldFlags.DeathMode || YharimEXWorldFlags.EternityMode)
+                {
+                    target.FargoSouls().MaxLifeReduction += 100;
+                }
+                if (YharimEXWorldFlags.EternityMode)
+                {
+                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
+                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                }
+                target.AddBuff(ModContent.BuffType<MutantNibbleBuff>(), 900);
+                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 900);
             }
-            if (YharimEXWorldFlags.EternityMode)
+            else
             {
-                target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                if (YharimEXWorldFlags.DeathMode || YharimEXWorldFlags.EternityMode)
+                {
+                    target.FargoSouls().MaxLifeReduction += 100;
+                }
+                if (YharimEXWorldFlags.EternityMode)
+                {
+                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
+                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                }
+                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
             }
-            target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
         }
     }
 }
