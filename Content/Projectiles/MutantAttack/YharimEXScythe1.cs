@@ -1,5 +1,4 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.Projectiles
@@ -140,8 +140,17 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
+                }
             }
             target.AddBuff(BuffID.Bleeding, 600);
         }

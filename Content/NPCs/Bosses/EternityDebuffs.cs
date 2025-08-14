@@ -4,6 +4,8 @@ using FargowiltasSouls;
 using Terraria;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
+using FargowiltasSouls.Content.Buffs.Souls;
+using System.Security.Cryptography.X509Certificates;
 
 namespace YharimEX.Content.NPCs.Bosses
 {
@@ -11,6 +13,7 @@ namespace YharimEX.Content.NPCs.Bosses
     [JITWhenModsEnabled(YharimEXCrossmodSystem.FargowiltasSouls.Name)]
     public class EternityDebuffs
     {
+
         public static void ManageOnHitDebuffs(Player target)
         {
             if (type == 1)
@@ -21,6 +24,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
                 if (YharimEXWorldFlags.EternityMode)
                 {
+                    target.AddBuff(ModContent.BuffType<DefenselessBuff>(), 300);
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
                     target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
                 }
@@ -35,11 +39,16 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
                 if (YharimEXWorldFlags.EternityMode)
                 {
+                    target.AddBuff(ModContent.BuffType<DefenselessBuff>(), 300);
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
                     target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
                 }
                 target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
             }
+        }
+        public static void ApplyHypothermia(Player target)
+        {
+            target.AddBuff(ModContent.BuffType<HypothermiaBuff>(), 900);
         }
     }
 }

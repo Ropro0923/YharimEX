@@ -21,6 +21,7 @@ namespace YharimEX.Content.Projectiles.FargoProjectile
         public bool GrazeCheck = false;
         public int safeRange = 0;
         public bool? canDamage = false;
+        public bool canSplit = false;
         public override bool InstancePerEntity => true;
         public override void SetDefaults(Projectile entity)
         {
@@ -34,6 +35,7 @@ namespace YharimEX.Content.Projectiles.FargoProjectile
                         return canDamage == true && Math.Abs((Main.LocalPlayer.Center - entity.Center).Length() - safeRange) < Player.defaultHeight + Main.LocalPlayer.FargoSouls().GrazeRadius;
                     };
             }
+            if (canSplit ) entity.FargoSouls().CanSplit = true; 
         }
 
         public static void SetGrazeCD(Projectile projectile)

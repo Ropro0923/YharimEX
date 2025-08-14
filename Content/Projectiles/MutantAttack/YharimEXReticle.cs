@@ -24,7 +24,7 @@ namespace YharimEX.Content.Projectiles
             Projectile.penetrate = -1;
             Projectile.hostile = true;
             Projectile.alpha = 255;
-            Projectile.timeLeft = YharimEXWorldFlags.MasochistModeReal ? 120 : 150;
+            Projectile.timeLeft = YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode ? 120 : 150;
         }
 
         public override bool? CanDamage()

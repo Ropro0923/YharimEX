@@ -1,4 +1,3 @@
-using FargowiltasSouls.Content.Buffs.Boss;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -6,9 +5,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Content.Projectiles.FargoProjectile;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -31,9 +30,10 @@ namespace YharimEX.Content.Projectiles
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
             CooldownSlot = 1;
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                        if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().DeletionImmuneRank = 2;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletiionImmuneRank = 2;
             }
         }
 
@@ -62,8 +62,17 @@ namespace YharimEX.Content.Projectiles
             target.AddBuff(BuffID.Slimed, 300);
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
+                }
             }
         }
 

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using FargowiltasSouls.Core.NPCMatching.Conditions;
 
 namespace YharimEX.Core.Systems
 {

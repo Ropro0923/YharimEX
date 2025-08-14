@@ -1,4 +1,3 @@
-using FargowiltasSouls.Content.Buffs.Boss;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -83,8 +82,17 @@ namespace YharimEX.Content.Projectiles
             target.AddBuff(BuffID.Slimed, 240);
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode)
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                {
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
+                }
             }
         }
         public override Color? GetAlpha(Color lightColor)

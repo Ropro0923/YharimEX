@@ -5,8 +5,8 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using YharimEX.Content.Projectiles.FargoProjectile;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -33,8 +33,9 @@ namespace YharimEX.Content.Projectiles
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().CanSplit = false;
-                Projectile.FargoSouls().DeletionImmuneRank = 2;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.canSplit = false;
+                SetupFargoProjectile.DeletiionImmuneRank = 2;
             }
         }
 

@@ -1,6 +1,3 @@
-using FargowiltasSouls.Content.Bosses.Champions.Cosmos;
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
@@ -10,9 +7,9 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
+using YharimEX.Content.Projectiles.FargoProjectile;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -40,9 +37,11 @@ namespace YharimEX.Content.Projectiles
             CooldownSlot = 1;
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                Projectile.FargoSouls().DeletionImmuneRank = 1;
+            {
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletiionImmuneRank = 1;
+            }
         }
-
         public override void OnSpawn(IEntitySource source)
         {
             if (source is EntitySource_Parent parent && parent.Entity is NPC npc
@@ -82,8 +81,12 @@ namespace YharimEX.Content.Projectiles
                     Projectile.Kill();
                     return;
                 }
+
                 if (Projectile.frame == 3)
-                    Projectile.FargoSouls().GrazeCD = 0;
+                    if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        SetupFargoProjectile.SetGrazeCD(Projectile);
+                    }
             }
 
             if (Projectile.localAI[1] == 0)
@@ -127,17 +130,6 @@ namespace YharimEX.Content.Projectiles
             }
         }
 
-        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
-        {
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                if (NPC.AnyNPCs(ModContent.NPCType<CosmosChampion>()))
-                {
-                    modifiers.ScalingArmorPenetration += 0.25f;
-                }
-            }
-        }
-
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             target.AddBuff(BuffID.Burning, 120);
@@ -147,9 +139,14 @@ namespace YharimEX.Content.Projectiles
             {
                 if (YharimEXGlobalUtilities.BossIsAlive(ref YharimEXGlobalNPC.yharimEXBoss, ModContent.NPCType<YharimEXBoss>()))
                 {
-                    target.FargoSouls().MaxLifeReduction += 100;
-                    target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        target.YharimPlayer().MaxLifeReduction += 100;
+                    }
+                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    {
+                        EternityDebuffs.ManageOnHitDebuffs(target);
+                    }
                 }
             }
         }

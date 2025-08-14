@@ -4,8 +4,8 @@ using System;
 using Terraria;
 using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Content.Projectiles.FargoProjectile;
 using YharimEX.Core.Globals;
-using FargowiltasSouls;
 using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.Projectiles
@@ -32,9 +32,10 @@ namespace YharimEX.Content.Projectiles
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                        if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                Projectile.FargoSouls().TimeFreezeImmune = true;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.TimeFreezeImmune = true;
             }
         }
 

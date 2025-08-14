@@ -66,7 +66,8 @@ namespace YharimEX.Content.Deathrays
                         }
                         return false;
                     };
-                Projectile.FargoSouls().DeletionImmuneRank = 1;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                SetupFargoProjectile.DeletiionImmuneRank = 1;
             }
         }
 
