@@ -8,6 +8,8 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Systems;
+using YharimEX.Content.Projectiles.FargoProjectile;
+using YharimEX.Core.Globals;
 
 namespace YharimEX.Content.Projectiles.DLCAttack
 {
@@ -33,19 +35,20 @@ namespace YharimEX.Content.Projectiles.DLCAttack
             Projectile.penetrate = -1;
             CooldownSlot = -1;
 
-            Projectile.FargoSouls().GrazeCheck =
-                projectile =>
-                {
-                    return CanDamage() == true && Math.Abs((Main.LocalPlayer.Center - Projectile.Center).Length() - safeRange) < Player.defaultHeight + Main.LocalPlayer.FargoSouls().GrazeRadius;
-                };
-
-            Projectile.FargoSouls().TimeFreezeImmune = true;
-            Projectile.FargoSouls().DeletionImmuneRank = 2;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                SetupFargoProjectile setupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+                setupFargoProjectile.GrazeCheck = true;
+                setupFargoProjectile.safeRange = safeRange;
+                setupFargoProjectile.canDamage = CanDamage();
+                setupFargoProjectile.TimeFreezeImmune = true;
+                setupFargoProjectile.DeletiionImmuneRank = 2;
+            }
         }
 
         public override bool? CanDamage()
         {
-            return Projectile.alpha == 0f && FargoSoulsUtil.NPCExists(Projectile.ai[0], ModContent.NPCType<MutantBoss>()).GetGlobalNPC<MutantDLC>().DLCAttackChoice == MutantDLC.DLCAttack.AresNuke;
+            return Projectile.alpha == 0f && YharimEXGlobalUtilities.NPCExists(Projectile.ai[0], ModContent.NPCType<YharimEXBoss>()).GetGlobalNPC<CalDLCEmodeAttacks>().DLCAttackChoice == CalDLCEmodeAttacks.DLCAttack.AresNuke;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -69,9 +72,9 @@ namespace YharimEX.Content.Projectiles.DLCAttack
 
         public override void AI()
         {
-            NPC npc = FargoSoulsUtil.NPCExists(Projectile.ai[0], ModContent.NPCType<MutantBoss>());
-            MutantDLC mutantDLC = npc.GetGlobalNPC<MutantDLC>();
-            if (npc != null && (mutantDLC.DLCAttackChoice == MutantDLC.DLCAttack.AresNuke || mutantDLC.DLCAttackChoice == MutantDLC.DLCAttack.PrepareAresNuke))
+            NPC npc = YharimEXGlobalUtilities.NPCExists(Projectile.ai[0], ModContent.NPCType<YharimEXBoss>());
+            CalDLCEmodeAttacks mutantDLC = npc.GetGlobalNPC<CalDLCEmodeAttacks>();
+            if (npc != null && (mutantDLC.DLCAttackChoice == CalDLCEmodeAttacks.DLCAttack.AresNuke || mutantDLC.DLCAttackChoice == CalDLCEmodeAttacks.DLCAttack.PrepareAresNuke))
             {
                 Projectile.alpha -= 7;
                 Projectile.timeLeft = 300;
@@ -95,8 +98,10 @@ namespace YharimEX.Content.Projectiles.DLCAttack
             Projectile.rotation += (float)Math.PI / 70f;
             Lighting.AddLight(Projectile.Center, 0.4f, 0.9f, 1.1f);
 
-            if (Projectile.FargoSouls().GrazeCD > 10)
-                Projectile.FargoSouls().GrazeCD = 10;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                SetupFargoProjectile.SetGrazeCD(Projectile);
+            }
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)

@@ -3880,12 +3880,6 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void DyingAnimationAndHandling()
         {
-            /*if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
-            {
-                if (!AliveCheck(player))
-                    return;
-                i'm not THAT fucked up
-            }*/
             NPC.velocity = Vector2.Zero;
             for (int i = 0; i < 5; i++)
             {

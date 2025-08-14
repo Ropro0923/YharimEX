@@ -803,10 +803,10 @@ namespace YharimEX.Content.NPCs.Bosses
                         Vector2 distance = player.Center - npc.Center;
                         distance.X /= time;
                         distance.Y = distance.Y / time - 0.5f * gravity * time;
-                        int ritual = ModContent.ProjectileType<DLCMutantFishronRitual>();
+                        int ritual = ModContent.ProjectileType<DLCYharimFishronRitual>();
                         if (!Main.projectile.Any(p => p != null && p.active && p.type == ritual))
                             Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, Vector2.Zero, ritual, FargoSoulsUtil.ScaledProjectileDamage(npc.defDamage, 4f / 3f), 0f, Main.myPlayer, npc.whoAmI);
-                        int nuke = Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, distance, ModContent.ProjectileType<MutantAresNuke>(), (YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) ? FargoSoulsUtil.ScaledProjectileDamage(npc.defDamage, 4f / 3f) : 0, 0f, Main.myPlayer, gravity);
+                        int nuke = Projectile.NewProjectile(npc.GetSource_FromThis(), npc.Center, distance, ModContent.ProjectileType<YharimEXAresNuke>(), (YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) ? FargoSoulsUtil.ScaledProjectileDamage(npc.defDamage, 4f / 3f) : 0, 0f, Main.myPlayer, gravity);
                         if (nuke.WithinBounds(Main.maxNPCs))
                         {
                             Main.npc[nuke].timeLeft = nukeTime;
@@ -839,7 +839,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
                 if (++Timer > nukeTime)
                 {
-                    foreach (Projectile projectile in Main.projectile.Where(p => p != null && p.active && p.type == ModContent.ProjectileType<MutantAresNuke>()))
+                    foreach (Projectile projectile in Main.projectile.Where(p => p != null && p.active && p.type == ModContent.ProjectileType<YharimEXAresNuke>()))
                     {
                         projectile.Kill();
                     }

@@ -15,7 +15,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXShadowHand : YharimEXFishron
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXShadowHand";
+        public override string Texture => "Terraria/Images/Projectile_965"; //honestly this looks better :P
 
         public override void SetStaticDefaults()
         {
