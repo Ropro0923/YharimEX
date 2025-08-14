@@ -18,10 +18,13 @@ namespace YharimEX.Core.Players
         public bool HadYharimPresence;
         public bool YharimDesperation;
         public bool YharimFang;
+        public int YharimEXNoUsingItems;
+
         public override void UpdateDead()
         {
             MaxLifeReduction = 0;
             CurrentLifeReduction = 0;
+            YharimEXNoUsingItems = 0;
         }
 
         public override void ResetEffects()
@@ -36,6 +39,9 @@ namespace YharimEX.Core.Players
             HadYharimPresence = YharimPresence;
             YharimDesperation = false;
             YharimFang = false;
+
+            if (YharimEXNoUsingItems > 0)
+                YharimEXNoUsingItems--;
         }
 
         public void ManageLifeReduction()

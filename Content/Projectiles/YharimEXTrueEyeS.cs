@@ -1,5 +1,4 @@
-using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
+using FargowiltasSouls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,9 +7,9 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
-using FargowiltasSouls;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -160,11 +159,13 @@ namespace YharimEX.Content.Projectiles
         }
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 360);
-                if (YharimEXWorldFlags.EternityMode)
-                    target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+                target.YharimPlayer().MaxLifeReduction += 100;
+            }
+            else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                EternityDebuffs.ManageOnHitDebuffs(target);
             }
         }
 

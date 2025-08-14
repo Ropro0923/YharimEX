@@ -33,8 +33,8 @@ namespace YharimEX.Content.NPCs.Bosses
 {
     public class YharimEXBoss : ModNPC
     {
-        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBoss";
-        public override string BossHeadTexture => "YharimEX/Assets/NPCs/YharimEXBoss/YharimEXBoss_Head";
+        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss";
+        public override string BossHeadTexture => "YharimEX/Assets/NPCs/YharimEXBoss_Head";
         public SlotId? TelegraphSound = null;
         Player player => Main.player[NPC.target];
         public bool playerInvulTriggered;
@@ -3942,7 +3942,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                EternityDebuffs.ManageOnHItDebuffs(target);
+                EternityDebuffs.ManageOnHitDebuffs(target);
             }
         }
 
