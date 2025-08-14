@@ -10,10 +10,10 @@ namespace YharimEX.Core.Players
 
     public class YharimEXFargoPlayer : ModPlayer
     {
-        public bool YharimEXBetsyDashing;
+    //    public bool YharimEXBetsyDashing;
         public override void ResetEffects()
         {
-            YharimEXBetsyDashing = Main.player[Player.whoAmI].FargoSouls().BetsyDashing;
+        //    YharimEXBetsyDashing = Main.player[Player.whoAmI].FargoSouls().BetsyDashing;
         }
     }
 }
