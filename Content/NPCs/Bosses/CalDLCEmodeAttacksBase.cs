@@ -7,31 +7,16 @@ using InfernumMode.Core.Netcode.Packets;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.NPCs.Bosses
 {
     public abstract class CalDLCEmodeAttacksBase : GlobalNPC
     {
-        public NPCMatcher Matcher;
-
         public override bool InstancePerEntity => true;
 
         public sealed override bool AppliesToEntity(NPC entity, bool lateInstantiation)
         {
-            return lateInstantiation && Matcher.Satisfies(entity.type) && (YharimEXWorldFlags.DeathMode || YharimEXWorldFlags.InfernumMode || YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.MasochistModeReal);
-        }
-
-        public override void Load()
-        {
-            Matcher = CreateMatcher();
-            base.Load();
-        }
-
-        public abstract NPCMatcher CreateMatcher();
-        public override GlobalNPC NewInstance(NPC target)
-        {
-            return ExtraRequirements() ? base.NewInstance(target) : null;
+            return lateInstantiation && (entity.type == ModContent.NPCType<YharimEXBoss>());
         }
 
         public virtual bool ExtraRequirements() { return true; }

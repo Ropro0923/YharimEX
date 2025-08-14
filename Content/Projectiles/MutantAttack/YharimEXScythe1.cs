@@ -1,4 +1,6 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
+﻿using CalamityMod.NPCs.SupremeCalamitas;
+using CalamityMod.NPCs;
+using FargowiltasSouls.Content.Buffs.Boss;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -8,18 +10,21 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
+using Terraria.Graphics.Effects;
+using ReLogic.Content;
 
 namespace YharimEX.Content.Projectiles
 {
     public class YharimEXScythe1 : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXScythe1";
+        public static Asset<Texture2D> screamTex;
+        public override string Texture => "CalamityMod/Projectiles/InvisibleProj";
 
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("Mutant Sickle");
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 3;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+            screamTex = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/ScreamyFace", AssetRequestMode.AsyncLoad);
         }
 
         public override void SetDefaults()
@@ -114,25 +119,123 @@ namespace YharimEX.Content.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
+            // Shader + scream texture pass
+            Texture2D tex = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
+            lightColor.R = (byte)(255 * Projectile.Opacity);
+
+            Main.spriteBatch.End();
+            Effect shieldEffect = Filters.Scene["CalamityMod:HellBall"].GetShader().Shader;
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, shieldEffect, Main.GameViewMatrix.TransformationMatrix);
+
+            float noiseScale = 0.6f;
+
+            shieldEffect.Parameters["time"].SetValue(Projectile.timeLeft / 60f * 0.24f);
+            shieldEffect.Parameters["blowUpPower"].SetValue(3.2f);
+            shieldEffect.Parameters["blowUpSize"].SetValue(0.4f);
+            shieldEffect.Parameters["noiseScale"].SetValue(noiseScale);
+
+            float opacity = Projectile.Opacity;
+            shieldEffect.Parameters["shieldOpacity"].SetValue(opacity);
+            shieldEffect.Parameters["shieldEdgeBlendStrenght"].SetValue(4f);
+
+            Color edgeColor = Color.Black * opacity;
+            Color shieldColor = Color.Lerp(Color.Red, Color.Magenta, 0.5f) * opacity;
+
+            shieldEffect.Parameters["shieldColor"].SetValue(shieldColor.ToVector3());
+            shieldEffect.Parameters["shieldEdgeColor"].SetValue(edgeColor.ToVector3());
+
+            Vector2 pos = Projectile.Center - Main.screenPosition;
+            float scale = 0.715f;
+            Main.spriteBatch.Draw(
+                screamTex.Value,
+                pos,
+                null,
+                Color.White,
+                0,
+                screamTex.Size() * 0.5f,
+                scale * 0.25f * Projectile.scale * Projectile.Opacity, // quarter size
+                0,
+                0
+            );
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+
+            Texture2D vortexTexture = ModContent.Request<Texture2D>("CalamityMod/ExtraTextures/SoulVortex").Value;
+            Texture2D centerTexture = ModContent.Request<Texture2D>("CalamityMod/Particles/LargeBloom").Value;
+            for (int i = 0; i < 10; i++)
+            {
+                float angle = MathHelper.TwoPi * i / 3f + Main.GlobalTimeWrappedHourly * MathHelper.TwoPi;
+                Color outerColor = Color.Lerp(Color.Red, Color.Magenta, i * 0.15f);
+                Color drawColor = Color.Lerp(outerColor, Color.Black, i * 0.2f) * 0.5f;
+                drawColor.A = 0;
+                Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+                drawPosition += (angle + Main.GlobalTimeWrappedHourly * i / 16f).ToRotationVector2() * 6f;
+
+                Main.EntitySpriteDraw(
+                    vortexTexture,
+                    drawPosition,
+                    null,
+                    drawColor * Projectile.Opacity,
+                    -angle + MathHelper.PiOver2,
+                    vortexTexture.Size() * 0.5f,
+                    (Projectile.scale * (1 - i * 0.05f) * 0.25f) * Projectile.Opacity, // quarter size
+                    SpriteEffects.None,
+                    0
+                );
+            }
+
+            Main.EntitySpriteDraw(
+                centerTexture,
+                Projectile.Center - Main.screenPosition,
+                null,
+                Color.Black * Projectile.Opacity,
+                Projectile.rotation,
+                centerTexture.Size() * 0.5f,
+                (Projectile.scale * 0.9f * 0.25f) * Projectile.Opacity, // quarter size
+                SpriteEffects.None,
+                0
+            );
+
+            // Trail rendering
             Texture2D texture2D13 = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
-            int num156 = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value.Height / Main.projFrames[Projectile.type]; //ypos of lower right corner of sprite to draw
-            int y3 = num156 * Projectile.frame; //ypos of upper left corner of sprite to draw
+            int num156 = texture2D13.Height / Main.projFrames[Projectile.type];
+            int y3 = num156 * Projectile.frame;
             Rectangle rectangle = new(0, y3, texture2D13.Width, num156);
             Vector2 origin2 = rectangle.Size() / 2f;
 
-            Color color26 = lightColor;
-            color26 = Projectile.GetAlpha(color26);
-
+            Color color26 = Projectile.GetAlpha(lightColor);
             for (int i = 0; i < ProjectileID.Sets.TrailCacheLength[Projectile.type]; i++)
             {
-                Color color27 = color26;
-                color27 *= (float)(ProjectileID.Sets.TrailCacheLength[Projectile.type] - i) / ProjectileID.Sets.TrailCacheLength[Projectile.type];
+                Color color27 = color26 * ((ProjectileID.Sets.TrailCacheLength[Projectile.type] - i) / ProjectileID.Sets.TrailCacheLength[Projectile.type]);
                 Vector2 value4 = Projectile.oldPos[i];
                 float num165 = Projectile.oldRot[i];
-                Main.EntitySpriteDraw(texture2D13, value4 + Projectile.Size / 2f - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(rectangle), color27, num165, origin2, Projectile.scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(
+                    texture2D13,
+                    value4 + Projectile.Size / 2f - Main.screenPosition + new Vector2(0, Projectile.gfxOffY),
+                    rectangle,
+                    color27,
+                    num165,
+                    origin2,
+                    Projectile.scale * 0.25f, // quarter size
+                    SpriteEffects.None,
+                    0
+                );
             }
 
-            Main.EntitySpriteDraw(texture2D13, Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(rectangle), Projectile.GetAlpha(lightColor), Projectile.rotation, origin2, Projectile.scale, SpriteEffects.None, 0);
+            // Current frame draw
+            Main.EntitySpriteDraw(
+                texture2D13,
+                Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
+                rectangle,
+                Projectile.GetAlpha(lightColor),
+                Projectile.rotation,
+                origin2,
+                Projectile.scale * 0.25f, // quarter size
+                SpriteEffects.None,
+                0
+            );
+
             return false;
         }
 

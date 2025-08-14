@@ -1,25 +1,36 @@
-﻿using FargowiltasSouls.Content.Buffs.Boss;
-using FargowiltasSouls.Content.Buffs.Masomode;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Terraria;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CalamityMod.Buffs.DamageOverTime;
+using CalamityMod.Buffs.StatDebuffs;
+using CalamityMod.NPCs.DevourerofGods;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using Terraria.Audio;
 using Terraria.ID;
+using Terraria;
 using Terraria.ModLoader;
-using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
+using YharimEX.Core.Globals;
 
-namespace YharimEX.Content.Projectiles
+namespace YharimEX.Content.Projectiles.DLCAttack
 {
-    public class YharimEXDoGTail : ModProjectile
+    public class YharimEXDoGBody : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXDoGTail";
+        public override string Texture => YharimEXCrossmodSystem.InfernumMode.Loaded ? "InfernumMode/Content/BehaviorOverrides/BossAIs/DoG/DoGP2Body" : "CalamityMod/NPCs/DevourerofGods/DevourerofGodsBody";
+
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Projectile.type] = 1;
+        }
+
         public override void SetDefaults()
         {
-            Projectile.width = 24;
-            Projectile.height = 24;
+            Projectile.width = 56;
+            Projectile.height = 56;
             Projectile.penetrate = -1;
             Projectile.timeLeft = 900;
             Projectile.hostile = true;
@@ -55,9 +66,7 @@ namespace YharimEX.Content.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture2D13 = Projectile.ai[2] == 0
-                ? Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value
-                : ModContent.Request<Texture2D>("YharimEX/Assets/Projectiles/YharimEXEoWTail", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D texture2D13 = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
             int num214 = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value.Height / Main.projFrames[Projectile.type];
             int y6 = num214 * Projectile.frame;
             Main.EntitySpriteDraw(texture2D13, Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), new Rectangle(0, y6, texture2D13.Width, num214),
@@ -70,15 +79,7 @@ namespace YharimEX.Content.Projectiles
         {
             if ((int)Main.time % 120 == 0) Projectile.netUpdate = true;
 
-            int num1038 = 30;
-
-            //dust!
-            int dustId = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y + 2f), Projectile.width, Projectile.height + 5, DustID.BlueTorch, Projectile.velocity.X * 0.2f,
-                Projectile.velocity.Y * 0.2f, 100, default, 2f);
-            Main.dust[dustId].noGravity = true;
-            int dustId3 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y + 2f), Projectile.width, Projectile.height + 5, DustID.BlueTorch, Projectile.velocity.X * 0.2f,
-                Projectile.velocity.Y * 0.2f, 100, default, 2f);
-            Main.dust[dustId3].noGravity = true;
+            int num1038 = 56;
 
             bool flag67 = false;
             Vector2 value67 = Vector2.Zero;
@@ -90,7 +91,7 @@ namespace YharimEX.Content.Projectiles
                 Projectile.netUpdate = true;
             }
 
-            int byIdentity = YharimEXGlobalUtilities.GetProjectileByIdentity(Projectile.owner, (int)Projectile.ai[0], ModContent.ProjectileType<YharimEXDoGBody>());
+            int byIdentity = YharimEXGlobalUtilities.GetProjectileByIdentity(Projectile.owner, (int)Projectile.ai[0], Projectile.type, ModContent.ProjectileType<YharimEXDoGHead>());
             if (byIdentity >= 0 && Main.projectile[byIdentity].active)
             {
                 flag67 = true;
@@ -100,6 +101,7 @@ namespace YharimEX.Content.Projectiles
                 float num1053 = MathHelper.Clamp(Main.projectile[byIdentity].scale, 0f, 50f);
                 int arg_2D9AD_0 = Main.projectile[byIdentity].alpha;
                 Main.projectile[byIdentity].localAI[0] = Projectile.localAI[0] + 1f;
+                if (Main.projectile[byIdentity].type != ModContent.ProjectileType<YharimEXDoGHead>()) Main.projectile[byIdentity].localAI[1] = Projectile.identity;
                 Projectile.timeLeft = Main.projectile[byIdentity].timeLeft;
             }
 
@@ -131,17 +133,24 @@ namespace YharimEX.Content.Projectiles
                     -Projectile.velocity.Y * 0.2f, 100, default, 2f);
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].velocity *= 2f;
-                dust = Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, DustID.RedTorch, -Projectile.velocity.X * 0.2f,
+                dust = Dust.NewDust(Projectile.Center, Projectile.width, Projectile.height, DustID.PinkTorch, -Projectile.velocity.X * 0.2f,
                     -Projectile.velocity.Y * 0.2f, 100);
                 Main.dust[dust].velocity *= 2f;
+            }
+            SoundEngine.PlaySound(DevourerofGodsHead.DeathSegmentSound, Projectile.Center);
+            if (!Main.dedServ)
+            {
+                Mod Calamity = ModLoader.GetMod("CalamityMod");
+                int g = Gore.NewGore(Projectile.GetSource_FromThis(), Projectile.Center, Projectile.velocity / 2, ModContent.Find<ModGore>(Calamity.Name, "DoGS6").Type, Projectile.scale);
+                Main.gore[g].timeLeft = 20;
             }
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            target.AddBuff(Projectile.ai[2] == 0 ? ModContent.BuffType<LightningRodBuff>() : BuffID.Weak, Main.rand.Next(300, 1200));
-            if (YharimEXWorldFlags.EternityMode)
-                target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
+            target.AddBuff(ModContent.BuffType<GodSlayerInferno>(), 200, true, false);
+            target.AddBuff(ModContent.BuffType<WhisperingDeath>(), 600, true, false);
+            if (YharimEXWorldFlags.EternityMode && YharimEXCrossmodSystem.FargowiltasSouls.Loaded) target.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("MutantFangBuff").Type, 180);
         }
     }
 }

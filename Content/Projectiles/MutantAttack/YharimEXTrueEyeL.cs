@@ -17,7 +17,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXTrueEyeL : ModProjectile
     {
-        public override string Texture => "CalamityMod/NPCs/SupremeCalamitas/SupremeCalamitasHooded";
+        public override string Texture => "Terraria/Images/Projectile_650"; //i like the moon lord eyes better ngl
         private float localAI0;
         private float localAI1;
 

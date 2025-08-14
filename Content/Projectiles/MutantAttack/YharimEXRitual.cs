@@ -15,6 +15,7 @@ using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Systems;
 using FargowiltasSouls;
 using YharimEX.Assets.ExtraTextures;
+using YharimEX.Core.Globals;
 
 namespace YharimEX.Content.Projectiles
 {
@@ -126,7 +127,7 @@ namespace YharimEX.Content.Projectiles
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
                     target.AddBuff(ModContent.BuffType<MutantFangBuff>(), 180);
 
-                    if (YharimEXWorldFlags.MasochistModeReal && Main.npc[EModeGlobalNPC.mutantBoss].ai[0] == -5)
+                    if (YharimEXWorldFlags.MasochistModeReal && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] == -5)
                     {
                         if (!target.HasBuff(ModContent.BuffType<TimeFrozenBuff>()))
                             SoundEngine.PlaySound(new SoundStyle("YharimEX/Assets/Sounds/Attacks/ZaWarudo"), target.Center);
@@ -165,7 +166,7 @@ namespace YharimEX.Content.Projectiles
             var maxOpacity = Projectile.Opacity;
             float scale = Projectile.scale * 0.5f;
 
-            ManagedShader borderShader = ShaderManager.GetShader("YharimEX.YharimEXYharimEXP2Aura");
+            ManagedShader borderShader = ShaderManager.GetShader("YharimEX.YharimEXP2Aura");
             borderShader.TrySetParameter("colorMult", 7.35f);
             borderShader.TrySetParameter("time", Main.GlobalTimeWrappedHourly);
             borderShader.TrySetParameter("radius", radius * scale);

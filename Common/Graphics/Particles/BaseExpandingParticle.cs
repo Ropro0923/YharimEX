@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FargowiltasSouls;
-using Luminance.Core.Graphics;
+﻿using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Terraria;
+using YharimEX.Core.Globals;
+using Terraria.ModLoader;
 
 namespace YharimEX.Common.Graphics.Particles
 {
@@ -21,7 +17,7 @@ namespace YharimEX.Common.Graphics.Particles
 
         public readonly bool UseBloom;
 
-        public override string AtlasTextureName => "YharimEX.Bloom";
+        public override string AtlasTextureName => ""; //"YharimEX.Bloom"
 
         public virtual Vector2 DrawScale => Scale * 0.3f;
 
@@ -46,25 +42,23 @@ namespace YharimEX.Common.Graphics.Particles
 
         public sealed override void Update()
         {
-            Opacity = MathHelper.Lerp(1f, 0f, FargoSoulsUtil.SineInOut(base.LifetimeRatio));
-            Scale = Vector2.Lerp(StartScale, EndScale, FargoSoulsUtil.SineInOut(base.LifetimeRatio));
+            Opacity = MathHelper.Lerp(1f, 0f, YharimEXGlobalUtilities.SineInOut(base.LifetimeRatio));
+            Scale = Vector2.Lerp(StartScale, EndScale, YharimEXGlobalUtilities.SineInOut(base.LifetimeRatio));
         }
 
         public sealed override void Draw(SpriteBatch spriteBatch)
         {
-            AtlasTexture texture = base.Texture;
-            Vector2 position = Position - Main.screenPosition;
-            Rectangle? frame = Frame;
-            Color drawColor = DrawColor;
-            drawColor.A = 0;
-            spriteBatch.Draw(texture, position, frame, drawColor * Opacity, Rotation, null, DrawScale, Direction.ToSpriteDirection());
+            var tex2D = ModContent.Request<Texture2D>("YharimEX/Assets/ExtraTextures/AdditiveTextures/Bloom").Value;
+            var origin = tex2D.Size() * 0.5f;
+            var pos = Position - Main.screenPosition;
+
+            var color = DrawColor; color.A = 0;
+            spriteBatch.Draw(tex2D, pos, null, color * Opacity, Rotation, origin, DrawScale, SpriteEffects.None, 0);
+
             if (UseBloom)
             {
-                AtlasTexture texture2 = base.Texture;
-                Vector2 position2 = Position - Main.screenPosition;
-                drawColor = BloomColor;
-                drawColor.A = 0;
-                spriteBatch.Draw(texture2, position2, null, drawColor * 0.4f * Opacity, Rotation, null, DrawScale * 0.66f, Direction.ToSpriteDirection());
+                var bloom = BloomColor; bloom.A = 0;
+                spriteBatch.Draw(tex2D, pos, null, bloom * 0.4f * Opacity, Rotation, origin, DrawScale * 0.66f, SpriteEffects.None, 0);
             }
         }
     }

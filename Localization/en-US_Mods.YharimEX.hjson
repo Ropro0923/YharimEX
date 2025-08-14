@@ -35,42 +35,42 @@ NPCs: {
 		Chat.EternityDefeat: TEST
 	}
 
-	YharimEXIllusion.DisplayName: Yharim EX Illusion
+	YharimEXIllusion.DisplayName: Yharim, the Godseeker
 }
 
 Projectiles: {
 	YharimEXSunBlast.DisplayName: Sun Blast
-	YharimEXBrain.DisplayName: Brain of Confusion attack
+	YharimEXBrain.DisplayName: Brain of Confusion
 	YharimEXRitual.DisplayName: Yharim EX Ritual
 	YharimEXMark2.DisplayName: Yharim EX Mark 2
 	YharimEXEye.DisplayName: Yharim EX Eye
-	YharimEXDoGTail.DisplayName: Yharim EX Dog Tail
-	YharimEXDoGHead.DisplayName: Yharim EX Dog Head
-	YharimEXDoGBody.DisplayName: Yharim EX Dog Body
-	YharimEXDeathraySmall.DisplayName: Yharim EX Deathray Small
-	YharimEXDeathrayAim.DisplayName: Yharim EX Deathray Aim
-	YharimEXDeathray3.DisplayName: Yharim EX Deathray 3
-	YharimEXDeathray2.DisplayName: Yharim EX Deathray 2
-	YharimEXDeathray1.DisplayName: Yharim EX Deathray 1
-	YharimEXCrystalLeaf.DisplayName: Yharim EX Crystal Leaf
+	YharimEXDoGTail.DisplayName: Devourer of Gods
+	YharimEXDoGHead.DisplayName: Devourer of Gods
+	YharimEXDoGBody.DisplayName: Devourer of Gods
+	YharimEXDeathraySmall.DisplayName: Deathray
+	YharimEXDeathrayAim.DisplayName: Deathray
+	YharimEXDeathray3.DisplayName: Deathray
+	YharimEXDeathray2.DisplayName: Deathray
+	YharimEXDeathray1.DisplayName: Deathray
+	YharimEXCrystalLeaf.DisplayName: Crystal Leaf
 	YharimEXBossProjectile.DisplayName: Yharim EX Boss Projectile
-	YharimEXBombSmall.DisplayName: Yharim EX Bomb Small
-	YharimEXBomb.DisplayName: Yharim EX Bomb
-	MutantEyeOfCthulhu.DisplayName: Mutant Eye Of Cthulhu
-	YharimEXEyeHoming.DisplayName: Yharim EX Eye Homing
-	YharimEXEyeWavy.DisplayName: Yharim EX Eye Wavy
-	YharimEXFishron.DisplayName: Yharim EX Fishron
-	YharimEXFishronRitual.DisplayName: Yharim EX Fishron Ritual
-	YharimEXFragment.DisplayName: Yharim EX Fragment
-	YharimEXGiantDeathray2.DisplayName: Yharim EX Giant Deathray 2
-	YharimEXGlowRing.DisplayName: Yharim EX Glow Ring
-	YharimEXGlowything.DisplayName: Yharim EX Glowything
-	YharimEXGuardian.DisplayName: Yharim EX Guardian
+	YharimEXBombSmall.DisplayName: Bomb
+	YharimEXBomb.DisplayName: Bomb
+	MutantEyeOfCthulhu.DisplayName: Eye Of Cthulhu
+	YharimEXEyeHoming.DisplayName: Eye
+	YharimEXEyeWavy.DisplayName: Eye
+	YharimEXFishron.DisplayName: Yharon
+	YharimEXFishronRitual.DisplayName: Fishron Ritual
+	YharimEXFragment.DisplayName: Fragment
+	YharimEXGiantDeathray2.DisplayName: Giant Deathray
+	YharimEXGlowRing.DisplayName: Glow Ring
+	YharimEXGlowything.DisplayName: Glowything
+	YharimEXGuardian.DisplayName: Ares
 	YharimEXHeal.DisplayName: Mutant Yharim EX Heal Heal
 	YharimEXMark1.DisplayName: Yharim EX Mark1
-	YharimEXNuke.DisplayName: Yharim EX Nuke
-	YharimEXPhantasmalBlast.DisplayName: Yharim EX Phantasmal Blast
-	YharimEXPillar.DisplayName: Yharim EX Pillar
+	YharimEXNuke.DisplayName: Nuke
+	YharimEXPhantasmalBlast.DisplayName: Phantasmal Blast
+	YharimEXPillar.DisplayName: Astrageldon
 	YharimEXReticle.DisplayName: Yharim EX Reticle
 	YharimEXRetirang.DisplayName: Yharim EX Retirang
 	YharimEXReticle2.DisplayName: Yharim EX Reticle 2
@@ -83,31 +83,51 @@ Projectiles: {
 	YharimEXIronParry.DisplayName: Yharim EX Iron Parry
 	YharimEXScythe1.DisplayName: Yharim EX Scythe 1
 	YharimEXScythe2.DisplayName: Yharim EX Scythe 2
-	YharimEXShadowHand.DisplayName: Yharim EX Shadow Hand
+	YharimEXShadowHand.DisplayName: Shadow Hand
 	YharimEXSlimeBall.DisplayName: Yharim EX Slime Ball
 	YharimEXSlimeRain.DisplayName: Yharim EX Slime Rain
 	YharimEXSlimeSpike.DisplayName: Yharim EX Slime Spike
 	YharimEXSpazmarang.DisplayName: Yharim EX Spazmarang
-	YharimEXSpearAim.DisplayName: Yharim EX Spear Aim
-	YharimEXSpearDash.DisplayName: Yharim EX Spear Dash
-	YharimEXSphereSmall.DisplayName: Yharim EX Sphere Small
-	YharimEXPenetratorDeathray.DisplayName: Yharim EX Penetrator Deathray
-	YharimEXPenetratorThrown.DisplayName: Yharim EX Penetrator Thrown
-	YharimEXPhantasmalSphere.DisplayName: Yharim EX Phantasmal Sphere
-	YharimEXSpearMagical.DisplayName: Yharim EX Spear Magical
-	YharimEXSpearSpin.DisplayName: Yharim EX Spear Spin
-	YharimEXSpearThrown.DisplayName: Yharim EX Spear Thrown
-	YharimEXSpearThrownFriendly.DisplayName: Yharim EX Spear Thrown Friendly
-	YharimEXSphereRing.DisplayName: Yharim EX Sphere Ring
+	YharimEXSpearAim.DisplayName: Spear
+	YharimEXSpearDash.DisplayName: Spear Dash
+	YharimEXSphereSmall.DisplayName: Sphere
+	YharimEXPenetratorDeathray.DisplayName: Penetrator Deathray
+	YharimEXPenetratorThrown.DisplayName: Penetrator
+	YharimEXPhantasmalSphere.DisplayName: Phantasmal Sphere
+	YharimEXSpearMagical.DisplayName: Yharim Spear
+	YharimEXSpearSpin.DisplayName: Yharim Spear
+	YharimEXSpearThrown.DisplayName: Yharim EX Spear
+	YharimEXSpearThrownFriendly.DisplayName: Spear Thrown Friendly
+	YharimEXSphereRing.DisplayName: Sphere Ring
 	YharimEXSword.DisplayName: Yharim EX Sword
-	YharimEXTrueEyeDeathray.DisplayName: Yharim EX True Eye Deathray
-	YharimEXTrueEyeL.DisplayName: Yharim EX True Eye L
-	YharimEXTrueEyeR.DisplayName: Yharim EX True Eye R
-	YharimEXTrueEyeS.DisplayName: Yharim EX True Eye S
-	YharimEXTrueEyeSphere.DisplayName: Yharim EX True Eye Sphere
-	YharimEXEyeOfCthulhu.DisplayName: Yharim EX Eye Of Cthulhu
-	YharimEXTyphoon.DisplayName: Yharim EX Typhoon
-	YharimEXBossRush.DisplayName: Yharim E X Boss Rush
+	YharimEXTrueEyeDeathray.DisplayName: True Eye Deathray
+	YharimEXTrueEyeL.DisplayName: True Eye
+	YharimEXTrueEyeR.DisplayName: True Eye
+	YharimEXTrueEyeS.DisplayName: True Eye
+	YharimEXTrueEyeSphere.DisplayName: True Eye Sphere
+	YharimEXEyeOfCthulhu.DisplayName: Calamitas Clone
+	YharimEXTyphoon.DisplayName: Typhoon
+	YharimEXBossRush.DisplayName: Boss Rush
+	BloomLine.DisplayName: Bloom Line
+	DLCBloomLine.DisplayName: Bloom Line
+	DLCYharimFishronRitual.DisplayName: Fishron Ritual
+	DLCYharimSpearDash.DisplayName: Spear Dash
+	DLCYharimSpearSpin.DisplayName: Spear Spin
+	SlamTelegraph.DisplayName: Slam Telegraph
+	YharimEXAresBomb.DisplayName: Ares Bomb
+	YharimEXAresNuke.DisplayName: Ares Nuke
+	YharimEXAureusSpawn.DisplayName: Aureus Spawn
+	YharimEXHolyRay.DisplayName: Holy Ray
+	YharimEXOldDuke.DisplayName: Old Duke
+	YharimEXPBG.DisplayName: Plaguebringer Goliath
+	YharimEXPolter.DisplayName: Polterghast
+	YharimEXSCal.DisplayName: Brimstone Monster
+	YharimEXSlimeGod.DisplayName: Slime God
+	Boss.YharimEXYharonVortex.DisplayName: Yharon Vortex
+	YharimFrostMist.DisplayName: Frost Mist
+	YharimEXDestroyerBody.DisplayName: The Destroyer
+	YharimEXDestroyerHead.DisplayName: The Destroyer
+	YharimEXDestroyerTail.DisplayName: The Destroyer
 }
 
 Items: {

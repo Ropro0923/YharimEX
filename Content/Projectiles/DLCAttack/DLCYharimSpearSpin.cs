@@ -112,7 +112,7 @@ namespace YharimEX.Content.Projectiles.DLCAttack
             }
             else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                EternityDebuffs.ManageOnHItDebuffs(target);
+                EternityDebuffs.ManageOnHitDebuffs(target);
             }
         }
 

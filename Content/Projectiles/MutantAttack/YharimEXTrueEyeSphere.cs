@@ -12,7 +12,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXTrueEyeSphere : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXTrueEyeSphere";
+        public override string Texture => "Terraria/Images/Projectile_454";
 
         public override void SetStaticDefaults()
         {

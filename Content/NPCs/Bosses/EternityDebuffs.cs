@@ -4,6 +4,7 @@ using FargowiltasSouls;
 using Terraria;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
+using System;
 
 namespace YharimEX.Content.NPCs.Bosses
 {
@@ -11,7 +12,7 @@ namespace YharimEX.Content.NPCs.Bosses
     [JITWhenModsEnabled(YharimEXCrossmodSystem.FargowiltasSouls.Name)]
     public class EternityDebuffs
     {
-        public static void ManageOnHitDebuffs(Player target)
+        public static void ManageOnHitDebuffs(Player target, int type = 0)
         {
             if (type == 1)
             {
