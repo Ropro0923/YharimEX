@@ -99,14 +99,7 @@ namespace YharimEX.Content.Projectiles
 
             target.AddBuff(Projectile.ai[2] == 0 ? FargoSouls.Find<ModBuff>("LightningRodBuff").Type : BuffID.Weak, Main.rand.Next(300, 1200));
 
-            if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                target.YharimPlayer().MaxLifeReduction += 100;
-            }
-            else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-            {
-                EternityDebuffs.ManageOnHitDebuffs(target);
-            }
+            target.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("MutantFangBuff").Type, 180);
         }
 
         public override void OnKill(int timeLeft)

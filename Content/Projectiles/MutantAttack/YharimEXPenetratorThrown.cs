@@ -123,6 +123,11 @@ namespace YharimEX.Content.Projectiles
                 if (p != Main.maxProjectiles)
                     Main.projectile[p].DamageType = Projectile.DamageType;
             }
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                target.AddBuff(FargoSouls.Find<ModBuff>("CurseOFTheMoonBuff").Type, 600);
+            }
         }
 
         public override Color? GetAlpha(Color lightColor)
