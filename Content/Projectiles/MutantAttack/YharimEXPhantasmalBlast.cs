@@ -97,6 +97,16 @@ namespace YharimEX.Content.Projectiles
             Main.gore[i2].velocity.Y += Main.rand.Next(-10, 11) * 0.05f;*/
         }
 
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                target.AddBuff(FargoSouls.Find<ModBuff>("CurseOFTheMoonBuff").Type, 600);
+            }
+            target.immune[Projectile.owner] = 1;
+        }
+
         public override Color? GetAlpha(Color lightColor)
         {
             return new Color(255, 255, 255, 127) * Projectile.Opacity;
