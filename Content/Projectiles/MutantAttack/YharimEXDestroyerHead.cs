@@ -14,7 +14,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXDestroyerHead : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXDesertScourgeHead";
+        public override string Texture => "Terraria/Images/NPC_134";
 
         public override void SetDefaults()
         {
