@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CalamityMod.Systems;
+using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
+using YharimEX.Content.Sky;
 
 namespace YharimEX
 {
@@ -24,6 +26,10 @@ namespace YharimEX
 
         public YharimEX() => Instance = this;
 
+        public override void Load()
+        {
+            SkyManager.Instance["YharimEX:YharimEXBoss"] = new YharimEXSky();
+        }
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             try

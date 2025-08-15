@@ -29,7 +29,7 @@ namespace YharimEX.Core.Systems
         */
         internal static bool infernumMode;
         internal static bool downedYharimEX;
-        internal static bool angryYharimEX;
+        internal static bool angryYharimEX = false;
         internal static int skipYharimEXP1;
         //internal static bool[] downedBoss = new bool[Enum.GetValues(typeof(Downed)).Length];
         public static int SkipYharimEXP1 { get => skipYharimEXP1; set => skipYharimEXP1 = value; }

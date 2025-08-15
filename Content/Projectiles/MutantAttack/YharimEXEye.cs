@@ -84,7 +84,7 @@ namespace YharimEX.Content.Projectiles
         {
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                YharimEXFargoPlayer YharimEXFargoPlayer = target.GetModPlayer<YharimEXFargoPlayer>();
+            //    YharimEXFargoPlayer YharimEXFargoPlayer = target.GetModPlayer<YharimEXFargoPlayer>();
             //    if (YharimEXFargoPlayer.YharimEXBetsyDashing)
             //        return;
 
