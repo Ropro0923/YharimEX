@@ -1,23 +1,29 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using YharimEX.Content.NPCs.Bosses;
-using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
 using YharimEX.Content.Projectiles.FargoProjectile;
+using YharimEX.Core.Globals;
+using YharimEX.Content.NPCs.Bosses;
 
-namespace YharimEX.Content.Projectiles
+namespace YharimEX.Content.Projectiles.MutantAttack
 {
     public class YharimEXTrueEyeS : ModProjectile
     {
-        public override string Texture => "Terraria/Images/Projectile_650"; //i like the moon lord eyes better ngl
+        public override string Texture => "Terraria/Images/Projectile_650";
+
+        private float localAI0;
+        private float localAI1;
+
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Projectile.type] = 42;
+            // DisplayName.SetDefault("True Eye of Mutant");
+            Main.projFrames[Projectile.type] = 4;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
@@ -32,6 +38,7 @@ namespace YharimEX.Content.Projectiles
             Projectile.ignoreWater = true;
             CooldownSlot = 1;
             Projectile.penetrate = -1;
+
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
@@ -140,6 +147,8 @@ namespace YharimEX.Content.Projectiles
                 if (++Projectile.frame >= Main.projFrames[Projectile.type])
                     Projectile.frame = 0;
             }
+            if (Projectile.ai[1] != 2f) //custom pupil when attacking
+                UpdatePupil();
         }
 
         private void ShootBolts(Player target)
@@ -154,6 +163,29 @@ namespace YharimEX.Content.Projectiles
                     Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), spawn, vel, ProjectileID.PhantasmalBolt, Projectile.damage, 0f, Projectile.owner);
             }
         }
+
+        private void UpdatePupil()
+        {
+            float f1 = (float)(localAI0 % 6.28318548202515 - 3.14159274101257);
+            float num13 = (float)Math.IEEERemainder(localAI1, 1.0);
+            if (num13 < 0.0)
+                ++num13;
+            float num14 = (float)Math.Floor(localAI1);
+            float max = 0.999f;
+            int num15 = 0;
+            float amount = 0.1f;
+            float f2;
+            float num18;
+            float num19;
+            f2 = Projectile.AngleTo(Main.player[(int)Projectile.ai[0]].Center);
+            num15 = 2;
+            num18 = MathHelper.Clamp(num13 + 0.05f, 0.0f, max);
+            num19 = num14 + Math.Sign(-12f - num14);
+            Vector2 rotationVector2 = f2.ToRotationVector2();
+            localAI0 = (float)(Vector2.Lerp(f1.ToRotationVector2(), rotationVector2, amount).ToRotation() + num15 * 6.28318548202515 + 3.14159274101257);
+            localAI1 = num19 + num18;
+        }
+
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
@@ -178,34 +210,17 @@ namespace YharimEX.Content.Projectiles
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
-
-            int framesPerColumn = 21; // frames stacked vertically in each column
-            int totalColumns = 2;     // number of columns in spritesheet
-            int frameWidth = texture.Width / totalColumns;
-            int frameHeight = texture.Height / framesPerColumn;
-
-            // Flattened frame index
-            int totalFrameIndex = Projectile.frame;
-
-            // Determine column and row
-            int column = totalFrameIndex / framesPerColumn;
-            int row = totalFrameIndex % framesPerColumn;
-
-            Rectangle rectangle = new Rectangle(
-                column * frameWidth,
-                row * frameHeight,
-                frameWidth,
-                frameHeight
-            );
-
+            Texture2D texture2D13 = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
+            int num156 = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value.Height / Main.projFrames[Projectile.type]; //ypos of lower right corner of sprite to draw
+            int y3 = num156 * Projectile.frame; //ypos of upper left corner of sprite to draw
+            Rectangle rectangle = new(0, y3, texture2D13.Width, num156);
             Vector2 origin2 = rectangle.Size() / 2f;
+
             Color color26 = Projectile.GetAlpha(lightColor);
 
             float scale = (Main.mouseTextColor / 200f - 0.35f) * 0.4f + 1f;
             scale *= Projectile.scale;
 
-            // Draw trail
             for (int i = 0; i < ProjectileID.Sets.TrailCacheLength[Projectile.type]; i++)
             {
                 Color color27 = color26 * 0.75f;
@@ -213,15 +228,16 @@ namespace YharimEX.Content.Projectiles
                 color27 *= (float)(ProjectileID.Sets.TrailCacheLength[Projectile.type] - i) / ProjectileID.Sets.TrailCacheLength[Projectile.type];
                 Vector2 value4 = Projectile.oldPos[i];
                 float num165 = Projectile.oldRot[i];
-                Main.EntitySpriteDraw(texture,
-                    value4 + Projectile.Size / 2f - Main.screenPosition + new Vector2(0, Projectile.gfxOffY),
-                    rectangle, color27, num165, origin2, scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(texture2D13, value4 + Projectile.Size / 2f - Main.screenPosition + new Vector2(0, Projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(rectangle), color27, num165, origin2, scale, SpriteEffects.None, 0);
             }
 
-            // Draw projectile
-            Main.EntitySpriteDraw(texture,
-                Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
-                rectangle, color26, Projectile.rotation, origin2, Projectile.scale, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(texture2D13, Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(rectangle), color26, Projectile.rotation, origin2, Projectile.scale, SpriteEffects.None, 0);
+
+            Texture2D pupil = ModContent.Request<Texture2D>("YharimEX/Assets/Projectiles/YharimEXTrueEyePupil", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Vector2 pupilOffset = new Vector2(localAI1 / 2f, 0f).RotatedBy(localAI0);
+            pupilOffset += new Vector2(0f, -6f).RotatedBy(Projectile.rotation);
+            Vector2 pupilOrigin = pupil.Size() / 2f;
+            Main.EntitySpriteDraw(pupil, pupilOffset + Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY), new Microsoft.Xna.Framework.Rectangle?(pupil.Bounds), color26, 0f, pupilOrigin, Projectile.scale, SpriteEffects.None, 0);
             return false;
         }
     }

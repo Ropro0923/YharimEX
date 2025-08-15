@@ -4,7 +4,6 @@ using FargowiltasSouls;
 using Terraria;
 using Terraria.ModLoader;
 using YharimEX.Core.Systems;
-using System;
 
 namespace YharimEX.Content.NPCs.Bosses
 {

@@ -122,6 +122,7 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 NPC.damage *= 17;
                 NPC.defense *= 10;
+                Main.NewText("RAH");
             }
             Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/TheRealityoftheProphecy");
             SceneEffectPriority = SceneEffectPriority.BossHigh;
