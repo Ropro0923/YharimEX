@@ -367,7 +367,7 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 if (Main.zenithWorld) //edgy boss text
                 {
-                    Color color = Color.Cyan;
+                    Color color = Color.OrangeRed;
                     YharimEXGlobalUtilities.PrintText(text, color);
                     CombatText.NewText(npc.Hitbox, color, text, true);
                     /*

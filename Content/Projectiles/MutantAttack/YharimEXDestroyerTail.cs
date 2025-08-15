@@ -14,7 +14,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXDestroyerTail : ModProjectile
     {
-        public override string Texture => "Terraria/Images/NPC_136";
+        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXDesertScourgeTail";
         public override void SetDefaults()
         {
             Projectile.width = 24;
