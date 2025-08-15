@@ -45,11 +45,11 @@ namespace YharimEX.Content.NPCs.Bosses
             {
                 if (npc.ai[0] < 0) //desperation
                 {
-                    npc.ModNPC.Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/StoriaShort");
+                    npc.ModNPC.Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/StoriaShort");
                 }
                 else
                 {
-                    npc.ModNPC.Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Storia");
+                    npc.ModNPC.Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/Storia");
                 }
             }
 

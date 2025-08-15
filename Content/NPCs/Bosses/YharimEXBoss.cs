@@ -125,7 +125,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 Main.NewText("RAH");
             }
             Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/TheRealityoftheProphecy");
-            SceneEffectPriority = SceneEffectPriority.BossHigh;
+            SceneEffectPriority = SceneEffectPriority.BossHigh + 1;
         }
 
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)

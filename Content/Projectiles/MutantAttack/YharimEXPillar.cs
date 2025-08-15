@@ -17,13 +17,13 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXPillar : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXPillar";
+        public override string Texture => "YharimEX/Assets/Projectiles/Astrageldon";
         private int target = -1;
 
         public override void SetStaticDefaults()
         {
             // DisplayName.SetDefault("Celestial Pillar");
-            Main.projFrames[Projectile.type] = 4;
+            Main.projFrames[Projectile.type] = 7;
             ProjectileID.Sets.TrailCacheLength[Projectile.type] = 10;
             ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
         }
