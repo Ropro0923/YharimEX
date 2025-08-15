@@ -28,7 +28,7 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using YharimEX.Content.Projectiles.MutantAttack;
+using YharimEX.Content.Projectiles.MutantAttack;    
 
 namespace YharimEX.Content.NPCs.Bosses
 {
@@ -873,7 +873,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void EModeSpecialEffects()
         {
-            if ((YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode))
+            if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
             {
                 //because this breaks the background???
                 if (Main.GameModeInfo.IsJourneyMode && CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled)
