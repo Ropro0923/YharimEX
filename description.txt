@@ -1,20 +1,25 @@
-This mod adds the Yharim EX boss, an endgame fight.
+This mod adds Yharim, the Godseeker, the final boss of the Calamity Mod.
+
+This mod is unofficial and is not affiliated with the Calamity Mod team. It is a port of the Yharim EX fight from 1.4.3 to 1.4.4, with some changes to the fight mechanics and visuals.
 
 Source Code: https://github.com/Ropro0923/YharimEX
 
-You can find the developers, Akira and Ropro0923 in the CSE / Thrower Unification / CatTech and the Infernal Eclipse of Ragnarok discord servers
+You can find the developers, Akira and Ropro0923 in the CSE / Thrower Unification / CatTech and the Infernal Eclipse of Ragnarok discord servers below:
 
-CSE / Thrower Unification / CatTech
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3329620648&searchtext=community] CSE[/url] / [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3535746309] Thrower Unification[/url] / CatTech[/url]
 https://discord.gg/frUcz2dQAy
 
-Infernal Eclipse of Ragnarok
+[url=https://steamcommunity.com/sharedfiles/itemedittext/?id=3456517686] Infernal Eclipse of Ragnarok[/url]
 https://discord.gg/tc5nZdRvaU
 
-You should try out these mods too!
 
-Thanks to 永恒群冠 and 我在风中凌乱啊 for making the original fight.
-Thanks to the Fargo's Souls team for making the mod.
-Thanks to the Calamity team for making the sprites.
-For these people, any inquiries or concerns can be sent to Ropro0923
+Developers:
+[list]
+	[*] Developers: Ropro0923 & Akira
+	[*] Orginal Mutant Fight & Calamity DLC Attacks, and Souls Sound Effects: Terry, Fargowilta, Javyz
+	[*] Yharim EX Fight: 永恒群冠 and 我在风中凌乱啊 
+	[*] Sprites & Calamity Sound Effects: Cult of Hypnos & the Calamity, Catalyst, Infernum teams
+	[*] Music: theforge129 (unnamed Yharim Theme), Xi Vs Sakuzyo (Storia), TheTrester (Legends About The Godseeker), 
+[/list]]
 
-The point of this mod is to port the 1.4.3 fight to 1.4.4, I am not using the sprites and the boss with malicious intent, just renewing an old mod.
+Any inquiries or concerns about the ussage of code & sprites can be sent to Ropro0923. We am not using the sprites and the boss with malicious intent, just renewing an old mod.
