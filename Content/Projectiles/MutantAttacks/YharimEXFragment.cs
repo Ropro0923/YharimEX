@@ -8,7 +8,7 @@ namespace YharimEX.Content.Projectiles.MutantAttacks
 {
     public class YharimEXFragment : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXFragment";
+        public override string Texture => "YharimEX/Assets/Projectiles/NovaSlime";
 
         public override void SetStaticDefaults()
         {
