@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,10 +14,10 @@ namespace YharimEX.Content.NPCs.Bosses
     {
         public override bool InstancePerEntity => true;
 
-        public sealed override bool AppliesToEntity(NPC entity, bool lateInstantiation)
-        {
-            return lateInstantiation && (entity.type == ModContent.NPCType<YharimEXBoss>());
-        }
+    //    public sealed override bool AppliesToEntity(NPC entity, bool lateInstantiation)
+    //    {
+    //        return lateInstantiation && (entity.type == ModContent.NPCType<YharimEXBoss>());
+    //    }
 
         public virtual bool ExtraRequirements() { return true; }
 
@@ -63,4 +62,3 @@ namespace YharimEX.Content.NPCs.Bosses
 
     }
 }
-*/

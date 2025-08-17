@@ -25,7 +25,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 BuffID.Suffocation,
             ]);
 
-            if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 Mod FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
                 NPC.AddDebuffImmunities(

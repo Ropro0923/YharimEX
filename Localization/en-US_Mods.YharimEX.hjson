@@ -252,6 +252,26 @@ Projectiles: {
 	YharimEXTrueEyeS.DisplayName: Yharim EX True Eye
 	YharimEXTrueEyeSphere.DisplayName: Yharim EX True Eye Sphere
 	YharimEXTyphoon.DisplayName: Yharim EX Typhoon
+	YharimFrostMist.DisplayName: Yharim Frost Mist
+	Boss.YharimEXYharonVortex.DisplayName: Yharim E X Yharon Vortex
+	YharimEXSlimeGod.DisplayName: Yharim E X Slime God
+	YharimEXSCal.DisplayName: Yharim E X S Cal
+	YharimEXPolter.DisplayName: Yharim E X Polter
+	YharimEXPBG.DisplayName: Yharim E X P B G
+	YharimEXOldDuke.DisplayName: Yharim E X Old Duke
+	YharimEXHolyRay.DisplayName: Yharim E X Holy Ray
+	YharimEXDoGTail.DisplayName: Yharim E X Do G Tail
+	YharimEXDoGHead.DisplayName: Yharim E X Do G Head
+	YharimEXDoGBody.DisplayName: Yharim E X Do G Body
+	YharimEXBloomLine.DisplayName: Yharim E X Bloom Line
+	YharimEXAureusSpawn.DisplayName: Yharim E X Aureus Spawn
+	YharimEXAresNuke.DisplayName: Yharim E X Ares Nuke
+	YharimEXAresBomb.DisplayName: Yharim E X Ares Bomb
+	SlamTelegraph.DisplayName: Slam Telegraph
+	DLCYharimSpearSpin.DisplayName: D L C Yharim Spear Spin
+	DLCYharimSpearDash.DisplayName: D L C Yharim Spear Dash
+	DLCYharimFishronRitual.DisplayName: D L C Yharim Fishron Ritual
+	DLCBloomLine.DisplayName: D L C Bloom Line
 }
 
 LifeUp: +5 max life
