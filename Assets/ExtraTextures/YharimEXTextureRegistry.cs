@@ -11,6 +11,8 @@ namespace YharimEX.Assets.ExtraTextures
         public static Asset<Texture2D> FadedStreak => ModContent.Request<Texture2D>("YharimEX/Assets/ExtraTextures/Trails/FadedStreak");
         public static Asset<Texture2D> ColorNoiseMap => ModContent.Request<Texture2D>("YharimEX/Assets/ExtraTextures/Noise/ColorNoiseMap");
         public static Asset<Texture2D> BloomTexture => ModContent.Request<Texture2D>("YharimEX/Assets/ExtraTextures/AdditiveTextures/Bloom");
+        public static Asset<Texture2D> Techno1Noise => ModContent.Request<Texture2D>("YharimEX/Assets/ExtraTextures/Noise/Techno1Noise");
+
 
     }
 }

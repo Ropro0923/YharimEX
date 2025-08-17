@@ -21,9 +21,11 @@ using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.NPCs.Town
 {
-    [AutoloadHead]
     public class TheGodseeker : ModNPC
     {
+        public override string Texture => "YharimEX/Assets/NPCs/Town/TheGodseeker";     
+        public override string HeadTexture => "YharimEX/Assets/NPCs/Town/TheGodseeker_Head";
+
         internal bool spawned;
         private bool canSayDefeatQuote = true;
         private int defeatQuoteTimer = 900;
@@ -31,7 +33,6 @@ namespace YharimEX.Content.NPCs.Town
         private static int ShimmerHeadIndex;
         private static Profiles.StackedNPCProfile NPCProfile;
         private bool otherShop;
-
         public override void SetDefaults()
         {
             NPC.townNPC = true;
@@ -66,7 +67,6 @@ namespace YharimEX.Content.NPCs.Town
                 }
             }
         }
-
         public virtual void Load()
         {
             ShimmerHeadIndex = Mod.AddNPCHeadTexture(Type, Texture + "_Shimmer_Head");

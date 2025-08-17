@@ -3,16 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using YharimEX.Content.Projectiles;
-using YharimEX.Core.Globals;
-using YharimEX.Core.Systems;
+using YharimEX.Content.Projectiles.MutantAttacks;
 
 namespace YharimEX.Content.NPCs.Bosses
 {
     public class YharimEXIllusion : ModNPC
     {
-        public override string Texture => "YharimEX/Assets/NPCs/YharimEXBoss";
-        public override string HeadTexture => "YharimEX/Assets/NPCs/YharimEXIllusion_Head_Boss";
+        public override string Texture => "YharimEX/Assets/NPCs/Boss/YharimEXBoss";
+        public override string BossHeadTexture => "YharimEX/Assets/NPCs/Boss/YharimEXBoss_Head";
 
         public override void SetStaticDefaults()
         {
@@ -20,8 +18,8 @@ namespace YharimEX.Content.NPCs.Bosses
             NPCID.Sets.CantTakeLunchMoney[Type] = true;
 
             NPC.AddDebuffImmunities(
-                        [
-                            BuffID.Confused,
+            [
+                BuffID.Confused,
                 BuffID.Chilled,
                 BuffID.OnFire,
                 BuffID.Suffocation,
@@ -29,7 +27,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
             {
-                Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+                Mod FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
                 NPC.AddDebuffImmunities(
                 [
                     FargoSouls.Find<ModBuff>("LethargicBuff").Type,
@@ -43,6 +41,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     FargoSouls.Find<ModBuff>("LeadPoisonBuff").Type,
                 ]);
             }
+
             this.ExcludeFromBestiary();
         }
 
@@ -75,8 +74,8 @@ namespace YharimEX.Content.NPCs.Bosses
 
         public override void AI()
         {
-            NPC yharimEX = YharimEXGlobalUtilities.NPCExists(NPC.ai[0], ModContent.NPCType<YharimEXBoss>());
-            if (yharimEX == null || yharimEX.ai[0] < 18 || yharimEX.ai[0] > 19 || yharimEX.life <= 1)
+            NPC mutant = YharimEXGlobalUtilities.NPCExists(NPC.ai[0], ModContent.NPCType<YharimEXBoss>());
+            if (mutant == null || mutant.ai[0] < 18 || mutant.ai[0] > 19 || mutant.life <= 1)
             {
                 NPC.life = 0;
                 NPC.HitEffect();
@@ -98,16 +97,16 @@ namespace YharimEX.Content.NPCs.Bosses
                 return;
             }
 
-            NPC.target = yharimEX.target;
-            NPC.damage = yharimEX.damage;
-            NPC.defDamage = yharimEX.damage;
+            NPC.target = mutant.target;
+            NPC.damage = mutant.damage;
+            NPC.defDamage = mutant.damage;
 
-            NPC.frame.Y = yharimEX.frame.Y;
+            NPC.frame.Y = mutant.frame.Y;
 
             if (NPC.HasValidTarget)
             {
-                Vector2 target = Main.player[yharimEX.target].Center;
-                Vector2 distance = target - yharimEX.Center;
+                Vector2 target = Main.player[mutant.target].Center;
+                Vector2 distance = target - mutant.Center;
                 NPC.Center = target;
                 NPC.position.X += distance.X * NPC.ai[1];
                 NPC.position.Y += distance.Y * NPC.ai[2];
@@ -115,7 +114,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             else
             {
-                NPC.Center = yharimEX.Center;
+                NPC.Center = mutant.Center;
             }
 
             /*Vector2 target = new Vector2(mutant.localAI[1], mutant.localAI[2]);
@@ -134,7 +133,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 else
                     ai0 = 2;
                 if (YharimEXGlobalUtilities.HostCheck)
-                    Projectile.NewProjectile(yharimEX.GetSource_FromThis(), NPC.Center, Vector2.UnitY * -5, ModContent.ProjectileType <YharimEXPillar>(), YharimEXGlobalUtilities.ScaledProjectileDamage(yharimEX.damage, 4f / 3), 0, Main.myPlayer, ai0, NPC.whoAmI);
+                    Projectile.NewProjectile(mutant.GetSource_FromThis(), NPC.Center, Vector2.UnitY * -5, ModContent.ProjectileType<YharimEXPillar>(), YharimEXGlobalUtilities.ScaledProjectileDamage(mutant.damage, 4f / 3), 0, Main.myPlayer, ai0, NPC.whoAmI);
             }
 
             if (Main.getGoodWorld && ++NPC.localAI[0] > YharimEXBoss.HyperMax + 1)

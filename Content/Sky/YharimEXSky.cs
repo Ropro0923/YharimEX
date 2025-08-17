@@ -58,7 +58,7 @@ namespace YharimEX.Content.Sky
                         break;
 
                     case 36: //slime rain
-                        if (YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[2] > 180 * 3 - 60)
+                        if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) || YharimEXWorldFlags.InfernumMode && Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[2] > 180 * 3 - 60)
                             ChangeColorIfDefault(Color.Blue);
                         break;
 

@@ -15,11 +15,11 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             if (type == 1)
             {
-                if (YharimEXWorldFlags.DeathMode || YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.DeathMode || (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode))
                 {
                     target.FargoSouls().MaxLifeReduction += 100;
                 }
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
                 {
                     //target.AddBuff(ModContent.BuffType<DefenselessBuff>(), 300);
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
@@ -30,11 +30,11 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             else
             {
-                if (YharimEXWorldFlags.DeathMode || YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.DeathMode || (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode))
                 {
                     target.FargoSouls().MaxLifeReduction += 100;
                 }
-                if (YharimEXWorldFlags.EternityMode)
+                if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
                 {
                     //target.AddBuff(ModContent.BuffType<DefenselessBuff>(), 300);
                     target.AddBuff(ModContent.BuffType<OceanicMaulBuff>(), 5400);
@@ -42,10 +42,6 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
                 target.AddBuff(ModContent.BuffType<CurseoftheMoonBuff>(), 600);
             }
-        }
-        public static void ApplyHypothermia(Player target)
-        {
-            target.AddBuff(ModContent.BuffType<HypothermiaBuff>(), 900);
         }
     }
 }

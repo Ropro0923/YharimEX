@@ -65,7 +65,7 @@ namespace YharimEX.Core.Systems
         {
             if (!YharimEXCrossmodSystem.InfernumMode.Loaded)
                 return;
-            MakeCard(ModContent.NPCType<YharimEXBoss>(), (horz, anim) => Color.Lerp(Color.Red, Color.Gold, anim), "YharimMutant", SoundID.DD2_BetsyFireballShot, new SoundStyle("CalamityMod/Sounds/Custom/Scare"));
+            MakeCard(ModContent.NPCType<YharimEXBoss>(), (horz, anim) => Color.Lerp(Color.Red, Color.Gold, anim), "YharimEXInfernum", SoundID.DD2_BetsyFireballShot, new SoundStyle("CalamityMod/Sounds/Custom/Scare"));
         }
 
         internal void MakeCard(int type, Func<float, float, Color> color, string title, SoundStyle tickSound, SoundStyle endSound, int time = 300, float size = 1f)
@@ -77,7 +77,7 @@ namespace YharimEX.Core.Systems
             Mod Infernum = YharimEXCrossmodSystem.InfernumMode.Mod;
             // Initialize the base instance for the intro card. Alternative effects may be added separately.
             Func<float, float, Color> textColorSelectionDelegate = color;
-            object instance = Infernum.Call("InitializeIntroScreen", Mod.GetLocalization("InfernumIntegration." + title), time, true, condition, textColorSelectionDelegate);
+            object instance = Infernum.Call("InitializeIntroScreen", Mod.GetLocalization("NPCs.YharimEXBoss.YharimEXInfernum"), time, true, condition, textColorSelectionDelegate);
             Infernum.Call("IntroScreenSetupLetterDisplayCompletionRatio", instance, new Func<int, float>(animationTimer => MathHelper.Clamp(animationTimer / (float)time * 1.36f, 0f, 1f)));
 
             // dnc but needed or else it errors
@@ -118,7 +118,7 @@ namespace YharimEX.Core.Systems
                     {
                         Action<SpriteBatch, Rectangle, Color> action = (Action<SpriteBatch, Rectangle, Color>)((sb, rect, color) =>
                         {
-                            Texture2D texture2D = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/YharimEXBossChecklist", (AssetRequestMode)2).Value;
+                            Texture2D texture2D = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/Boss/YharimEXBossChecklist", (AssetRequestMode)2).Value;
                             Vector2 vector2;
                             // ISSUE: explicit constructor call
                             vector2 = new Vector2(
@@ -129,7 +129,7 @@ namespace YharimEX.Core.Systems
                         });
                         dictionary.Add("customPortrait", action);
                         dictionary.Add("displayName", Language.GetText("Mods.YharimEX.NPCs.YharimEXBoss.DisplayName"));
-                        dictionary.Add("overrideHeadTextures", "YharimEX/Assets/NPCs/YharimEXBoss_Head");
+                        dictionary.Add("overrideHeadTextures", "YharimEX/Assets/NPCs/Boss/YharimEXBoss_Head");
                     }
                 }
             }
@@ -143,7 +143,7 @@ namespace YharimEX.Core.Systems
             }
             dictionary.Add("collectibles", intList1);
             if (!flag)
-                dictionary.Add("spawnInfo", Language.GetText("Mods.YharimEX.SpawnInfo." + InternalName));
+                dictionary.Add("spawnInfo", Language.GetText("Mods.YharimEX.NPCs.YharimEXBoss.SpawnInfo"));
 
             return dictionary;
         }

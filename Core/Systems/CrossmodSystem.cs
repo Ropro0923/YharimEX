@@ -1,6 +1,6 @@
 ﻿using Terraria.ModLoader;
 
-namespace YharimEX.Core.Systems
+namespace YharimEX
 {
     public static class YharimEXCrossmodSystem
     {

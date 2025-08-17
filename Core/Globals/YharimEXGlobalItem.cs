@@ -10,7 +10,7 @@ namespace YharimEX.Core.Globals
         {
             YharimEXPlayer YharimEXPlayer = player.GetModPlayer<YharimEXPlayer>();
 
-            if (YharimEXPlayer.YharimEXNoUsingItems > 0)
+            if (YharimEXPlayer.NoUsingItems > 0)
                 return false;
             return true;
         }

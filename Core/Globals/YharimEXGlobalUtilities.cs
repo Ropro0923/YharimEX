@@ -14,7 +14,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using YharimEX.Core.Players;
 
-namespace YharimEX.Core.Globals
+namespace YharimEX
 {
     public static class YharimEXGlobalUtilities
     {
@@ -261,8 +261,6 @@ namespace YharimEX.Core.Globals
         {
             return source is EntitySource_ItemUse parent && parent.Item.type == Main.player[proj.owner].HeldItem.type;
         }
-
-        public static bool AprilFools => DateTime.Today.Month == 4 && DateTime.Today.Day <= 7;
 
         public static void ScreenshakeRumble(float strength)
         {
@@ -555,7 +553,7 @@ namespace YharimEX.Core.Globals
                 player.RemoveAllGrapplingHooks();
             if (player.mount.Active)
                 player.mount.Dismount(player);
-            player.GetModPlayer<YharimEXPlayer>().YharimEXNoUsingItems = 2;
+            player.GetModPlayer<YharimEXPlayer>().NoUsingItems = 2;
             if (preventDashing)
             {
                 for (int i = 0; i < 4; i++)

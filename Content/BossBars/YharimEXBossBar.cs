@@ -14,7 +14,7 @@ namespace YharimEX.Content.BossBars
 
         public override void Load()
         {
-            forcedHead = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/YharimEXIllusion_Head_Boss");
+            forcedHead = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/Boss/YharimEX_Head_Boss");
         }
 
         public override Asset<Texture2D> GetIconTexture(ref Rectangle? iconFrame)
