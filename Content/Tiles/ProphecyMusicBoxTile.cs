@@ -16,6 +16,7 @@ namespace YharimEX.Content.Tilles
 {
     public class ProphecyMusicBoxTile : ModTile
     {
+        public override string Texture => "YharimEX/Assets/Tiles/ProphecyMusicBoxTile";
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;

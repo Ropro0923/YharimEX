@@ -13,6 +13,7 @@ namespace YharimEX.Content.Items
 {
     public class ProphecyMusicBox : ModItem
     {
+        public override string Texture => "YharimEX/Assets/Items/ProphecyMusicBox";
         public override void SetStaticDefaults()
         {
             if (Main.dedServ)

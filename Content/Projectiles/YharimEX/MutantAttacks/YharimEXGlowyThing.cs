@@ -7,7 +7,7 @@ namespace YharimEX.Content.Projectiles.MutantAttacks
 {
     public class YharimEXGlowything : ModProjectile
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXGlowyThing";
+        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXGlowything";
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
