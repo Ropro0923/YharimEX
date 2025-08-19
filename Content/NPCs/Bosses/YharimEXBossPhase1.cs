@@ -1,38 +1,14 @@
-// YHARIM EX
-using YharimEX.Content.BossBars;
-using YharimEX.Content.NPCs.Town;
 using YharimEX.Core.Systems;
-using YharimEX.Core.Globals;
-using YharimEX.Content.Items;
-using YharimEX.Core.Players;
-
-
-// MOD DEPENDENCIES
 using CalamityMod;
 using Luminance.Core.Graphics;
-
-// TERRARIA
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Utilities;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.Creative;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
-using YharimEX.Content.Buffs;
 using YharimEX.Assets.Sounds.Attacks;
-using YharimEX.Assets.ExtraTextures;
 using YharimEX.Content.Projectiles.MutantAttacks;
-using YharimEX.Content.Projectiles;
 
 namespace YharimEX.Content.NPCs.Bosses
 {
@@ -597,5 +573,6 @@ namespace YharimEX.Content.NPCs.Bosses
                 }
             }
         }
+        
     }
 }

@@ -204,7 +204,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) || YharimEXWorldFlags.InfernumMode) && !Main.dedServ)
+                if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode || YharimEXWorldFlags.InfernumMode) && !Main.dedServ)
                 {
                     if (!Main.LocalPlayer.ItemTimeIsZero && (Main.LocalPlayer.HeldItem.type == ItemID.RodofDiscord || Main.LocalPlayer.HeldItem.type == ItemID.RodOfHarmony))
                         Main.LocalPlayer.AddBuff(FargosSouls.Find<ModBuff>("TimeFrozenBuff").Type, 600);
@@ -277,105 +277,110 @@ namespace YharimEX.Content.NPCs.Bosses
                 case 7: ApproachForNextAttackP1(); break;
                 case 8: VoidRaysP1(); break;
 
-                case 9: BoundaryBulletHellAndSwordP1(); break;
+                case 20: BoundaryBulletHellAndSwordP1(); break;
+
+                    #endregion
+
+                    /*
+
+                        #region phase 2
+
+                        case 10: Phase2Transition(); break;
+
+                        case 11: ApproachForNextAttackP2(); break;
+                        case 12: VoidRaysP2(); break;
+
+                        case 13: PrepareSpearDashPredictiveP2(); break;
+                        case 14: SpearDashPredictiveP2(); break;
+                        case 15: WhileDashingP2(); break;
+
+                        case 16: goto case 11; //approach for bullet hell
+                        case 17: BoundaryBulletHellP2(); break;
+
+                        case 18: AttackChoice++; break; //new attack can be put here
+
+                        case 19: PillarDunk(); break;
+
+                        case 20: EOCStarSickles(); break;
+
+                        case 21: PrepareSpearDashDirectP2(); break;
+                        case 22: SpearDashDirectP2(); break;
+                        case 23:
+                            if (NPC.ai[1] % 3 == 0)
+                                NPC.ai[1]++;
+                            goto case 15;
+
+                        case 24: SpawnDestroyersForPredictiveThrow(); break;
+                        case 25: SpearTossPredictiveP2(); break;
+
+                        case 26: PrepareMechRayFan(); break;
+                        case 27: MechRayFan(); break;
+
+                        case 28: AttackChoice++; break; //free slot for new attack
+
+                        case 29: PrepareFishron1(); break;
+                        case 30: SpawnFishrons(); break;
+
+                        case 31: PrepareTrueEyeDiveP2(); break;
+                        case 32: goto case 3; //spawn eyes
+
+                        case 33: PrepareNuke(); break;
+                        case 34: Nuke(); break;
+
+                        case 35: PrepareSlimeRain(); break;
+                        case 36: SlimeRain(); break;
+
+                        case 37: PrepareFishron2(); break;
+                        case 38: goto case 30; //spawn fishrons
+
+                        case 39: PrepareOkuuSpheresP2(); break;
+                        case 40: OkuuSpheresP2(); break;
+
+                        case 41: SpearTossDirectP2(); break;
+
+                        case 42: PrepareTwinRangsAndCrystals(); break;
+                        case 43: TwinRangsAndCrystals(); break;
+
+                        case 44: EmpressSwordWave(); break;
+
+                        case 45: PrepareMutantSword(); break;
+                        case 46: MutantSword(); break;
+
+                        //case 47: goto case 35;
+                        //case 48: QueenSlimeRain(); break;
+
+                        //case 49: SANSGOLEM(); break;
+
+                        //case 50: //wof
+
+                        //gap in the numbers here so the ai loops right
+                        //when adding a new attack, remember to make ChooseNextAttack() point to the right case!
+
+                        case 52: P2NextAttackPause(); break;
+
+                        #endregion
+                    */
+
+                        #region phase 3
+
+                        case -1: drainLifeInP3 = Phase3Transition(); break;
+
+                        case -2: VoidRaysP3(); break;
+
+                        case -3: OkuuSpheresP3(); break;
+
+                        case -4: BoundaryBulletHellP3(); break;
+
+                        case -5: FinalSpark(); break;
+
+                        case -6: DyingDramaticPause(); break;
+                        case -7: DyingAnimationAndHandling(); break;
 
                 #endregion
-
-                #region phase 2
-
-                case 10: Phase2Transition(); break;
-
-                case 11: ApproachForNextAttackP2(); break;
-                case 12: VoidRaysP2(); break;
-
-                case 13: PrepareSpearDashPredictiveP2(); break;
-                case 14: SpearDashPredictiveP2(); break;
-                case 15: WhileDashingP2(); break;
-
-                case 16: goto case 11; //approach for bullet hell
-                case 17: BoundaryBulletHellP2(); break;
-
-                case 18: AttackChoice++; break; //new attack can be put here
-
-                case 19: PillarDunk(); break;
-
-                case 20: EOCStarSickles(); break;
-
-                case 21: PrepareSpearDashDirectP2(); break;
-                case 22: SpearDashDirectP2(); break;
-                case 23:
-                    if (NPC.ai[1] % 3 == 0)
-                        NPC.ai[1]++;
-                    goto case 15;
-
-                case 24: SpawnDestroyersForPredictiveThrow(); break;
-                case 25: SpearTossPredictiveP2(); break;
-
-                case 26: PrepareMechRayFan(); break;
-                case 27: MechRayFan(); break;
-
-                case 28: AttackChoice++; break; //free slot for new attack
-
-                case 29: PrepareFishron1(); break;
-                case 30: SpawnFishrons(); break;
-
-                case 31: PrepareTrueEyeDiveP2(); break;
-                case 32: goto case 3; //spawn eyes
-
-                case 33: PrepareNuke(); break;
-                case 34: Nuke(); break;
-
-                case 35: PrepareSlimeRain(); break;
-                case 36: SlimeRain(); break;
-
-                case 37: PrepareFishron2(); break;
-                case 38: goto case 30; //spawn fishrons
-
-                case 39: PrepareOkuuSpheresP2(); break;
-                case 40: OkuuSpheresP2(); break;
-
-                case 41: SpearTossDirectP2(); break;
-
-                case 42: PrepareTwinRangsAndCrystals(); break;
-                case 43: TwinRangsAndCrystals(); break;
-
-                case 44: EmpressSwordWave(); break;
-
-                case 45: PrepareMutantSword(); break;
-                case 46: MutantSword(); break;
-
-                //case 47: goto case 35;
-                //case 48: QueenSlimeRain(); break;
-
-                //case 49: SANSGOLEM(); break;
-
-                //case 50: //wof
-
-                //gap in the numbers here so the ai loops right
-                //when adding a new attack, remember to make ChooseNextAttack() point to the right case!
-
-                case 52: P2NextAttackPause(); break;
-
-                #endregion
-
-                #region phase 3
-
-                case -1: drainLifeInP3 = Phase3Transition(); break;
-
-                case -2: VoidRaysP3(); break;
-
-                case -3: OkuuSpheresP3(); break;
-
-                case -4: BoundaryBulletHellP3(); break;
-
-                case -5: FinalSpark(); break;
-
-                case -6: DyingDramaticPause(); break;
-                case -7: DyingAnimationAndHandling(); break;
-
-                #endregion
-
-                default: AttackChoice = 11; goto case 11; //return to first phase 2 attack
+                        
+// RETURN set to ApproachForNextAttackP2
+                default: AttackChoice = 20; goto case 20; //return to first phase 2 attack
+                    
             }
             //manage aura scale
             if (AttackChoice == 1) //ooku spheres p1
@@ -677,14 +682,14 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && Main.rand.NextBool(3))
             {
-                int[] options = [0, 1, 2, 4, 7, 9, 9];
+                int[] options = [0, 1, 2, 4, 7, 20, 20];
                 AttackChoice = Main.rand.Next(options);
                 if (AttackChoice == sourceAI) //dont repeat attacks consecutively
-                    AttackChoice = sourceAI == 9 ? 0 : 9;
+                    AttackChoice = sourceAI == 20 ? 0 : 20;
 
                 bool badCombo = false;
                 //dont go into boundary/sword from spheres, true eye dive, void rays
-                if (AttackChoice == 9 && (sourceAI == 1 || sourceAI == 2 || sourceAI == 7))
+                if (AttackChoice == 20 && (sourceAI == 1 || sourceAI == 2 || sourceAI == 7))
                     badCombo = true;
                 //dont go into destroyer-toss or void rays from true eye dive
                 if ((AttackChoice == 0 || AttackChoice == 7) && sourceAI == 2)
@@ -692,14 +697,14 @@ namespace YharimEX.Content.NPCs.Bosses
 
                 if (badCombo)
                     AttackChoice = 4; //default to dashes
-                else if (AttackChoice == 9 && Main.rand.NextBool())
+                else if (AttackChoice == 20 && Main.rand.NextBool())
                     NPC.localAI[2] = 1f; //force sword attack instead of boundary
                 else
                     NPC.localAI[2] = 0f;
             }
             else
             {
-                if (AttackChoice == 9 && NPC.localAI[2] == 0)
+                if (AttackChoice == 20 && NPC.localAI[2] == 0)
                 {
                     NPC.localAI[2] = 1;
                 }
@@ -1098,8 +1103,6 @@ namespace YharimEX.Content.NPCs.Bosses
             spriteBatch.Draw(blackTile.Value, rekt, null, default, 0f, blackTile.Value.Size() * 0.5f, 0, 0f);
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
-
-            //spriteBatch.Draw(FargosTextureRegistry.SoftEdgeRing.Value, position, null, outerColor * 0.7f, 0f, FargosTextureRegistry.SoftEdgeRing.Value.Size() * 0.5f, 9.2f * auraScale, SpriteEffects.None, 0f);
         }
         public static void ArenaAura(Vector2 center, float distance, bool reverse = false, int dustid = -1, Color color = default, params int[] buffs)
         {
