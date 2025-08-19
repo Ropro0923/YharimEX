@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Core.Systems;
 using YharimEX.Core.Globals;
-
+/*
 namespace YharimEX.Content.Projectiles.DLCAttack
 {
     public class DLCYharimFishronRitual : ModProjectile
@@ -127,3 +127,4 @@ namespace YharimEX.Content.Projectiles.DLCAttack
 
     }
 }
+*/

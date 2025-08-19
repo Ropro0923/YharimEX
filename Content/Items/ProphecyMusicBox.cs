@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria;
 using Terraria.ModLoader;
-using InfernumMode.Content.Items.Relics;
 using YharimEX.Content.Tilles;
+using CalamityMod.Items.Placeables.Furniture.BossRelics;
 
 namespace YharimEX.Content.Items
 {
@@ -42,23 +42,27 @@ namespace YharimEX.Content.Items
 
         public override void AddRecipes()
         {
-            if (ModLoader.TryGetMod("FargowiltasSouls", out Mod souls))
+            if (ModLoader.TryGetMod("FargowiltasSouls", out Mod Souls))
             {
-                CreateRecipe()
-                    .AddIngredient(souls.Find<ModItem>("MutantRelic"))
-                    .AddIngredient(ItemID.MusicBox)
-                    .AddTile(TileID.HeavyWorkBench)
-                    .Register();
+                ModItem mutantRelic = Souls.Find<ModItem>("MutantRelic");
+                if (mutantRelic != null)
+                {
+                    Recipe Fargos = CreateRecipe();
+                    Fargos.AddIngredient(mutantRelic);
+                    Fargos.AddIngredient(ItemID.MusicBox);
+                    Fargos.AddTile(TileID.HeavyWorkBench);
+                    Fargos.Register();
+                }
             }
             else
             {
-                CreateRecipe()
-                    .AddIngredient<DraedonRelic>()
-                    .AddIngredient<SupremeCalamitasRelic>()
-                    .AddIngredient(ItemID.Zenith)
-                    .AddIngredient(ItemID.MusicBox)
-                    .AddTile(TileID.HeavyWorkBench)
-                    .Register();
+                Recipe Base = CreateRecipe();
+                Base.AddIngredient<DraedonRelic>();
+                Base.AddIngredient<CalamitasRelic>();
+                Base.AddIngredient(ItemID.Zenith);
+                Base.AddIngredient(ItemID.MusicBox);
+                Base.AddTile(TileID.HeavyWorkBench);
+                Base.Register();
             }
         }
     }

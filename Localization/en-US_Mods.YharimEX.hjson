@@ -1,4 +1,4 @@
-NPCs: {
+	NPCs: {
 	YharimEXBoss: {
 		DisplayName: Yharim, the Godseeker
 		SkipPhase1: Yharim is growing tired of your attempts.
@@ -165,6 +165,11 @@ Items: {
 		DisplayName: Yharims Journal
 		Tooltip: Yharim's personal journal, containing details of every major foe you have faced.
 	}
+
+	ProphecyMusicBox: {
+		DisplayName: Prophecy Music Box
+		Tooltip: ""
+	}
 }
 
 Buffs: {
@@ -275,3 +280,4 @@ Projectiles: {
 }
 
 LifeUp: +5 max life
+Tiles.ProphecyMusicBoxTile.MapEntry: Prophecy Music Box Tile

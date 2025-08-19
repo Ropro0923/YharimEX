@@ -59,7 +59,7 @@ namespace YharimEX.Content.NPCs.Town
             NPCID.Sets.HatOffsetY[Type] = 6;
             NPCID.Sets.ShimmerTownTransform[Type] = true;
 
-            if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 if (FargosNPC.CanSetCatchable())
                 {
