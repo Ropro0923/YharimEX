@@ -256,6 +256,11 @@ Items: {
 		DisplayName: Yharims Journal
 		Tooltip: Yharim's personal journal, containing details of every major foe you have faced.
 	}
+
+	ProphecyMusicBox: {
+		DisplayName: Prophecy Music Box
+		Tooltip: ""
+	}
 }
 
 LifeUp: +5 max life
@@ -279,3 +284,4 @@ Buffs: {
 }
 
 Bestiary.YharimEXBoss: Being the owner of an Auric soul, he has near limitless power. His underlings mean nothing to him now.
+Tiles.ProphecyMusicBoxTile.MapEntry: Prophecy Music Box Tile

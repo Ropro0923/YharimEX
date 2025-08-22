@@ -37,6 +37,7 @@
 	<ItemGroup>
 	  <Folder Include="Assets\ExtraTextures\AdditiveTextures\" />
 	  <Folder Include="Assets\Music\" />
+	  <Folder Include="Assets\Tiles\" />
 	  <Folder Include="Common\Graphics\Particles\ParticleTextures\" />
 	  <Folder Include="Content\Projectiles\YharimAttack\" />
 	</ItemGroup>

@@ -51,6 +51,14 @@ namespace YharimEX.Content.NPCs.Bosses
         public Vector2 AuraCenter = Vector2.Zero;
         string TownNPCName;
         public const int HyperMax = 5;
+
+        public Mod FargoSouls()
+        {
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                return YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+            else return null;
+        }
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 4;
@@ -69,18 +77,17 @@ namespace YharimEX.Content.NPCs.Bosses
 
             if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
             {
-                Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
                 NPC.AddDebuffImmunities(
                 [
-                    FargoSouls.Find<ModBuff>("LethargicBuff").Type,
-                    FargoSouls.Find<ModBuff>("ClippedWingsBuff").Type,
-                    FargoSouls.Find<ModBuff>("MutantNibbleBuff").Type,
-                    FargoSouls.Find<ModBuff>("OceanicMaulBuff").Type,
-                    FargoSouls.Find<ModBuff>("LightningRodBuff").Type,
-                    FargoSouls.Find<ModBuff>("SadismBuff").Type,
-                    FargoSouls.Find<ModBuff>("GodEaterBuff").Type,
-                    FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type,
-                    FargoSouls.Find<ModBuff>("LeadPoisonBuff").Type,
+                    FargoSouls().Find<ModBuff>("LethargicBuff").Type,
+                    FargoSouls().Find<ModBuff>("ClippedWingsBuff").Type,
+                    FargoSouls().Find<ModBuff>("MutantNibbleBuff").Type,
+                    FargoSouls().Find<ModBuff>("OceanicMaulBuff").Type,
+                    FargoSouls().Find<ModBuff>("LightningRodBuff").Type,
+                    FargoSouls().Find<ModBuff>("SadismBuff").Type,
+                    FargoSouls().Find<ModBuff>("GodEaterBuff").Type,
+                    FargoSouls().Find<ModBuff>("TimeFrozenBuff").Type,
+                    FargoSouls().Find<ModBuff>("LeadPoisonBuff").Type,
                 ]);
             }
         }
@@ -195,13 +202,13 @@ namespace YharimEX.Content.NPCs.Bosses
 
         public override bool PreAI()
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && !Main.dedServ)
                 {
                     if (!Main.LocalPlayer.ItemTimeIsZero && (Main.LocalPlayer.HeldItem.type == ItemID.RodofDiscord || Main.LocalPlayer.HeldItem.type == ItemID.RodOfHarmony))
-                        Main.LocalPlayer.AddBuff(FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type, 600);
+                        Main.LocalPlayer.AddBuff(FargoSouls().Find<ModBuff>("TimeFrozenBuff").Type, 600);
                 }
             }
 
@@ -221,7 +228,7 @@ namespace YharimEX.Content.NPCs.Bosses
         public override void AI()
         {
             YharimEXGlobalNPC.yharimEXBoss = NPC.whoAmI;
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            
             NPC.dontTakeDamage = AttackChoice < 0; //invul in p3
 
             // Set this to false by default.
@@ -426,7 +433,7 @@ namespace YharimEX.Content.NPCs.Bosses
         bool spawned;
         void ManageAurasAndPreSpawn()
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            
             if (!spawned)
             {
                 spawned = true;
@@ -1392,9 +1399,9 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void PrepareYharimEXSword()
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded && AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
-                Main.LocalPlayer.AddBuff(FargoSouls.Find<ModBuff>("PurgedBuff").Type, 2);
+                Main.LocalPlayer.AddBuff(FargoSouls().Find<ModBuff>("PurgedBuff").Type, 2);
 
             //can alternate directions
             int sign = AttackChoice != 9 && NPC.localAI[2] % 2 == 1 ? -1 : 1;
@@ -1474,9 +1481,9 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void YharimEXSword()
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded && AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
-                Main.LocalPlayer.AddBuff(FargoSouls.Find<ModBuff>("PurgedBuff").Type, 2);
+                Main.LocalPlayer.AddBuff(FargoSouls().Find<ModBuff>("PurgedBuff").Type, 2);
 
             NPC.ai[3] += NPC.ai[2];
             NPC.direction = NPC.spriteDirection = Math.Sign(NPC.localAI[1]);
@@ -1572,7 +1579,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     Main.LocalPlayer.controlUseItem = false;
                     Main.LocalPlayer.controlUseTile = false;
 
-                    // NOTE            Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
+                    // NOTE            Main.LocalPlayer.FargoSouls()().NoUsingItems = 2;
 
                 }
             }
@@ -3445,7 +3452,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     Main.LocalPlayer.controlUseItem = false;
                     Main.LocalPlayer.controlUseTile = false;
-                    // NOTE    Main.LocalPlayer.FargoSouls().NoUsingItems = 2;
+                    // NOTE    Main.LocalPlayer.FargoSouls()().NoUsingItems = 2;
                 }
 
                 if (--NPC.localAI[0] < 0)
@@ -3821,7 +3828,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
         void DyingDramaticPause()
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            
             if (!AliveCheck(player))
                 return;
             NPC.ai[3] -= (float)Math.PI / 6f / 60f;
@@ -3829,7 +3836,7 @@ namespace YharimEX.Content.NPCs.Bosses
             bool killPlayer = YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (Main.player[NPC.target].HasBuff(FargoSouls.Find<ModBuff>("TimeFrozenBuff").Type))
+                if (Main.player[NPC.target].HasBuff(FargoSouls().Find<ModBuff>("TimeFrozenBuff").Type))
                 {
                     killPlayer = true;
                 }

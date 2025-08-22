@@ -17,7 +17,7 @@ namespace YharimEX.Content.Projectiles
 {
     public class YharimEXNuke : ModProjectile, IPixelatedPrimitiveRenderer
     {
-        public override string Texture => "YharimEX/Assets/Projectiles/YharimEXNuke";
+        public override string Texture => "CalamityMod/Projectiles/Boss/AresGaussNukeProjectile";
 
         public override void SetStaticDefaults()
         {
