@@ -12,7 +12,7 @@ namespace YharimEX.Core.Systems
         }
         public static class Fargowiltas
         {
-            public const string Name = "FargowiltasSouls";
+            public const string Name = "Fargowiltas";
             public static bool Loaded => ModLoader.HasMod(Name);
             public static Mod Mod => ModLoader.GetMod(Name);
         }

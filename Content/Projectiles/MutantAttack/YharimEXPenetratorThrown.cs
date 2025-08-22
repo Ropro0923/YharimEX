@@ -123,7 +123,11 @@ namespace YharimEX.Content.Projectiles
                 if (p != Main.maxProjectiles)
                     Main.projectile[p].DamageType = Projectile.DamageType;
             }
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            Mod FargoSouls = null;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+            }
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 target.AddBuff(FargoSouls.Find<ModBuff>("CurseOFTheMoonBuff").Type, 600);

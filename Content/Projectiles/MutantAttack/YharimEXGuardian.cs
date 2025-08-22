@@ -71,7 +71,12 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            Mod FargoSouls = null;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+            }
+            
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)

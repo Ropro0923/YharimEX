@@ -62,16 +62,17 @@ namespace YharimEX.Content.Deathrays
 
         public override void PostAI()
         {
-            SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
             if (Projectile.hide)
-            {
+            {   
                 Projectile.hide = false;
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
+                    SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
                     if (Projectile.friendly)
                         SetupFargoProjectile.DeletionImmuneRank = 2;
+                    SetupFargoProjectile.SetGrazeCD(Projectile);
                 }
-                SetupFargoProjectile.SetGrazeCD(Projectile);
+                
             }
         }
 

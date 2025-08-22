@@ -71,18 +71,20 @@ namespace YharimEX.Content.Projectiles.MutantAttack
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
-
-            target.AddBuff(FargoSouls.Find<ModBuff>("HexedBuff").Type, 120);
-            target.AddBuff(FargoSouls.Find<ModBuff>("CurseoftheMoonBuff").Type, 360);
-            if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
-                switch ((int)Projectile.ai[0])
-                {
-                    case 0: target.AddBuff(FargoSouls.Find<ModBuff>("ReverseManaFlowBuff").Type, 180); break; //nebula
-                    case 1: target.AddBuff(FargoSouls.Find<ModBuff>("AtrophiedBuff").Type, 180); break; //solar
-                    case 2: target.AddBuff(FargoSouls.Find<ModBuff>("JammedBuff").Type, 180); break; //vortex
-                    default: target.AddBuff(FargoSouls.Find<ModBuff>("AntisocialBuff").Type, 180); break; //stardust
-                }
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                Mod FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+                target.AddBuff(FargoSouls.Find<ModBuff>("HexedBuff").Type, 120);
+                target.AddBuff(FargoSouls.Find<ModBuff>("CurseoftheMoonBuff").Type, 360);
+                if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
+                    switch ((int)Projectile.ai[0])
+                    {
+                        case 0: target.AddBuff(FargoSouls.Find<ModBuff>("ReverseManaFlowBuff").Type, 180); break; //nebula
+                        case 1: target.AddBuff(FargoSouls.Find<ModBuff>("AtrophiedBuff").Type, 180); break; //solar
+                        case 2: target.AddBuff(FargoSouls.Find<ModBuff>("JammedBuff").Type, 180); break; //vortex
+                        default: target.AddBuff(FargoSouls.Find<ModBuff>("AntisocialBuff").Type, 180); break; //stardust
+                    }
+            }
         }
 
         public override Color? GetAlpha(Color lightColor)

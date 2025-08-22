@@ -61,7 +61,11 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            Mod FargoSouls = null;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+            }
             target.AddBuff(BuffID.Poisoned, Main.rand.Next(60, 300));
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {

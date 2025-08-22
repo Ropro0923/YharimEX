@@ -245,7 +245,7 @@ namespace YharimEX.Content.Projectiles
                     ? Projectile.scale * Main.cursorScale * 0.8f * Main.rand.NextFloat(0.75f, 1.25f)
                     : Projectile.scale * modifier * Main.cursorScale * 1.25f;
 
-                Texture2D star = ModContent.Request<Texture2D>("FargowiltasSouls/Assets/Effects/LifeStar", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+                Texture2D star = ModContent.Request<Texture2D>("YharimEX/Assets/Effects/LifeStar", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
                 Rectangle rect = new(0, 0, star.Width, star.Height);
                 Vector2 origin = new(star.Width / 2 + sansScale, star.Height / 2 + sansScale);
 

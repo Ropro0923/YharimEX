@@ -235,21 +235,24 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
-
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
+                Mod FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    target.AddBuff(BuffID.Obstructed, 15);
-                    target.AddBuff(FargoSouls.Find<ModBuff>("Berserked").Type, 15);
-                    if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                    if (YharimEXWorldFlags.EternityMode || YharimEXWorldFlags.DeathMode)
                     {
-                        target.YharimPlayer().MaxLifeReduction += 100;
-                    }
-                    else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                    {
-                        EternityDebuffs.ManageOnHitDebuffs(target);
+                        target.AddBuff(BuffID.Obstructed, 15);
+                        target.AddBuff(FargoSouls.Find<ModBuff>("Berserked").Type, 15);
+                        if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                        {
+                            target.YharimPlayer().MaxLifeReduction += 100;
+                        }
+                        else if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+                        {
+                            EternityDebuffs.ManageOnHitDebuffs(target);
+                        }
                     }
                 }
             }

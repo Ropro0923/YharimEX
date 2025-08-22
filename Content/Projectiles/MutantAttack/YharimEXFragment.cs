@@ -92,20 +92,23 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
-
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                    target.AddBuff(FargoSouls.Find<ModBuff>("HexedBuff").Type, 120);
-                target.AddBuff(FargoSouls.Find<ModBuff>("CurseoftheMoonBuff").Type, 360);
-                if (YharimEXWorldFlags.EternityMode)
-                    target.AddBuff(FargoSouls.Find<ModBuff>("MutantFangBuff").Type, 180);
-                switch ((int)Projectile.ai[0])
+                Mod FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+
+                if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    case 0: target.AddBuff(FargoSouls.Find<ModBuff>("ReverseManaFlowBuff").Type, 180); break; //nebula
-                    case 1: target.AddBuff(FargoSouls.Find<ModBuff>("AtrophiedBuff").Type, 180); break; //solar
-                    case 2: target.AddBuff(FargoSouls.Find<ModBuff>("JammedBuff").Type, 180); break; //vortex
-                    default: target.AddBuff(FargoSouls.Find<ModBuff>("AntisocialBuff").Type, 180); break; //stardust
+                    target.AddBuff(FargoSouls.Find<ModBuff>("HexedBuff").Type, 120);
+                    target.AddBuff(FargoSouls.Find<ModBuff>("CurseoftheMoonBuff").Type, 360);
+                    if (YharimEXWorldFlags.EternityMode)
+                        target.AddBuff(FargoSouls.Find<ModBuff>("MutantFangBuff").Type, 180);
+                    switch ((int)Projectile.ai[0])
+                    {
+                        case 0: target.AddBuff(FargoSouls.Find<ModBuff>("ReverseManaFlowBuff").Type, 180); break; //nebula
+                        case 1: target.AddBuff(FargoSouls.Find<ModBuff>("AtrophiedBuff").Type, 180); break; //solar
+                        case 2: target.AddBuff(FargoSouls.Find<ModBuff>("JammedBuff").Type, 180); break; //vortex
+                        default: target.AddBuff(FargoSouls.Find<ModBuff>("AntisocialBuff").Type, 180); break; //stardust
+                    }
                 }
             }
         }

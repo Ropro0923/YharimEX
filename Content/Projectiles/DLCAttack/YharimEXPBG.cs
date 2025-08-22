@@ -97,7 +97,7 @@ namespace YharimEX.Content.Projectiles.DLCAttack
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if (YharimEXWorldFlags.EternityMode && YharimEXCrossmodSystem.Fargowiltas.Loaded)
+            if (YharimEXWorldFlags.EternityMode && YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 target.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("MutantFangBuff").Type, 180);
             target.AddBuff(ModContent.BuffType<Plague>(), 60 * 5);
             base.OnHitPlayer(target, info);

@@ -54,10 +54,11 @@ namespace YharimEX.Content.NPCs.Bosses
 
         public Mod FargoSouls()
         {
-            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-                return YharimEXCrossmodSystem.FargowiltasSouls.Mod;
-            else return null;
+            ModLoader.TryGetMod("FargowiltasSouls", out Mod fargoSouls);
+            return fargoSouls;
         }
+
+        public Mod fargoSouls => FargoSouls();
 
         public override void SetStaticDefaults()
         {
@@ -75,19 +76,19 @@ namespace YharimEX.Content.NPCs.Bosses
                 BuffID.Suffocation,
             ]);
 
-            if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
+            if (fargoSouls != null)
             {
                 NPC.AddDebuffImmunities(
                 [
-                    FargoSouls().Find<ModBuff>("LethargicBuff").Type,
-                    FargoSouls().Find<ModBuff>("ClippedWingsBuff").Type,
-                    FargoSouls().Find<ModBuff>("MutantNibbleBuff").Type,
-                    FargoSouls().Find<ModBuff>("OceanicMaulBuff").Type,
-                    FargoSouls().Find<ModBuff>("LightningRodBuff").Type,
-                    FargoSouls().Find<ModBuff>("SadismBuff").Type,
-                    FargoSouls().Find<ModBuff>("GodEaterBuff").Type,
-                    FargoSouls().Find<ModBuff>("TimeFrozenBuff").Type,
-                    FargoSouls().Find<ModBuff>("LeadPoisonBuff").Type,
+                    fargoSouls.Find<ModBuff>("LethargicBuff").Type,
+                    fargoSouls.Find<ModBuff>("ClippedWingsBuff").Type,
+                    fargoSouls.Find<ModBuff>("MutantNibbleBuff").Type,
+                    fargoSouls.Find<ModBuff>("OceanicMaulBuff").Type,
+                    fargoSouls.Find<ModBuff>("LightningRodBuff").Type,
+                    fargoSouls.Find<ModBuff>("SadismBuff").Type,
+                    fargoSouls.Find<ModBuff>("GodEaterBuff").Type,
+                    fargoSouls.Find<ModBuff>("TimeFrozenBuff").Type,
+                    fargoSouls.Find<ModBuff>("LeadPoisonBuff").Type,
                 ]);
             }
         }
@@ -208,7 +209,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode) && !Main.dedServ)
                 {
                     if (!Main.LocalPlayer.ItemTimeIsZero && (Main.LocalPlayer.HeldItem.type == ItemID.RodofDiscord || Main.LocalPlayer.HeldItem.type == ItemID.RodOfHarmony))
-                        Main.LocalPlayer.AddBuff(FargoSouls().Find<ModBuff>("TimeFrozenBuff").Type, 600);
+                        Main.LocalPlayer.AddBuff(fargoSouls.Find<ModBuff>("TimeFrozenBuff").Type, 600);
                 }
             }
 
@@ -472,7 +473,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 // -1 means no dust is drawn, as it looks ugly.
                 if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                 {
-                    ArenaAura(AuraCenter, 2000f * AuraScale, true, -1, default, YharimEXCrossmodSystem.Fargowiltas.Mod.Find<ModBuff>("GodEaterBuff").Type, ModContent.BuffType<TyrantPresenceBuff>());
+                    ArenaAura(AuraCenter, 2000f * AuraScale, true, -1, default, YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("GodEaterBuff").Type, ModContent.BuffType<TyrantPresenceBuff>());
                 }
                 else
                 {
@@ -489,7 +490,7 @@ namespace YharimEX.Content.NPCs.Bosses
                         if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                         {
                             if (Main.getGoodWorld)
-                                Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.Fargowiltas.Mod.Find<ModBuff>("GoldenStasisCDBuff").Type, 2);
+                                Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("GoldenStasisCDBuff").Type, 2);
                         }
                     }
 
@@ -497,14 +498,14 @@ namespace YharimEX.Content.NPCs.Bosses
                     {
                         if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                         {
-                            Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.Fargowiltas.Mod.Find<ModBuff>("GoldenStasisCDBuff").Type, 2);
+                            Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("GoldenStasisCDBuff").Type, 2);
                         }
                         if ((YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode))
                         {
                             Main.LocalPlayer.AddBuff(ModContent.BuffType<TyrantDesperationBuff>(), 2);
                             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
                             {
-                                Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.Fargowiltas.Mod.Find<ModBuff>("TimeStopCDBuff").Type, 2);
+                                Main.LocalPlayer.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("TimeStopCDBuff").Type, 2);
                             }
                         }
                     }
@@ -1019,8 +1020,6 @@ namespace YharimEX.Content.NPCs.Bosses
                     if (YharimEXGlobalUtilities.HostCheck) //spawn worm
                     {
                         int appearance = Main.rand.Next(2);
-                        // RETURN        if (YharimEXGlobalUtilities.AprilFools)
-                        //           appearance = 0;
                         for (int j = 0; j < 8; j++)
                         {
                             Vector2 vel = NPC.DirectionFrom(player.Center).RotatedByRandom(MathHelper.ToRadians(120)) * 10f;
@@ -1401,7 +1400,7 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded && AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
-                Main.LocalPlayer.AddBuff(FargoSouls().Find<ModBuff>("PurgedBuff").Type, 2);
+                Main.LocalPlayer.AddBuff(fargoSouls.Find<ModBuff>("PurgedBuff").Type, 2);
 
             //can alternate directions
             int sign = AttackChoice != 9 && NPC.localAI[2] % 2 == 1 ? -1 : 1;
@@ -1483,7 +1482,7 @@ namespace YharimEX.Content.NPCs.Bosses
         {
             
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded && AttackChoice == 9 && Main.LocalPlayer.active && NPC.Distance(Main.LocalPlayer.Center) < 3000f && Main.expertMode)
-                Main.LocalPlayer.AddBuff(FargoSouls().Find<ModBuff>("PurgedBuff").Type, 2);
+                Main.LocalPlayer.AddBuff(fargoSouls.Find<ModBuff>("PurgedBuff").Type, 2);
 
             NPC.ai[3] += NPC.ai[2];
             NPC.direction = NPC.spriteDirection = Math.Sign(NPC.localAI[1]);
@@ -1579,7 +1578,7 @@ namespace YharimEX.Content.NPCs.Bosses
                     Main.LocalPlayer.controlUseItem = false;
                     Main.LocalPlayer.controlUseTile = false;
 
-                    // NOTE            Main.LocalPlayer.FargoSouls()().NoUsingItems = 2;
+                    // NOTE            Main.LocalPlayer.fargoSouls().NoUsingItems = 2;
 
                 }
             }
@@ -3452,7 +3451,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     Main.LocalPlayer.controlUseItem = false;
                     Main.LocalPlayer.controlUseTile = false;
-                    // NOTE    Main.LocalPlayer.FargoSouls()().NoUsingItems = 2;
+                    // NOTE    Main.LocalPlayer.fargoSouls().NoUsingItems = 2;
                 }
 
                 if (--NPC.localAI[0] < 0)
@@ -3836,7 +3835,7 @@ namespace YharimEX.Content.NPCs.Bosses
             bool killPlayer = YharimEXWorldFlags.MasochistModeReal || YharimEXWorldFlags.InfernumMode;
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                if (Main.player[NPC.target].HasBuff(FargoSouls().Find<ModBuff>("TimeFrozenBuff").Type))
+                if (Main.player[NPC.target].HasBuff(fargoSouls.Find<ModBuff>("TimeFrozenBuff").Type))
                 {
                     killPlayer = true;
                 }

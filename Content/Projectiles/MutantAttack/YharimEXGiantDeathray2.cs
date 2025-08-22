@@ -71,7 +71,12 @@ namespace YharimEX.Content.Projectiles
 
         public override void AI()
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            Mod FargoSouls = null;
+
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+            }
 
             base.AI();
 

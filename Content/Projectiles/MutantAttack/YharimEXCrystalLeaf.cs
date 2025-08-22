@@ -66,13 +66,16 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
-            target.AddBuff(BuffID.Poisoned, Main.rand.Next(60, 300));
-            if (YharimEXWorldFlags.EternityMode)
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
-                target.AddBuff(FargoSouls.Find<ModBuff>("InfestedBuff").Type, Main.rand.Next(60, 300));
-                target.AddBuff(FargoSouls.Find<ModBuff>("IvyVenomBuff").Type, Main.rand.Next(60, 300));
-                target.AddBuff(FargoSouls.Find<ModBuff>("MutantFangBuff").Type, 180);
+                Mod FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+                target.AddBuff(BuffID.Poisoned, Main.rand.Next(60, 300));
+                if (YharimEXWorldFlags.EternityMode)
+                {
+                    target.AddBuff(FargoSouls.Find<ModBuff>("InfestedBuff").Type, Main.rand.Next(60, 300));
+                    target.AddBuff(FargoSouls.Find<ModBuff>("IvyVenomBuff").Type, Main.rand.Next(60, 300));
+                    target.AddBuff(FargoSouls.Find<ModBuff>("MutantFangBuff").Type, 180);
+                }
             }
         }
 

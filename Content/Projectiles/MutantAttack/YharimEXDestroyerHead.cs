@@ -95,11 +95,14 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                Mod FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
 
-            target.AddBuff(Projectile.ai[2] == 0 ? FargoSouls.Find<ModBuff>("LightningRodBuff").Type : BuffID.Weak, Main.rand.Next(300, 1200));
+                target.AddBuff(Projectile.ai[2] == 0 ? FargoSouls.Find<ModBuff>("LightningRodBuff").Type : BuffID.Weak, Main.rand.Next(300, 1200));
 
-            target.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("MutantFangBuff").Type, 180);
+                target.AddBuff(YharimEXCrossmodSystem.FargowiltasSouls.Mod.Find<ModBuff>("MutantFangBuff").Type, 180);
+            }
         }
 
         public override void OnKill(int timeLeft)

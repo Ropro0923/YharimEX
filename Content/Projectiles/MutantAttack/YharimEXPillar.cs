@@ -39,7 +39,7 @@ namespace YharimEX.Content.Projectiles
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 600;
             CooldownSlot = 1;
-            if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
                 SetupFargoProjectile.DeletionImmuneRank = 1;
@@ -150,13 +150,17 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            Mod FargoSouls = null;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+            }
             if (target.mount.Active)
                 target.mount.Dismount(target);
             target.velocity.X = Projectile.velocity.X < 0 ? -15f : 15f;
             target.velocity.Y = -10f;
 
-            if (YharimEXCrossmodSystem.Fargowiltas.Loaded)
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 target.AddBuff(FargoSouls.Find<ModBuff>("StunnedBuff").Type, 240);
 

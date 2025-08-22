@@ -95,7 +95,11 @@ namespace YharimEX.Content.Projectiles
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
+            Mod FargoSouls = null;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+            }
             if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
             {
                 target.AddBuff(FargoSouls.Find<ModBuff>("CurseOFTheMoonBuff").Type, 600);

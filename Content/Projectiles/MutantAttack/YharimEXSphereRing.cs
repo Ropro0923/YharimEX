@@ -108,8 +108,12 @@ namespace YharimEX.Content.Projectiles
 
         void TryTimeStop()
         {
-            Mod FargoSouls = YharimEXCrossmodSystem.Fargowiltas.Mod;
-            SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+            Mod FargoSouls = null;
+            if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            {
+                FargoSouls = YharimEXCrossmodSystem.FargowiltasSouls.Mod;
+                SetupFargoProjectile SetupFargoProjectile = Projectile.GetGlobalProjectile<SetupFargoProjectile>();
+            }
             if (!Main.getGoodWorld)
                 return;
             if (Projectile.hostile && !Projectile.friendly
