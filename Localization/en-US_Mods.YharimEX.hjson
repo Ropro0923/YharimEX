@@ -269,7 +269,7 @@ InfernumIntegration.YharimMutant:
 	The God Seeker
 	Yharim
 	'''
-SpawnInfo.YharimEXBoss: Use [i/YharimEX/YharimsRage] on the surface.
+SpawnInfo.YharimEXBoss: Use [i:YharimEX/YharimsRage] on the surface.
 
 Buffs: {
 	TyrantDesperationBuff: {
