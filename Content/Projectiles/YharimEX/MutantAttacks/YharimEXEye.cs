@@ -1,13 +1,8 @@
-using YharimEX.Core.Systems;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
-using Terraria.ModLoader;
 using YharimEX.Content.NPCs.Bosses;
-using YharimEX.Core.Globals;
+using YharimEX.Core.Players;
 
 namespace YharimEX.Content.Projectiles.MutantAttacks
 {
@@ -76,7 +71,7 @@ namespace YharimEX.Content.Projectiles.MutantAttacks
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            SetupFargoPlayer Player = target.GetModPlayer<SetupFargoPlayer>();
+            YharimEXFargoPlayer Player = target.GetModPlayer<YharimEXFargoPlayer>();
             if (Player.BetsyDashing)
                 return;
             if (YharimEXWorldFlags.DeathMode & !YharimEXCrossmodSystem.FargowiltasSouls.Loaded)

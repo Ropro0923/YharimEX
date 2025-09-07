@@ -1,19 +1,18 @@
+global using Terraria;
+global using Terraria.ModLoader;
+global using System;
+global using Microsoft.Xna.Framework;
+global using YharimEX.Core;
+global using YharimEX.Core.Systems;
 global using Luminance.Common.Utilities;
 global using LumUtils = Luminance.Common.Utilities.Utilities;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CalamityMod.Systems;
 using Terraria.Graphics.Effects;
-using Terraria.ModLoader;
 using YharimEX.Content.Sky;
 
 namespace YharimEX
 {
-	// Please read https://github.com/tModLoader/tModLoader/wiki/Basic-tModLoader-Modding-Guide#mod-skeleton-contents for more information about the various files in a mod.
 	public class YharimEX : Mod
 	{
         public enum YharimEXMusicMessageType : byte

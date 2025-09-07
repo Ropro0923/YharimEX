@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "dotnet",
+			"task": "build C:\\Users\\rcber\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\YharimEX\\YharimEX.csproj",
+			"file": "C:\\Users\\rcber\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\YharimEX\\YharimEX.csproj",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "dotnet: build C:\\Users\\rcber\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\YharimEX\\YharimEX.csproj"
+		}
+	]
+}

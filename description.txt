@@ -20,6 +20,6 @@ Developers:
 	[*] Yharim EX Fight: 永恒群冠 and 我在风中凌乱啊 
 	[*] Sprites & Calamity Sound Effects: Cult of Hypnos & the Calamity, Catalyst, Infernum teams
 	[*] Music: theforge129 (unnamed Yharim Theme), Xi Vs Sakuzyo (Storia), TheTrester (Legends About The Godseeker), 
-[/list]]
+[/list]
 
 Any inquiries or concerns about the ussage of code & sprites can be sent to Ropro0923. The sprites and the boss are not being used with malicious intent, just for renewing an old mod.

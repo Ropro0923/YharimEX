@@ -16,7 +16,7 @@ using YharimEX.Core.Globals;
 using YharimEX.Content.NPCs.Bosses;
 using YharimEX.Content.Projectiles.MutantAttacks;
 
-/*
+
 namespace YharimEX.Content.Projectiles.DLCAttack
 {
     public class DLCYharimSpearDash : ModProjectile
@@ -251,4 +251,3 @@ namespace YharimEX.Content.Projectiles.DLCAttack
         }
     }
 }
-*/

@@ -8,20 +8,20 @@
     ".NETCoreApp,Version=v8.0": {
       "YharimEX/1.0.0": {
         "dependencies": {
-          "tModLoader.CodeAssist": "0.1.5",
           "Basic.Reference.Assemblies.Net80": "1.0.0.0",
-          "CalamityMod": "0.0.0.0",
+          "CalamityModMusic_v2.0.5": "0.0.0.0",
+          "CalamityMod_v2.0.5": "0.0.0.0",
           "CsvHelper": "2.0.0.0",
           "DotNetZip": "1.16.0.0",
-          "Fargowiltas": "0.0.0.0",
-          "FargowiltasCrossmod": "0.0.0.0",
-          "FargowiltasSouls": "0.0.0.0",
+          "FargowiltasCrossmod_v1.2.0.16": "1.0.0.0",
+          "FargowiltasSouls_v1.7.2.14": "0.0.0.0",
+          "Fargowiltas_v3.3.6.3": "0.0.0.0",
           "FNA": "23.10.0.0",
           "Hjson": "1.0.0.0",
           "Humanizer": "2.14.0.0",
-          "InfernumMode": "0.0.0.0",
+          "InfernumMode_v2.0.1.19": "0.0.0.0",
           "log4net": "2.0.8.0",
-          "Luminance": "1.0.0.0",
+          "Luminance_v1.0.12": "1.0.0.0",
           "Microsoft.Build": "15.1.0.0",
           "Microsoft.Build.Framework": "15.1.0.0",
           "Microsoft.Build.Locator": "1.0.0.0",
@@ -58,6 +58,7 @@
           "NVorbis": "0.10.0.3",
           "RailSDK.Net": "1.0.0.0",
           "ReLogic": "1.0.0.0",
+          "ssm_v1.1.4.2": "0.0.0.0",
           "Steamworks.NET": "20.1.0.0",
           "SteelSeriesEngineWrapper": "1.0.0.0",
           "Stubble.Core": "1.10.0.0",
@@ -87,7 +88,6 @@
           "YharimEX.dll": {}
         }
       },
-      "tModLoader.CodeAssist/0.1.5": {},
       "Basic.Reference.Assemblies.Net80/1.0.0.0": {
         "runtime": {
           "Basic.Reference.Assemblies.Net80.dll": {
@@ -96,9 +96,17 @@
           }
         }
       },
-      "CalamityMod/0.0.0.0": {
+      "CalamityModMusic_v2.0.5/0.0.0.0": {
         "runtime": {
-          "CalamityMod.dll": {
+          "CalamityModMusic_v2.0.5.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "CalamityMod_v2.0.5/0.0.0.0": {
+        "runtime": {
+          "CalamityMod_v2.0.5.dll": {
             "assemblyVersion": "0.0.0.0",
             "fileVersion": "0.0.0.0"
           }
@@ -120,25 +128,25 @@
           }
         }
       },
-      "Fargowiltas/0.0.0.0": {
+      "FargowiltasCrossmod_v1.2.0.16/1.0.0.0": {
         "runtime": {
-          "Fargowiltas.dll": {
+          "FargowiltasCrossmod_v1.2.0.16.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "FargowiltasSouls_v1.7.2.14/0.0.0.0": {
+        "runtime": {
+          "FargowiltasSouls_v1.7.2.14.dll": {
             "assemblyVersion": "0.0.0.0",
             "fileVersion": "0.0.0.0"
           }
         }
       },
-      "FargowiltasCrossmod/0.0.0.0": {
+      "Fargowiltas_v3.3.6.3/0.0.0.0": {
         "runtime": {
-          "FargowiltasCrossmod.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "FargowiltasSouls/0.0.0.0": {
-        "runtime": {
-          "FargowiltasSouls.dll": {
+          "Fargowiltas_v3.3.6.3.dll": {
             "assemblyVersion": "0.0.0.0",
             "fileVersion": "0.0.0.0"
           }
@@ -168,9 +176,9 @@
           }
         }
       },
-      "InfernumMode/0.0.0.0": {
+      "InfernumMode_v2.0.1.19/0.0.0.0": {
         "runtime": {
-          "InfernumMode.dll": {
+          "InfernumMode_v2.0.1.19.dll": {
             "assemblyVersion": "0.0.0.0",
             "fileVersion": "0.0.0.0"
           }
@@ -184,9 +192,9 @@
           }
         }
       },
-      "Luminance/1.0.0.0": {
+      "Luminance_v1.0.12/1.0.0.0": {
         "runtime": {
-          "Luminance.dll": {
+          "Luminance_v1.0.12.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -685,6 +693,14 @@
           }
         }
       },
+      "ssm_v1.1.4.2/0.0.0.0": {
+        "runtime": {
+          "ssm_v1.1.4.2.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
       "Steamworks.NET/20.1.0.0": {
         "runtime": {
           "Steamworks.NET.dll": {
@@ -926,19 +942,17 @@
       "serviceable": false,
       "sha512": ""
     },
-    "tModLoader.CodeAssist/0.1.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Sg/jKEg/z5eN+Cdi3/9CU4JfJwvXHVH+UDJf4Lipo26uTa+guLLJXH1XDJNPShTFwKK8jMUYbthINP4QhsgHSA==",
-      "path": "tmodloader.codeassist/0.1.5",
-      "hashPath": "tmodloader.codeassist.0.1.5.nupkg.sha512"
-    },
     "Basic.Reference.Assemblies.Net80/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "CalamityMod/0.0.0.0": {
+    "CalamityModMusic_v2.0.5/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CalamityMod_v2.0.5/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
@@ -953,17 +967,17 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Fargowiltas/0.0.0.0": {
+    "FargowiltasCrossmod_v1.2.0.16/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "FargowiltasCrossmod/0.0.0.0": {
+    "FargowiltasSouls_v1.7.2.14/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "FargowiltasSouls/0.0.0.0": {
+    "Fargowiltas_v3.3.6.3/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
@@ -983,7 +997,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "InfernumMode/0.0.0.0": {
+    "InfernumMode_v2.0.1.19/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
@@ -993,7 +1007,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Luminance/1.0.0.0": {
+    "Luminance_v1.0.12/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
@@ -1174,6 +1188,11 @@
       "sha512": ""
     },
     "ReLogic/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ssm_v1.1.4.2/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

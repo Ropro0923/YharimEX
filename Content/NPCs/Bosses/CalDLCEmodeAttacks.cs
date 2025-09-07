@@ -28,6 +28,7 @@ using CalamityMod.NPCs.Yharon;
 using CalamityMod.Projectiles.Boss;
 using CalamityMod;
 using YharimEX.Content.Projectiles.MutantAttacks;
+using FargowiltasSouls.Content.Bosses.MutantBoss;
 
 
 namespace YharimEX.Content.NPCs.Bosses
@@ -432,7 +433,7 @@ namespace YharimEX.Content.NPCs.Bosses
             }
             void ChooseNextAttack(params int[] args)
             {
-                YharimEXBoss mutantBoss = npc.ModNPC as YharimEXBoss;
+                MutantBoss mutantBoss = npc.ModNPC as MutantBoss;
                 float buffer = VanillaAttackBuffer + 1;
                 npc.ai[0] = 52;
                 npc.ai[1] = 0;
@@ -740,7 +741,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 int nukeTime = (Counter > 0 ? 90 : 180);
                 if (Timer == 0)
                 {
-                    YharimEXBoss mutantBoss = (npc.ModNPC as YharimEXBoss);
+                    MutantBoss mutantBoss = (npc.ModNPC as MutantBoss);
                     Vector2 pos = YharimEXGlobalUtilities.ProjectileExists(mutantBoss.ritualProj, ModContent.ProjectileType<YharimEXRitual>()) == null ? npc.Center : Main.projectile[mutantBoss.ritualProj].Center;
 
                     if (Counter <= 0)
@@ -956,7 +957,7 @@ namespace YharimEX.Content.NPCs.Bosses
                 {
                     if (YharimEXGlobalUtilities.HostCheck)
                     {
-                        YharimEXBoss mutantBoss = (npc.ModNPC as YharimEXBoss);
+                        MutantBoss mutantBoss = (npc.ModNPC as MutantBoss);
                         Vector2 pos = YharimEXGlobalUtilities.ProjectileExists(mutantBoss.ritualProj, ModContent.ProjectileType<YharimEXRitual>()) == null ? npc.Center : Main.projectile[mutantBoss.ritualProj].Center;
                         Vector2 rot = Utils.SafeNormalize(player.velocity, Vector2.UnitY);
                         const int moons = 7;
@@ -1113,7 +1114,7 @@ namespace YharimEX.Content.NPCs.Bosses
 
                 if (Timer < PrepareTime)
                 {
-                    YharimEXBoss mutantBoss = (npc.ModNPC as YharimEXBoss);
+                    MutantBoss mutantBoss = (npc.ModNPC as MutantBoss);
                     Projectile arena = YharimEXGlobalUtilities.ProjectileExists(mutantBoss.ritualProj, ModContent.ProjectileType<YharimEXRitual>());
                     if (arena != null)
                     {

@@ -1,6 +1,6 @@
 ﻿using Terraria.ModLoader;
 
-namespace YharimEX
+namespace YharimEX.Core.Systems
 {
     public static class YharimEXCrossmodSystem
     {
@@ -24,7 +24,19 @@ namespace YharimEX
         }
         public static class FargowiltasCrossmod
         {
-            public const string Name = "FargowiltasCrossmod ";
+            public const string Name = "FargowiltasCrossmod";
+            public static bool Loaded => ModLoader.HasMod(Name);
+            public static Mod Mod => ModLoader.GetMod(Name);
+        }
+        public static class InfernalEclipseAPI
+        {
+            public const string Name = "InfernalEclipseAPI";
+            public static bool Loaded => ModLoader.HasMod(Name);
+            public static Mod Mod => ModLoader.GetMod(Name);
+        }
+        public static class Starlight
+        {
+            public const string Name = "ssm";
             public static bool Loaded => ModLoader.HasMod(Name);
             public static Mod Mod => ModLoader.GetMod(Name);
         }

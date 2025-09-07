@@ -2,13 +2,10 @@
 using System.Linq;
 using System.Reflection;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria;
-using Microsoft.Xna.Framework;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Players;
 
-namespace YharimEX
+namespace YharimEX.Core.Systems
 {
     public static class YharimEXExtentionMethods
     {

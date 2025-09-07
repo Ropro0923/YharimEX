@@ -1,4 +1,4 @@
-	NPCs: {
+NPCs: {
 	YharimEXBoss: {
 		DisplayName: Yharim, the Godseeker
 		SkipPhase1: Yharim is growing tired of your attempts.
