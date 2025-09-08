@@ -1,10 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.UI.BigProgressBar;
-using Terraria.ModLoader;
 
 namespace YharimEX.Content.BossBars
 {
@@ -14,7 +11,7 @@ namespace YharimEX.Content.BossBars
 
         public override void Load()
         {
-            forcedHead = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/Boss/YharimEX_Head_Boss");
+            forcedHead = ModContent.Request<Texture2D>("YharimEX/Content/NPCs/YharimBoss/YharimEXBoss_Head_Boss");
         }
 
         public override Asset<Texture2D> GetIconTexture(ref Rectangle? iconFrame)

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
-using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Content.NPCs.YharimBoss;
 using YharimEX.Core.Globals;
 using YharimEX.Core.Systems;
 
@@ -26,7 +26,7 @@ namespace YharimEX.Content.Sky
 
             bool useSpecialColor = false;
 
-            if (YharimEXGlobalUtilities.BossIsAlive(ref YharimEXGlobalNPC.yharimEXBoss, ModContent.NPCType<YharimEXBoss>())
+            if (YharimEXUtilities.BossIsAlive(ref YharimEXGlobalNPC.yharimEXBoss, ModContent.NPCType<YharimEXBoss>())
                 && (Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] < 0 || Main.npc[YharimEXGlobalNPC.yharimEXBoss].ai[0] >= 10))
             {
                 intensity += increment;
@@ -139,7 +139,7 @@ namespace YharimEX.Content.Sky
                 float opacity = 0f;
                 Color color = ColorToUse(ref opacity);
 
-                spriteBatch.Draw(ModContent.Request<Texture2D>("YharimEX/Assets/Sky/YharimEXBossSky", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                spriteBatch.Draw(ModContent.Request<Texture2D>("YharimEX/Content/Sky/YharimEXBossSky", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
                     new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), color * opacity);
 
                 if (--delay < 0)
@@ -155,7 +155,7 @@ namespace YharimEX.Content.Sky
                 for (int i = 0; i < 50; i++) //static on screen
                 {
                     int width = Main.rand.Next(3, 251);
-                    spriteBatch.Draw(ModContent.Request<Texture2D>("YharimEX/Assets/Sky/YharimEXBossStatic", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
+                    spriteBatch.Draw(ModContent.Request<Texture2D>("YharimEX/Content/Sky/YharimEXBossStatic", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value,
                     new Rectangle(xPos[i] - width / 2, yPos[i], width, 3),
                     color * lifeIntensity * 0.75f);
                 }

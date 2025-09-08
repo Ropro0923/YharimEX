@@ -31,7 +31,7 @@ namespace YharimEX.Content.Particles
 			// Shrink, fade, and slow over time.
 			Velocity *= 0.95f;
 			Scale *= 0.95f;
-			Opacity = YharimEXGlobalUtilities.SineInOut(1f - LifetimeRatio);
+			Opacity = YharimEXUtilities.SineInOut(1f - LifetimeRatio);
 			Rotation = Velocity.ToRotation() + MathHelper.PiOver2;
 		}
 

@@ -4,6 +4,7 @@ global using System;
 global using Microsoft.Xna.Framework;
 global using YharimEX.Core;
 global using YharimEX.Core.Systems;
+global using Terraria.ID;
 global using Luminance.Common.Utilities;
 global using LumUtils = Luminance.Common.Utilities.Utilities;
 using System.IO;

@@ -4,18 +4,15 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using YharimEX.Core.Globals;
-using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Content.NPCs.YharimBoss;
 using YharimEX.Core.Systems;
 
 namespace YharimEX.Content.Items
 {
     public class YharimsRage : ModItem
     {
-        public override string Texture => "YharimEX/Assets/Items/YharimsRage";
         public override void SetStaticDefaults()
         {
-            //Main.RegisterItemAnimation(Item.type, new DrawAnimationVertical(3, 11));
-            //ItemID.Sets.AnimatesAsSoul[Item.type] = true;
             ItemID.Sets.ItemNoGravity[Item.type] = false;
             ItemID.Sets.SortingPriorityBossSpawns[Type] = 12;
             Terraria.GameContent.Creative.CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 3;
@@ -49,10 +46,8 @@ namespace YharimEX.Content.Items
 
         public override bool? UseItem(Player player)
         {
-            YharimEXGlobalUtilities.SpawnBossNetcoded(player, ModContent.NPCType<YharimEXBoss>());
+            YharimEXUtilities.SpawnBossNetcoded(player, ModContent.NPCType<YharimEXBoss>());
             return true;
         }
-
-        //public override Color? GetAlpha(Color lightColor) => Color.White;
     }
 }

@@ -3,11 +3,13 @@
 	"tasks": [
 		{
 			"type": "dotnet",
-			"task": "build C:\\Users\\rcber\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\YharimEX\\YharimEX.csproj",
-			"file": "C:\\Users\\rcber\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\YharimEX\\YharimEX.csproj",
-			"group": "build",
+			"task": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"problemMatcher": [],
-			"label": "dotnet: build C:\\Users\\rcber\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\YharimEX\\YharimEX.csproj"
+			"label": "dotnet: build"
 		}
 	]
 }

@@ -11,8 +11,6 @@ namespace YharimEX.Content.Items
 {
     public class YharimsJournal : ModItem
     {
-        public override string Texture => "YharimEX/Assets/Items/Journal";
-
         public override void SetDefaults()
         {
             Item.width = 30;

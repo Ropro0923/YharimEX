@@ -12,11 +12,10 @@ using Terraria.ObjectData;
 using Microsoft.Xna.Framework;
 using YharimEX.Content.Items;
 
-namespace YharimEX.Content.Tilles
+namespace YharimEX.Content.Tiles
 {
     public class ProphecyMusicBoxTile : ModTile
     {
-        public override string Texture => "YharimEX/Assets/Tiles/ProphecyMusicBoxTile";
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;

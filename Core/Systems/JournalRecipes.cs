@@ -1,20 +1,31 @@
 ﻿using CalamityMod.Items.LoreItems;
-using Terraria;
-using Terraria.ModLoader;
+using Terraria.ID;
 using YharimEX.Content.Items;
 
 namespace YharimEX.Core.Systems
 {
     public class JournalRecipes : ModSystem
     {
-        public override void PostSetupRecipes()
+        public override void PostAddRecipes()
         {
+            Recipe[] originalRecipes = new Recipe[Recipe.numRecipes];
             for (int i = 0; i < Recipe.numRecipes; i++)
             {
-                Recipe recipe = Main.recipe[i];
-                if (recipe != null && recipe.createItem.type == ModContent.ItemType<LoreItem>())
+                originalRecipes[i] = Main.recipe[i];
+            }
+
+            foreach (Recipe recipe in originalRecipes)
+            {
+                if (recipe?.createItem?.ModItem is LoreItem)
                 {
-                    recipe.AddIngredient(ModContent.ItemType<YharimsJournal>());
+                    Recipe JournalRecipe = Recipe.Create(recipe.createItem.type);
+                    JournalRecipe.AddIngredient(ModContent.ItemType<YharimsJournal>());
+                    foreach (int tile in recipe.requiredTile)
+                    {
+                        if (tile > 0)
+                            JournalRecipe.AddTile(tile);
+                    }
+                    JournalRecipe.Register();
                 }
             }
         }

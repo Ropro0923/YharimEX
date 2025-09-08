@@ -9,7 +9,7 @@ using Terraria.Audio;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
-using YharimEX.Content.NPCs.Bosses;
+using YharimEX.Content.NPCs.YharimBoss;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Localization;
@@ -30,10 +30,10 @@ namespace YharimEX.Core.Systems
             ModLoader.TryGetMod("MusicDisplay", out Mod musicDisplay);
             if (musicDisplay is null) return;
 
-            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/TheRealityoftheProphecy"), "The Reality of the Prophecy", "theforge129", "YharimEX");
-            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/Storia"), "Storia", "Xi Vs Sakuzyo", "YharimEX");
-            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/StoriaShort"), "Storia (Desperation)", "Xi Vs Sakuzyo", "YharimEX");
-            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/LegendsAboutTheGodseeker"), "Legends About The Godseeker", "TheTrester", "YharimEX");
+            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/TheRealityoftheProphecy"), "The Reality of the Prophecy", "theforge129", "YharimEX");
+            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Storia"), "Storia", "Xi Vs Sakuzyo", "YharimEX");
+            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/StoriaShort"), "Storia (Desperation)", "Xi Vs Sakuzyo", "YharimEX");
+            musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/LegendsAboutTheGodseeker"), "Legends About The Godseeker", "TheTrester", "YharimEX");
         }
 
         private void BossChecklistSetup()
@@ -118,7 +118,7 @@ namespace YharimEX.Core.Systems
                     {
                         Action<SpriteBatch, Rectangle, Color> action = (Action<SpriteBatch, Rectangle, Color>)((sb, rect, color) =>
                         {
-                            Texture2D texture2D = ModContent.Request<Texture2D>("YharimEX/Assets/NPCs/Boss/YharimEXBossChecklist", (AssetRequestMode)2).Value;
+                            Texture2D texture2D = ModContent.Request<Texture2D>("YharimEX/Content/NPCs/YharimBoss/YharimEXBossChecklist", (AssetRequestMode)2).Value;
                             Vector2 vector2;
                             // ISSUE: explicit constructor call
                             vector2 = new Vector2(
@@ -129,7 +129,7 @@ namespace YharimEX.Core.Systems
                         });
                         dictionary.Add("customPortrait", action);
                         dictionary.Add("displayName", Language.GetText("Mods.YharimEX.NPCs.YharimEXBoss.DisplayName"));
-                        dictionary.Add("overrideHeadTextures", "YharimEX/Assets/NPCs/Boss/YharimEXBoss_Head");
+                        dictionary.Add("overrideHeadTextures", "YharimEX/Content/NPCs/YharimBoss/YharimEXBoss_Head_Boss");
                     }
                 }
             }

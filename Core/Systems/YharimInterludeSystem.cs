@@ -56,7 +56,7 @@ namespace YharimEX.Core.Systems
             }
 
             // Interlude 5 - Yharim's Interlude
-            AddEntry("Interlude5", "YharimEX/Assets/Music/LegendsAboutTheGodseeker", TimeSpan.FromSeconds(190.224), () => YharimEXWorldFlags.DownedYharimEX, () => true);
+            AddEntry("Interlude5", "YharimEX/Assets/Sounds/Music/LegendsAboutTheGodseeker", TimeSpan.FromSeconds(190.224), () => YharimEXWorldFlags.DownedYharimEX, () => true);
         }
 
         public override void Unload() => EventCollection.Clear();

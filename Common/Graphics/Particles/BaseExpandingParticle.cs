@@ -42,8 +42,8 @@ namespace YharimEX.Common.Graphics.Particles
 
         public sealed override void Update()
         {
-            Opacity = MathHelper.Lerp(1f, 0f, YharimEXGlobalUtilities.SineInOut(base.LifetimeRatio));
-            Scale = Vector2.Lerp(StartScale, EndScale, YharimEXGlobalUtilities.SineInOut(base.LifetimeRatio));
+            Opacity = MathHelper.Lerp(1f, 0f, YharimEXUtilities.SineInOut(base.LifetimeRatio));
+            Scale = Vector2.Lerp(StartScale, EndScale, YharimEXUtilities.SineInOut(base.LifetimeRatio));
         }
 
         public sealed override void Draw(SpriteBatch spriteBatch)

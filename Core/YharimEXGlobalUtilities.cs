@@ -1,3 +1,4 @@
+using Fargowiltas.Common.Configs;
 using Luminance.Core.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +17,7 @@ using YharimEX.Core.Players;
 
 namespace YharimEX.Core
 {
-    public static class YharimEXGlobalUtilities
+    public static class YharimEXUtilities
     {
         public static void SetTexture1(this Texture2D texture) => Main.instance.GraphicsDevice.Textures[1] = texture;
 
@@ -71,11 +72,11 @@ namespace YharimEX.Core
                 return false;
             if (projectile.damage <= 0)
                 return false;
-    //        if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
-    //        {
-    //            if (projectile.FargoSouls().DeletionImmuneRank > deletionRank)
-    //                return false;
-    //        }
+            //        if (YharimEXCrossmodSystem.FargowiltasSouls.Loaded)
+            //        {
+            //            if (projectile.FargoSouls().DeletionImmuneRank > deletionRank)
+            //                return false;
+            //        }
             if (projectile.friendly)
             {
                 if (projectile.whoAmI == Main.player[projectile.owner].heldProj)
@@ -661,6 +662,16 @@ namespace YharimEX.Core
                 return minionAttackTargetNpc.whoAmI;
             }
             return FindClosestHostileNPC(center, detectionRange, lineCheck, prioritizeBoss);
+        }
+    }
+    
+    [ExtendsFromMod(YharimEXCrossmodSystem.FargowiltasSouls.Name)]
+    [JITWhenModsEnabled(YharimEXCrossmodSystem.FargowiltasSouls.Name)]
+    public class FargosNPC
+    {
+        public static bool CanSetCatchable()
+        {
+            return FargoServerConfig.Instance.CatchNPCs;
         }
     }
 }

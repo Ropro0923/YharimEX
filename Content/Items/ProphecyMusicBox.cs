@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria;
 using Terraria.ModLoader;
-using YharimEX.Content.Tilles;
+using YharimEX.Content.Tiles;
 using CalamityMod.Items.Placeables.Furniture.BossRelics;
 
 namespace YharimEX.Content.Items
 {
     public class ProphecyMusicBox : ModItem
     {
-        public override string Texture => "YharimEX/Assets/Items/ProphecyMusicBox";
         public override void SetStaticDefaults()
         {
             if (Main.dedServ)
@@ -21,7 +20,7 @@ namespace YharimEX.Content.Items
             Item.ResearchUnlockCount = 1;
             ItemID.Sets.CanGetPrefixes[Type] = false;
             ItemID.Sets.ShimmerTransformToItem[Type] = 576;
-            MusicLoader.AddMusicBox(Mod, MusicLoader.GetMusicSlot(Mod, "Assets/Music/TheRealityoftheProphecy"), ModContent.ItemType<ProphecyMusicBox>(), ModContent.TileType<ProphecyMusicBoxTile>(), 0);
+            MusicLoader.AddMusicBox(Mod, MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/TheRealityoftheProphecy"), ModContent.ItemType<ProphecyMusicBox>(), ModContent.TileType<ProphecyMusicBoxTile>(), 0);
         }
 
         public override void SetDefaults()
